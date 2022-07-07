@@ -3,14 +3,23 @@ version: 0.2
 phases:
   pre_build:
     commands:
-      - cd ./web/frontend
-      - npm install
+      - cd ./web/frontend && npm install && cd ../../
+      - cd ./web/backend && cd ../../
   build:
     commands:
-      - npm run build
-
+      - cd ./web/frontend && npm run build && cd ../../
+      - cd ./web/backend && cd ../../
+  post_build:
+    commands:
+      - mv ./web/frontend/build ./build
+      - mv ./web/backend ./backend
 artifacts:
-  files:
-    - '**/*'
-  discard-paths: no
-  base-directory: ./
+  secondary-artifacts:
+    Frontend:
+      files:
+        - '**/*'
+      base-directory: ./build
+    Backend:
+      files:
+        - '**/*'
+      base-directory: ./backend

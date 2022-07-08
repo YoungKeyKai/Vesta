@@ -23,3 +23,8 @@ The folder structure here is vital as the CI pipeline builds the project expecti
 2. Use descriptive branch names.
 3. Copy the Trello issue's URL into the PR description so the reviewer knows what the PR is about.
 4. Only merge when there is at least 1 reviewer. Be sure to copy the PR URL into the Discord server as well with an @everyone.
+
+## Setup
+Some notes for setup after cloning:
+1. Need to create a new virtual python environment in the project web directory and install django, python-decouple using pip (pip install [package]).
+2. Need to install npm packages in the frontend directory (npm install).

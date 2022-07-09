@@ -1,5 +1,8 @@
-from django.db import models
+from tkinter import CASCADE
+from django.db import models, connection
 from django.contrib.postgres.fields import IntegerRangeField, DateRangeField, ArrayField
+from psycopg2.extras import register_composite
+from psycopg2.extensions import register_adapter, adapt, AsIs
 
 # Django Auto-generated models
 
@@ -184,4 +187,121 @@ class ListingListing(models.Model):
     class Meta:
         db_table = 'listing'
 
+class ListingInterest(models.Model):
+    buyer = models.ForeignKey(AuthUser, related_name='buyer_fk', on_delete=models.SET_NULL, null=True)
+    seller = models.ForeignKey(AuthUser, related_name='seller_fk', on_delete=models.SET_NULL, null=True)
+    listing = models.ForeignKey(ListingListing, on_delete=models.CASCADE, null=False)
+    
+    #Enum Class
+    class InterestStatus(models.TextChoices):
+        CLOSED = 'closed'
+        SOLD = 'sold'
+        PENDING = 'pending'
 
+    status = models.CharField(
+        max_length = 15,
+        choices = InterestStatus.choices,
+        default = InterestStatus.PENDING
+    )
+
+    class Meta:
+        db_table = 'interest'
+
+class ListingFlaggedListing(models.Model):
+    listing = models.ForeignKey(ListingListing, on_delete=models.CASCADE, null=False)
+    flagger = models.ForeignKey(AuthUser, on_delete=models.CASCADE, null=False)
+    timestamp = models.DateTimeField(null=True)
+    
+    #Enum Class
+    class FlagStatus(models.TextChoices):
+        ILLEGAL = 'Illegal'
+        UNETHICAL = 'Unethical'
+        INAPPROPRIATE = 'Inappropriate'
+
+    type = models.CharField(
+        max_length = 20,
+        choices = FlagStatus.choices,
+        null=True
+    )
+
+    #Primary Key
+    models.UniqueConstraint(
+        name = 'FlaggedListingPK',
+        fields = ['listing', 'flagger']
+    )
+
+    class Meta:
+        db_table = 'flagged_listing'
+
+class MessagingBlocks(models.Model):
+    blocker = models.ForeignKey(AuthUser, related_name="blocks_blocker_fk", on_delete=models.CASCADE, null=False)
+    blocked = models.ForeignKey(AuthUser, related_name="blocks_blocked_fk", on_delete=models.CASCADE, null=False)
+    timestamp = models.DateTimeField(null=True)
+
+    # Primary Key
+    models.UniqueConstraint(
+        name = 'BlocksPK',
+        fields = ['blocker', 'blocked']
+    )
+
+    class Meta:
+        db_table = 'blocks'
+
+#Define our custom Message Type
+Message = register_composite(
+    'message',
+    connection.cursor().cursor,
+    globally=True
+).type
+
+def Message_adapter(value):
+  return AsIs("(%s, %s, %s)::message" % (
+    adapt(value.sender).getquoted(),
+    adapt(value.message).getquoted(),
+    adapt(value.timestamp).getquoted()
+  ))
+
+register_adapter(Message, Message_adapter)
+
+class MessagingMessage:
+    def __init__(self, sender, message, timestamp):
+        self.sender = sender
+        self.message = message
+        self.timestamp = timestamp
+
+class MessageField(models.Field):
+    def from_db_value(self, value, expression, connection):
+      if value is None:
+          return value
+      return MessagingMessage(value.sender, value.message, value.timestamp)
+
+    def to_python(self, value):
+        if isinstance(value, MessagingMessage):
+            return value
+
+        if value is None:
+            return value
+
+        return MessagingMessage(value.sender, value.message, value.timestamp)
+
+    def get_prep_value(self, value):
+        return (value.sender, value.message, value.timestamp)
+
+    def db_type(self, connection):
+        return 'message'
+
+class MessagingChat(models.Model):
+    user1 = models.ForeignKey(AuthUser, related_name="chat_user1_fk", on_delete=models.CASCADE, null=False)
+    user2 = models.ForeignKey(AuthUser, related_name="chat_user2_fk", on_delete=models.CASCADE, null=False)
+    history = ArrayField(
+        MessageField()
+    )
+
+    # Primary Key
+    models.UniqueConstraint(
+        name = 'ChatPK',
+        fields = ['user1', 'user2']
+    )
+
+    class Meta:
+        db_table = 'chat'

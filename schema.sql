@@ -1,145 +1,196 @@
--- User Schema
-CREATE SCHEMA IF NOT EXISTS users;
+-- This script is not for use, for illustrative purposes only
+-- Schemas have been dropped for now - separate permissions are not needed yet.
 
-CREATE TABLE IF NOT EXISTS users.users (
-    email       VARCHAR(64) PRIMARY KEY,
-    firstname   VARCHAR(64) NOT NULL,
-    prefname    VARCHAR(64),
-    lastname    VARCHAR(64) NOT NULL,
-    age         INTEGER NOT NULL,
-    signup      DATE NOT NULL
+CREATE TABLE public.auth_group (
+    id integer NOT NULL,
+    name character varying(150) NOT NULL
 );
 
-CREATE TYPE users.FILETYPE AS ENUM ('pdf', 'jpg', 'png');
-
-CREATE TYPE users.FILE AS (
-    filetype    users.FILETYPE,
-    content     BYTEA
+CREATE TABLE public.auth_group_permissions (
+    id bigint NOT NULL,
+    group_id integer NOT NULL,
+    permission_id integer NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS users.upload (
-    email       VARCHAR(64) NOT NULL,
-    upload      users.FILE NOT NULL,
-    uploadtime  TIMESTAMP NOT NULL,
-
-    FOREIGN KEY (email) REFERENCES users.users(email)
+CREATE TABLE public.auth_permission (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    content_type_id integer NOT NULL,
+    codename character varying(100) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS users.login (
-    email       VARCHAR(64) NOT NULL,
-    password    VARCHAR(64) NOT NULL,
-    active      BOOLEAN NOT NULL,
-
-    FOREIGN KEY (email) REFERENCES users.users(email)
+CREATE TABLE public.auth_user (
+    id integer NOT NULL,
+    password character varying(128) NOT NULL,
+    last_login timestamp with time zone,
+    is_superuser boolean NOT NULL,
+    username character varying(150) NOT NULL,
+    first_name character varying(150) NOT NULL,
+    last_name character varying(150) NOT NULL,
+    email character varying(254) NOT NULL,
+    is_staff boolean NOT NULL,
+    is_active boolean NOT NULL,
+    date_joined timestamp with time zone NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS users.preferences (
-    email       VARCHAR(64) PRIMARY KEY,
-    pricerange  INT4RANGE,
-    timerange   DATERANGE,
-    location    TEXT[],
-    rating      NUMERIC,
-
-    FOREIGN KEY (email) REFERENCES users.users(email)
+CREATE TABLE public.auth_user_groups (
+    id bigint NOT NULL,
+    user_id integer NOT NULL,
+    group_id integer NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS users.settings (
-    email       VARCHAR(64) PRIMARY KEY,
-    visible     BOOLEAN DEFAULT TRUE,
-    chatOn      BOOLEAN DEFAULT TRUE,
-
-    FOREIGN KEY (email) REFERENCES users.users(email)
+CREATE TABLE public.auth_user_user_permissions (
+    id bigint NOT NULL,
+    user_id integer NOT NULL,
+    permission_id integer NOT NULL
 );
 
--- Listing Schema
-CREATE SCHEMA IF NOT EXISTS listing;
-
-CREATE TABLE IF NOT EXISTS listing.property (
-    ID          SERIAL PRIMARY KEY,
-    name        VARCHAR(64) NOT NULL,
-    address     VARCHAR(128) NOT NULL,
-    city        VARCHAR(64) NOT NULL,
-    country     VARCHAR(64) NOT NULL
+CREATE TABLE public.django_admin_log (
+    id integer NOT NULL,
+    action_time timestamp with time zone NOT NULL,
+    object_id text,
+    object_repr character varying(200) NOT NULL,
+    action_flag smallint NOT NULL,
+    change_message text NOT NULL,
+    content_type_id integer,
+    user_id integer NOT NULL,
+    CONSTRAINT django_admin_log_action_flag_check CHECK ((action_flag >= 0))
 );
 
-CREATE TYPE listing.LISTING_STATUS AS ENUM ('available', 'sold', 'unavailable');
-
-CREATE TABLE IF NOT EXISTS listing.listing (
-    ID          SERIAL PRIMARY KEY,
-    owner       VARCHAR(64),
-    propertyID  INTEGER NOT NULL,
-    unit        VARCHAR(16),
-    duration    DATERANGE,
-    rate        INT4RANGE,
-    utilities   TEXT[],
-    floorplan   users.FILE,
-    status      listing.LISTING_STATUS,
-    proof       users.FILE,
-
-    FOREIGN KEY (propertyID) REFERENCES listing.property(ID)
+CREATE TABLE public.django_content_type (
+    id integer NOT NULL,
+    app_label character varying(100) NOT NULL,
+    model character varying(100) NOT NULL
 );
 
-CREATE TYPE listing.INTEREST_STATUS AS ENUM ('closed', 'sold', 'pending');
-
-CREATE TABLE IF NOT EXISTS listing.interest (
-    buyer       VARCHAR(64),
-    seller      VARCHAR(64),
-    listingID   INTEGER,
-    status      listing.INTEREST_STATUS,
-
-    FOREIGN KEY (buyer) REFERENCES users.users(email),
-    FOREIGN KEY (seller) REFERENCES users.users(email),
-    FOREIGN KEY (listingID) REFERENCES listing.listing(ID)
+CREATE TABLE public.django_migrations (
+    id bigint NOT NULL,
+    app character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    applied timestamp with time zone NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS listing.propertyReview (
-    ID          SERIAL PRIMARY KEY,
-    propertyID  INTEGER NOT NULL,
-    rating      INTEGER NOT NULL,
-    comments    TEXT,
-    timestamp   TIMESTAMP,
-
-    FOREIGN KEY (propertyID) REFERENCES listing.property(ID)
+CREATE TABLE public.django_session (
+    session_key character varying(40) NOT NULL,
+    session_data text NOT NULL,
+    expire_date timestamp with time zone NOT NULL
 );
 
-CREATE TYPE listing.FLAGGEDLISTING_TYPE AS ENUM ('Illegal', 'Unethical', 'Inappropriate');
+-- CUSTOM MODELS BEGIN HERE
 
-CREATE TABLE IF NOT EXISTS listing.flaggedListing (
-    listingID   INTEGER NOT NULL,
-    flagger     VARCHAR(64),
-    timestamp   TIMESTAMP,
-    type        listing.FLAGGEDLISTING_TYPE,
+CREATE TABLE public.uploads (
+    id bigint NOT NULL,
+    -- FileField uploaded to media directory
+    content character varying(100) NOT NULL,
+    owner_id bigint NOT NULL,
+    uploadtime timestamp with time zone,
 
-    PRIMARY KEY (listingID, flagger),
-    FOREIGN KEY (listingID) REFERENCES listing.listing(ID),
-    FOREIGN KEY (flagger) REFERENCES users.users(email)
+    -- Primary Key id
+    Foreign Key (owner_id) references public.auth_user (id)
 );
 
--- Messaging Schema
-CREATE SCHEMA IF NOT EXISTS messaging;
+CREATE TABLE public.settings (
+    id bigint NOT NULL,
+    visible boolean NOT NULL,
+    "chatOn" boolean NOT NULL,
+    owner_id bigint NOT NULL,
 
-CREATE TYPE messaging.MESSAGE AS (
-    sender      BOOLEAN,
-    message     TEXT,
-    timestamp   TIMESTAMP
+    -- Primary Key id
+    Foreign Key (owner_id) references public.auth_user (id)
 );
 
-CREATE TABLE IF NOT EXISTS messaging.chat (
-    user1       VARCHAR(64),
-    user2       VARCHAR(64),
-    history     messaging.MESSAGE[],
+CREATE TABLE public.preferences (
+    id bigint NOT NULL,
+    pricerange int4range NOT NULL,
+    timerange daterange NOT NULL,
+    location character varying(64)[] NOT NULL,
+    owner_id bigint NOT NULL,
 
-    PRIMARY KEY (user1, user2),
-    FOREIGN KEY (user1) REFERENCES users.users(email),
-    FOREIGN KEY (user2) REFERENCES users.users(email)
+    -- Primary Key id
+    Foreign Key (owner_id) references public.auth_user (id)
 );
 
-CREATE TABLE IF NOT EXISTS messaging.blocks (
-    blocker     VARCHAR(64),
-    blocked     VARCHAR(64),
-    timestamp   TIMESTAMP NOT NULL,
+CREATE TABLE public.property (
+    id bigint NOT NULL,
+    name character varying(64) NOT NULL,
+    address character varying(128) NOT NULL,
+    city character varying(64) NOT NULL,
+    country character varying(64) NOT NULL
 
-    PRIMARY KEY (blocker, blocked),
-    FOREIGN KEY (blocker) REFERENCES users.users(email),
-    FOREIGN KEY (blocked) REFERENCES users.users(email)
+    -- Primary Key id
+);
+
+CREATE TABLE public.listing (
+    id bigint NOT NULL,
+    unit character varying(16) NOT NULL,
+    duration daterange NOT NULL,
+    rate int4range NOT NULL,
+    utilities character varying(32)[] NOT NULL,
+    -- Enum (available, sold, unavailable)
+    status character varying(15) NOT NULL,
+    floorplan_id bigint,
+    owner_id bigint NOT NULL,
+    proof_id bigint,
+    "propertyID_id" bigint NOT NULL,
+
+    -- Primary Key id
+    Foreign Key (owner_id) references public.auth_user (id),
+    Foreign Key ("propertyID_id") references public.property (id),
+    Constraint floorplan_fk Foreign Key (floorplan_id) references public.uploads (id),
+    Constraint proof_fk Foreign Key (proof) references public.uploads (id)
+);
+
+CREATE TABLE public.interest (
+    id bigint NOT NULL,
+    -- Enum (closed, sold, pending)
+    status character varying(15) NOT NULL,
+    buyer_id bigint,
+    listing_id bigint NOT NULL,
+    seller_id bigint,
+
+    -- Primary Key id
+    Constraint buyer_fk Foreign Key (buyer_id) references public.auth_user (id),    
+    Constraint seller_fk Foreign Key (seller_id) references public.auth_user (id),
+    Foreign Key (listing_id) references public.listing (id)
+);
+
+CREATE TABLE public.flagged_listing (
+    id bigint NOT NULL,
+    "timestamp" timestamp with time zone,
+    -- Enum (Illegal, Unethical, Inappropriate)
+    type character varying(20),
+    flagger_id bigint NOT NULL,
+    listing_id bigint NOT NULL,
+
+    -- Primary Key id, Unique Key (flagger_id, listing_id)
+    Foreign Key (flagger_id) references public.auth_user (id),
+    Foreign Key (listing_id) references public.listing (id)
+);
+
+CREATE TABLE public.blocks (
+    id bigint NOT NULL,
+    "timestamp" timestamp with time zone,
+    blocked_id bigint NOT NULL,
+    blocker_id bigint NOT NULL,
+
+    -- Primary Key id, Unique Key (blocker, blocked)
+    Constraint blocks_blocker_fk Foreign Key (blocker_id) references public.auth_user (id), 
+    Constraint blocks_blocked_fk Foreign Key (blocked_id) references public.auth_user (id) 
+);
+
+CREATE TYPE public.message AS (
+	sender boolean,
+	message text,
+	"timestamp" timestamp without time zone
+);
+
+CREATE TABLE public.chat (
+    id bigint NOT NULL,
+    history public.message[] NOT NULL,
+    user1_id bigint NOT NULL,
+    user2_id bigint NOT NULL,
+
+    -- Primary Key id, Unique Key (user1_id, user2_id)
+    Constraint chat_user1_fk Foreign Key (user1_id) references public.auth_user (id),
+    Constraint chat_user2_fk Foreign Key (user2_id) references public.auth_user (id)
 );

@@ -4,7 +4,7 @@ import {
   BrowserRouter as Router
 } from "react-router-dom";
 
-import Random from './Components/random';
+import Market from './Components/market';
 import Home from './Components/home';
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
     <Router>
         <Routes>
           <Route exact path="/" element={<Home />} />
-          <Route path="/random" element={<Random />} />
+          <Route path="/market" element={<Market />} />
         </Routes>
     </Router>
   );

@@ -9,7 +9,7 @@ function Home() {
                 <p>
                     Vesta!!
                 </p>
-                <Link to={"random"}>Go to the next page here</Link>
+                <Link to={"market"}>Go to the next page here</Link>
                 <img src={logo} className="HomePage-logo" alt="logo" />
                 <a
                     className="HomePage-link"

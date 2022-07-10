@@ -26,5 +26,5 @@ The folder structure here is vital as the CI pipeline builds the project expecti
 
 ## Setup
 Some notes for setup after cloning:
-1. Need to create a new virtual python environment in the project web directory and install django, python-decouple using pip (pip install [package]).
+1. Need to create a new virtual python environment in the project web directory and install python packages using pip (pip install -r requirements.txt).
 2. Need to install npm packages in the frontend directory (npm install).

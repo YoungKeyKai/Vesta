@@ -14,8 +14,22 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
+from vesta import views
+
+router = routers.DefaultRouter()
+router.register(r'useruploads', views.UserUploadView, 'userupload')
+router.register(r'usersettings', views.UserSettingsView, 'usersettings')
+router.register(r'userpreferences', views.UserPreferencesView, 'userpreferences')
+router.register(r'listingproperties', views.ListingPropertyView, 'listingproperty')
+router.register(r'listinglistings', views.ListingListingView, 'listinglisting')
+router.register(r'listinginterests', views.ListingInterestView, 'listinginterest')
+router.register(r'listingflaggedlistings', views.ListingFlaggedListingView, 'listingflaggedlisting')
+router.register(r'messagingblocks', views.MessagingBlocksView, 'messagingblocks')
+router.register(r'messagingchats', views.MessagingChatView, 'messagingchat')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include(router.urls)),
 ]

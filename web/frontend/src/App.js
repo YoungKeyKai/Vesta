@@ -3,33 +3,29 @@ import {
     Route,
     BrowserRouter as Router
 } from "react-router-dom";
+import { Box } from "@mui/material";
 
+import urls from './Components/constants';
 import Market from './Components/market';
-import Home from './Components/home';
+import Homepage from './Components/homepage';
+import LoginPage from "./Components/loginPage";
+import TopBar from "./Components/topBar";
 
 function App() {
     return (
-        <div
+        <Box
             className="BackgroundContainer"
-            style={{
-                textAlign: "center",
-                backgroundColor: "#E1E7FF",
-                minHeight: "100vh",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "calc(10px + 2vmin)",
-                color: "black",
-            }}
+            sx={{ backgroundColor: "#E1E7FF", minHeight: '100vh', minWidth: '100vw' }}
         >
+            <TopBar />
             <Router>
                 <Routes>
-                    <Route exact path="/" element={<Home />} />
-                    <Route path="/market" element={<Market />} />
+                    <Route path={urls.homepage} element={<Homepage />} />
+                    <Route path={urls.market} element={<Market />} />
+                    <Route path={urls.loginPage} element={<LoginPage />} />
                 </Routes>
             </Router>
-        </div>
+        </Box>
     );
 }
 

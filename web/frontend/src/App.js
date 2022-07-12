@@ -10,7 +10,7 @@ import Home from './Components/home';
 function App() {
     return (
         <div
-            className="HomePage"
+            className="BackgroundContainer"
             style={{
                 textAlign: "center",
                 backgroundColor: "#E1E7FF",

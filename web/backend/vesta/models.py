@@ -141,12 +141,13 @@ class UserSettings(models.Model):
 
 class UserPreferences(models.Model):
     owner = models.ForeignKey(AuthUser, on_delete=models.CASCADE, null=False)
-    pricerange = IntegerRangeField()
-    timerange = DateRangeField()
+    pricerange = IntegerRangeField(blank=True)
+    timerange = DateRangeField(blank=True)
     location = ArrayField(
-        models.CharField(max_length=64)
+        models.CharField(max_length=64),
+        blank=True
     )
-    rating = models.DecimalField
+    rating = models.DecimalField(blank=True)
 
     class Meta:
         db_table = 'preferences'
@@ -163,14 +164,15 @@ class ListingProperty(models.Model):
 class ListingListing(models.Model):
     owner = models.ForeignKey(AuthUser, on_delete=models.CASCADE, null=False)
     propertyID = models.ForeignKey(ListingProperty, on_delete=models.CASCADE, null=False)
-    unit = models.CharField(max_length=16)
-    duration = DateRangeField()
-    rate = IntegerRangeField()
+    unit = models.CharField(max_length=16, blank=True)
+    duration = DateRangeField(blank=True)
+    rate = IntegerRangeField(blank=True)
     utilities = ArrayField(
-        models.CharField(max_length=32)
+        models.CharField(max_length=32),
+        blank=True
     )
-    floorplan = models.ForeignKey(UserUpload, related_name='floorplan_fk', on_delete=models.SET_NULL, null=True)
-    proof = models.ForeignKey(UserUpload, related_name='proof_fk', on_delete=models.SET_NULL, null=True)
+    floorplan = models.ForeignKey(UserUpload, related_name='floorplan_fk', on_delete=models.SET_NULL, null=True, blank=True)
+    proof = models.ForeignKey(UserUpload, related_name='proof_fk', on_delete=models.SET_NULL, null=True, blank=True)
     
     #Enum Class
     class ListingStatus(models.TextChoices):

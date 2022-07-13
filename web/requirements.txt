@@ -17,7 +17,7 @@ Pillow==8.3.2
 pipenv==2022.6.7
 platformdirs==2.5.2
 protobuf==4.21.2
-psycopg2-binary==2.9.3
+psycopg2==2.9.3
 pycparser==2.21
 pyparsing==2.4.7
 python-dateutil==2.8.2

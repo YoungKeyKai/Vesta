@@ -147,7 +147,7 @@ class UserPreferences(models.Model):
         models.CharField(max_length=64),
         blank=True
     )
-    rating = models.DecimalField(blank=True)
+    rating = models.DecimalField(decimal_places=2, max_digits=2, null=True, blank=True)
 
     class Meta:
         db_table = 'preferences'

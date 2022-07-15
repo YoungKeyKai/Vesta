@@ -11,22 +11,22 @@ import Homepage from './Components/homepage';
 import LoginPage from "./Components/loginPage";
 import TopBar from "./Components/topBar";
 
-function App() {
+export default function App() {
     return (
-        <Box
-            className="BackgroundContainer"
-            sx={{ backgroundColor: "#E1E7FF", minHeight: '100vh', minWidth: '100vw' }}
-        >
-            <TopBar />
-            <Router>
-                <Routes>
-                    <Route path={urls.homepage} element={<Homepage />} />
-                    <Route path={urls.market} element={<Market />} />
-                    <Route path={urls.loginPage} element={<LoginPage />} />
-                </Routes>
-            </Router>
-        </Box>
+        <Router>
+            <Box
+                className="BackgroundContainer"
+                sx={{ backgroundColor: "#E1E7FF", height: '100vh', width: '100vw' }}
+            >
+                <TopBar sx={{ width: '100vw', height: '10vh' }} />
+                <Box sx={{ width: 1, height: 0.9 }}>
+                    <Routes>
+                        <Route path={urls.homepage} element={<Homepage />} />
+                        <Route path={urls.market} element={<Market />} />
+                        <Route path={urls.loginPage} element={<LoginPage />} />
+                    </Routes>
+                </Box>
+            </Box>
+        </Router>
     );
 }
-
-export default App;

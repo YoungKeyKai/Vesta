@@ -1,17 +1,23 @@
 import PropTypes from 'prop-types';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
+import { AppBar, Toolbar, IconButton, Typography, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 import SearchBox from './searchBox';
 
+function ProfileButton() {
+    return (
+        <IconButton>
+            <AccountCircleIcon sx={{ fill: 'white' }} />
+        </IconButton>
+    );
+}
+
 export default function TopBar(props) {
-    const {height, width} = props.sx;
+    const { height, width } = props.sx;
 
     return (
-        <AppBar position="static" sx={{height, width}}>
+        <AppBar position="static" sx={{ height, width }}>
             <Toolbar sx={{ height, bgcolor: '#283860' }}>
                 <IconButton
                     size="large"
@@ -31,6 +37,8 @@ export default function TopBar(props) {
                     Vesta
                 </Typography>
                 <SearchBox />
+                <Box sx={{flexGrow: 1}} />
+                <ProfileButton />
             </Toolbar>
         </AppBar>
     );

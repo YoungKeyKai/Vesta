@@ -1,6 +1,6 @@
 import { Typography, Box } from '@mui/material';
 
-import urls from './constants';
+import { pages } from './constants';
 import LinkButton from './linkButton';
 
 export default function Homepage() {
@@ -35,7 +35,7 @@ export default function Homepage() {
                 }}
             >
                 <LinkButton
-                    to={urls.market}
+                    to={pages.market.url}
                     sx={{
                         backgroundColor: "#84CEEB",
                         ...linkButtonSize,
@@ -44,7 +44,7 @@ export default function Homepage() {
                     Find Listings
                 </LinkButton>
                 <LinkButton
-                    to={urls.loginPage}
+                    to={pages.loginPage.url}
                     sx={{
                         backgroundColor: "#5AB9EA",
                         ...linkButtonSize,
@@ -53,7 +53,7 @@ export default function Homepage() {
                     Create Listings
                 </LinkButton>
                 <LinkButton
-                    to={urls.loginPage}
+                    to={pages.loginPage.url}
                     sx={{
                         backgroundColor: "#8860D0",
                         ...linkButtonSize,

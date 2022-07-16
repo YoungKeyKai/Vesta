@@ -1,7 +1,14 @@
-const urls = {
-    homepage: "/",
-    market: "/market",
-    loginPage: "/login",
+export const pages = {
+    homepage: {
+        url: '/',
+        name: 'Home'
+    },
+    market: {
+        url: '/market',
+        name: 'Marketplace'
+    },
+    loginPage: {
+        url: '/login',
+        name: 'Login'
+    },
 };
-
-export default urls;

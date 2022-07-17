@@ -2,7 +2,9 @@ import PropTypes from 'prop-types'
 import { Button } from '@mui/material';
 import { Link } from "react-router-dom";
 
-export default function LinkButton({children, ...otherProps}) {
+export default function LinkButton(props) {
+    const {children, ...otherProps} = props
+
     return (
         <Button component={Link} {...otherProps} >
             {children}

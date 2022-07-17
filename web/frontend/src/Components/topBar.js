@@ -1,9 +1,12 @@
+import { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { AppBar, Toolbar, IconButton, Typography, Box } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Typography, Box, Popper, ClickAwayListener, MenuList } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 import SearchBox from './searchBox';
+import LinkMenuItem from './linkMenuItem';
+import { pages } from './constants';
 
 function ProfileButton() {
     return (
@@ -15,19 +18,55 @@ function ProfileButton() {
 
 export default function TopBar(props) {
     const { height, width } = props.sx;
+    const menuAnchor = useRef(null)
+
+    const [isPageListMenuOpen, setIsPageListMenuOpen] = useState(false);
+    const togglePageListMenu = () => {
+        setIsPageListMenuOpen(!isPageListMenuOpen);
+    }
+    const PageListButton = () => (
+        <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            sx={{ mr: 2 }}
+            onClick={togglePageListMenu}
+        >
+            <MenuIcon />
+        </IconButton>
+    );
+    const PageListMenu = () => (
+        <Popper
+            open={isPageListMenuOpen}
+            anchorEl={menuAnchor.current}
+            placement='bottom-start'
+            disablePortal
+        >
+            <ClickAwayListener onClickAway={togglePageListMenu}>
+                <MenuList
+                    autoFocusItem={isPageListMenuOpen}
+                    sx={{ backgroundColor: 'white' }}
+                >
+                    {Object.keys(pages).map(page =>
+                        <LinkMenuItem
+                            key={page}
+                            to={pages[page].url}
+                            onClick={togglePageListMenu}
+                            sx={{ color: 'black' }}
+                        >
+                            {pages[page].name}
+                        </LinkMenuItem>
+                    )}
+                </MenuList>
+            </ClickAwayListener>
+        </Popper>
+    );
 
     return (
-        <AppBar position="static" sx={{ height, width }}>
+        <AppBar position="static" ref={menuAnchor} sx={{ height, width }}>
             <Toolbar sx={{ height, bgcolor: '#283860' }}>
-                <IconButton
-                    size="large"
-                    edge="start"
-                    color="inherit"
-                    aria-label="open drawer"
-                    sx={{ mr: 2 }}
-                >
-                    <MenuIcon />
-                </IconButton>
+                <PageListButton />
+                <PageListMenu />
                 <Typography
                     variant="h6"
                     noWrap

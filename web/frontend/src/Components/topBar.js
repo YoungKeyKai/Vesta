@@ -37,7 +37,7 @@ export default function TopBar(props) {
                     Vesta
                 </Typography>
                 <SearchBox />
-                <Box sx={{flexGrow: 1}} />
+                <Box sx={{ flexGrow: 1 }} />
                 <ProfileButton />
             </Toolbar>
         </AppBar>

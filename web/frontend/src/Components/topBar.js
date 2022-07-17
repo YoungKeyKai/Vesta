@@ -6,15 +6,8 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 import SearchBox from './searchBox';
 import LinkMenuItem from './linkMenuItem';
+import LinkIconButton from './linkIconButton';
 import { pages } from './constants';
-
-function ProfileButton() {
-    return (
-        <IconButton>
-            <AccountCircleIcon sx={{ fill: 'white' }} />
-        </IconButton>
-    );
-}
 
 export default function TopBar(props) {
     const { height, width } = props.sx;
@@ -60,6 +53,12 @@ export default function TopBar(props) {
                 </MenuList>
             </ClickAwayListener>
         </Popper>
+    );
+
+    const ProfileButton = () => (
+        <LinkIconButton to={pages.loginPage.url}>
+            <AccountCircleIcon sx={{ fill: 'white' }} />
+        </LinkIconButton>
     );
 
     return (

@@ -62,13 +62,32 @@ export default function Market() {
                 </div>
                 <div className='market-listings'>
                     {listings.map( (listing, index) => {
+                        console.log(listing);
                         const property = properties.get(listing.propertyID);
                         const duration = JSON.parse(listing.duration);
+                        const rate = JSON.parse(listing.rate);
                         return (
                         <Card className='market-listing-card' key={index} sx={{backgroundColor: "#84CEEB"}}>
                             <CardContent>
-                                <div>{property ? property.name : 'Name'}</div>
-                                <div>{duration.lower} - {duration.upper}</div>
+                                <div className='market-listing-card-body'>
+                                    <div className='market-listing-card-left'>
+                                        <div>{property ? property.name : 'Loading...'}</div>
+                                        <div>{property ? property.address : 'Loading...'}</div>
+                                        <div>{property ? `${property.city}, ${property.country}` : 'Loading...'}</div>
+                                        <div>{duration.lower} - {duration.upper}</div>
+                                    </div>
+                                    <div className='market-listing-card-right'>
+                                        <div>$ {`${rate.lower} - ${rate.upper}`}</div>
+                                        <div className='listing-utilities'>
+                                            {listing.utilities.map( util => (
+                                                <div>{util}</div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                    <div className='market-listing-card-image'>
+                                        Image
+                                    </div>
+                                </div>
                             </CardContent>
                         </Card>
                         )

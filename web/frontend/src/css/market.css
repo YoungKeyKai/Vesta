@@ -1,0 +1,13 @@
+.Market {
+    padding: 0rem 1rem;
+}
+
+.market-listings {
+    width: 90rem;
+    display: inline-block;
+}
+
+.market-listing-card {
+    margin: 1rem;
+    width: 50rem;
+}

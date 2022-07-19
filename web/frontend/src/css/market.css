@@ -4,10 +4,12 @@
 
 .market-listings {
     width: 90rem;
-    display: inline-block;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
 }
 
 .market-listing-card {
     margin: 1rem;
-    width: 50rem;
+    width: calc(50% - 2rem);
 }

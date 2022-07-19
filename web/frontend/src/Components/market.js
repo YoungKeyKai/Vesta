@@ -56,22 +56,24 @@ export default function Market() {
     return (
         <div className='Market'>
             <h1>Market</h1>
-            <div className='market-listings'>
+            <div>
                 <div className='market-results-info'>
                     Showing 1-6 of {listings.length} Results
                 </div>
-                {listings.map( (listing, index) => {
-                    const property = properties.get(listing.propertyID);
-                    const duration = JSON.parse(listing.duration);
-                    return (
-                    <Card className='market-listing-card' key={index}>
-                        <CardContent>
-                            <div>{property ? property.name : 'Name'}</div>
-                            <div>{duration.lower} - {duration.upper}</div>
-                        </CardContent>
-                    </Card>
-                    )
-                })}
+                <div className='market-listings'>
+                    {listings.map( (listing, index) => {
+                        const property = properties.get(listing.propertyID);
+                        const duration = JSON.parse(listing.duration);
+                        return (
+                        <Card className='market-listing-card' key={index} sx={{backgroundColor: "#84CEEB"}}>
+                            <CardContent>
+                                <div>{property ? property.name : 'Name'}</div>
+                                <div>{duration.lower} - {duration.upper}</div>
+                            </CardContent>
+                        </Card>
+                        )
+                    })}
+                </div>
             </div>
             <Pagination count={10} color="secondary"/>
         </div>

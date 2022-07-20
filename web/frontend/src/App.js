@@ -12,15 +12,18 @@ import LoginPage from "./Components/loginPage";
 import TopBar from "./Components/topBar";
 import ListingsPage from './Components/listingsPage';
 
+import "@fontsource/josefin-sans";
+import './css/app.css';
+
 export default function App() {
     return (
         <Router>
             <Box
                 className="BackgroundContainer"
-                sx={{ backgroundColor: "#E1E7FF", height: '100vh', width: '100vw' }}
+                sx={{ backgroundColor: "#E1E7FF", height: '100vh' }}
             >
                 <TopBar sx={{ width: '100vw', height: '10vh' }} />
-                <Box sx={{ width: 1, height: 0.9 }}>
+                <Box>
                     <Routes>
                         <Route path={pages.homepage.url} element={<Homepage />} />
                         <Route path={pages.market.url} element={<Market />} />

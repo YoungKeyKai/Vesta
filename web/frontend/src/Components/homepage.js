@@ -1,6 +1,6 @@
 import { Typography, Box } from '@mui/material';
 
-import { pages } from './constants';
+import { pages } from '../constants';
 import LinkButton from './linkButton';
 
 export default function Homepage() {

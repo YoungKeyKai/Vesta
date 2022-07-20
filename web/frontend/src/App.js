@@ -4,15 +4,15 @@ import {
     BrowserRouter as Router
 } from "react-router-dom";
 import { Box } from "@mui/material";
+import "@fontsource/josefin-sans";
 
-import { pages } from './Components/constants';
+import { pages } from './constants';
 import Market from './Components/market';
 import Homepage from './Components/homepage';
 import LoginPage from "./Components/loginPage";
 import TopBar from "./Components/topBar";
 import ListingsPage from './Components/listingsPage';
 
-import "@fontsource/josefin-sans";
 import './css/app.css';
 
 export default function App() {

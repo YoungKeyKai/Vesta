@@ -5,7 +5,7 @@ import CardContent from '@mui/material/CardContent'
 import Pagination from '@mui/material/Pagination';
 
 import '../css/market.css'
-import { colors } from './constants'
+import { colors } from '../constants'
 import sampleImg from '../media/fergushousesample.jpg';
 
 export default function Market() {

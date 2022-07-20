@@ -1,4 +1,4 @@
-import './listingsPage.css';
+import '../css/listingsPage.css';
 
 export default function ListingsPage() {
     const TEMP_APIKEY = 'AIzaSyClRBH_pT4waqp3BxnTtJw_7z-6clxz_HU';

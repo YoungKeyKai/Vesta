@@ -7,7 +7,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SearchBox from './searchBox';
 import LinkMenuItem from './linkMenuItem';
 import LinkIconButton from './linkIconButton';
-import { pages } from './constants';
+import { pages } from '../constants';
 
 export default function TopBar(props) {
     const { height, width } = props.sx;

@@ -21,10 +21,6 @@ export default function Market() {
 
     // useEffect Hook on Page Load
     useEffect(() => {
-        // Fetch Listings
-        getListings();
-    }, []);
-
     const getListings = () => {
         axios.get('/api/listinglistings')
             .then((res) => {
@@ -38,6 +34,10 @@ export default function Market() {
                 console.log(err);
             })
     }
+
+        // Fetch Listings
+        getListings();
+    }, []);
 
     const getProperties = (listings) => {
         // Store a Set of Properties to fetch to avoid repeating API Calls
@@ -108,7 +108,7 @@ export default function Market() {
                                             </div>
                                         </div>
                                         <div className='market-listing-card-image'>
-                                            <img src={sampleImg} width="100%" />
+                                        <img src={sampleImg} width="100%" alt="Property Thumbnail" />
                                         </div>
                                     </div>
                                 </CardContent>

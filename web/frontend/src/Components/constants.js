@@ -7,6 +7,10 @@ export const pages = {
         url: '/market',
         name: 'Marketplace'
     },
+    listings: {
+        url: '/market/listing',
+        name: 'Listing'
+    },
     loginPage: {
         url: '/login',
         name: 'Login'

@@ -3,7 +3,7 @@
 }
 
 .market-listings {
-    width: 90rem;
+    width: 110rem;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-evenly;
@@ -24,6 +24,10 @@
 }
 .market-listing-card-image {
     flex: 3;
-    background-color: bisque;
     text-align: center;
+}
+
+.pagination-wrapper {
+    justify-content: center;
+    display: flex;
 }

@@ -11,7 +11,8 @@ import Homepage from './Components/homepage';
 import LoginPage from "./Components/loginPage";
 import TopBar from "./Components/topBar";
 
-import './css/app.css'
+import "@fontsource/josefin-sans";
+import './css/app.css';
 
 export default function App() {
     return (

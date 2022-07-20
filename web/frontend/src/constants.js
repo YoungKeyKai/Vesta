@@ -1,11 +1,13 @@
 export const pages = {
     homepage: {
+        display: true,
         url: '/',
         name: 'Home'
     },
     market: {
+        display: true,
         url: '/market',
-        name: 'Marketplace'
+        name: 'Market'
     },
     listings: {
         url: '/market/listing',

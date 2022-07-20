@@ -10,6 +10,7 @@ import Market from './Components/market';
 import Homepage from './Components/homepage';
 import LoginPage from "./Components/loginPage";
 import TopBar from "./Components/topBar";
+import ListingsPage from './Components/listingsPage';
 
 export default function App() {
     return (
@@ -24,6 +25,7 @@ export default function App() {
                         <Route path={pages.homepage.url} element={<Homepage />} />
                         <Route path={pages.market.url} element={<Market />} />
                         <Route path={pages.loginPage.url} element={<LoginPage />} />
+                        <Route path={pages.listings.url} element={<ListingsPage />} />
                     </Routes>
                 </Box>
             </Box>

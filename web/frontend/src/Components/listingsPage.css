@@ -1,22 +1,20 @@
-.ListingsPageWrapper {
+.ListingsPage {
     display: flex;
     column-count: 2;
     height: 100%;
 }
 
-.ListingsPageLeftWrapper {
-    height: 100%;
+.LeftColumn {
     width: 100%;
     background-color: aqua;
 }
 
-.ListingsPageRightWrapper {
-    height: 100%;
+.RightColumn {
     width: 100%;
     background-color: gray;
 }
 
-.ListingsPage-GoogleMapsEmbed {
+.GoogleMapsEmbed {
     height: 50%;
     width: 100%;
 }

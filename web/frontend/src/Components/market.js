@@ -5,7 +5,7 @@ import CardContent from '@mui/material/CardContent'
 import Pagination from '@mui/material/Pagination';
 
 import '../css/market.css'
-import {colors} from './constants'
+import { colors } from './constants'
 import sampleImg from '../media/fergushousesample.jpg';
 
 export default function Market() {
@@ -21,19 +21,19 @@ export default function Market() {
 
     // useEffect Hook on Page Load
     useEffect(() => {
-    const getListings = () => {
-        axios.get('/api/listinglistings')
-            .then((res) => {
-                setListings(res.data);
-                setPage(res.data.slice(0, 6));
-                //Get corresponding properties
-                getProperties(res.data);
-            })
-            .catch((err) => {
-                //Replace with formal error handling
-                console.log(err);
-            })
-    }
+        const getListings = () => {
+            axios.get('/api/listinglistings')
+                .then((res) => {
+                    setListings(res.data);
+                    setPage(res.data.slice(0, 6));
+                    //Get corresponding properties
+                    getProperties(res.data);
+                })
+                .catch((err) => {
+                    //Replace with formal error handling
+                    console.log(err);
+                })
+        }
 
         // Fetch Listings
         getListings();
@@ -75,10 +75,10 @@ export default function Market() {
             <h1>Market</h1>
             <div>
                 <div className='market-results-info'>
-                    Showing {6 * (pageNum - 1) + 1 }-{6 * (pageNum - 1) + 6} of {listings.length} Results
+                    Showing {6 * (pageNum - 1) + 1}-{6 * (pageNum - 1) + 6} of {listings.length} Results
                 </div>
                 <div className='market-listings'>
-                    {page.map( (listing, index) => {
+                    {page.map((listing, index) => {
                         const property = properties.get(listing.propertyID);
                         const duration = JSON.parse(listing.duration);
                         const rate = JSON.parse(listing.rate);
@@ -88,7 +88,7 @@ export default function Market() {
                             bgcolor = colors[0];
                         } else if (index > 3) {
                             bgcolor = colors[2];
-                        } 
+                        }
                         return (
                             <Card className='market-listing-card' key={index} sx={{ backgroundColor: bgcolor }}>
                                 <CardContent>
@@ -102,7 +102,7 @@ export default function Market() {
                                         <div className='market-listing-card-right'>
                                             <div>$ {`${rate.lower} - ${rate.upper}`}</div>
                                             <div className='listing-utilities'>
-                                                {listing.utilities.map( util => (
+                                                {listing.utilities.map(util => (
                                                     <div>{util}</div>
                                                 ))}
                                             </div>
@@ -118,12 +118,13 @@ export default function Market() {
                 </div>
             </div>
             <div className="pagination-wrapper">
-                <Pagination 
-                    count={Math.ceil(listings.length / 6)} 
+                <Pagination
+                    count={Math.ceil(listings.length / 6)}
                     page={pageNum}
-                    onChange={handlePageUpdate} 
-                    color="secondary" 
-                    shape="rounded"/>
+                    onChange={handlePageUpdate}
+                    color="secondary"
+                    shape="rounded"
+                />
             </div>
         </div>
     );

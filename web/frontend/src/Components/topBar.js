@@ -41,6 +41,7 @@ export default function TopBar(props) {
                     sx={{ backgroundColor: 'white' }}
                 >
                     {Object.keys(pages).map(page =>
+                        pages[page].display &&
                         <LinkMenuItem
                             key={page}
                             to={pages[page].url}

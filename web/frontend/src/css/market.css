@@ -13,6 +13,9 @@
     margin: 1rem;
     width: calc(50% - 2rem);
 }
+.market-listing-card:hover {
+    cursor: pointer;
+}
 .market-listing-card-body {
     display: flex;
 }
@@ -25,6 +28,7 @@
 .market-listing-card-image {
     flex: 3;
     text-align: center;
+    box-shadow: 2px black;
 }
 
 .pagination-wrapper {

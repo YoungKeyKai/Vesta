@@ -1,20 +1,24 @@
 .ListingsPage {
     display: flex;
+    flex-grow: 1;
     column-count: 2;
-    height: 100%;
+    padding: 0rem 1rem;
 }
 
 .LeftColumn {
     width: 100%;
-    background-color: aqua;
 }
 
 .RightColumn {
     width: 100%;
-    background-color: gray;
 }
 
-.GoogleMapsEmbed {
+.map-wrapper {
     height: 50%;
+    width: 100%;
+}
+
+.google-maps-embed {
+    height: 100%;
     width: 100%;
 }

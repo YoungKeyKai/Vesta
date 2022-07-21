@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent'
-import Pagination from '@mui/material/Pagination';
+import { Card, Tooltip, CardContent, Pagination } from '@mui/material';
+import { Wifi, ElectricBolt, Kitchen, LocalLaundryService, LocalDining } from '@mui/icons-material';
 
 import '../css/market.css'
 import { colors } from '../constants'
@@ -18,6 +18,9 @@ export default function Market() {
     const [pageNum, setPageNum] = useState(1);
     // Current Page of Listings
     const [page, setPage] = useState([]);
+
+    // History
+    const navigate = useNavigate();
 
     // useEffect Hook on Page Load
     useEffect(() => {
@@ -70,53 +73,146 @@ export default function Market() {
         }
     }
 
+    const routeChange = (id) => {
+        navigate(`/market/listing?id=${id}`);
+    }
+
+    const convertDate = (date) => {
+        const dateObj = new Date(date);
+        return `${dateObj.toLocaleString(
+            'en-US', { month: 'short' }
+        )} ${dateObj.getFullYear()}`;
+    }
+
+    const renderUtilties = (utilities) => {
+        let set = new Set();
+        let elements = [];
+        for (const util of utilities) {
+            set.add(util);
+        }
+        // Render out special icons first then render the rest
+        if (set.has('Wifi')) {
+            elements.push(
+                <Tooltip title="Wifi">
+                    <Wifi sx={{ color: '#283860' }} />
+                </Tooltip>
+            );
+            set.delete('Wifi');
+        }
+        if (set.has('Electricity')) {
+            elements.push(
+                <Tooltip title="Hydro">
+                    <ElectricBolt sx={{ color: '#283860' }} />
+                </Tooltip>
+            );
+            set.delete('Electricity');
+        }
+        if (set.has('Kitchen')) {
+            elements.push(
+                <Tooltip title="Kitchen">
+                    <Kitchen sx={{ color: '#283860' }} />
+                </Tooltip>
+            );
+            set.delete('Kitchen');
+        }
+        if (set.has('Laundry')) {
+            elements.push(
+                <Tooltip title="Laundry">
+                    <LocalLaundryService sx={{ color: '#283860' }} />
+                </Tooltip>
+            );
+            set.delete('Laundry');
+        }
+        if (set.has('Food')) {
+            elements.push(
+                <Tooltip title="Local Dining">
+                    <LocalDining sx={{ color: '#283860' }} />
+                </Tooltip>
+            );
+            set.delete('Food');
+        }
+
+        let extras = ``;
+        if (set.size) {
+            let delim = '+ ';
+            for (const elem of set) {
+                extras = `${extras}${delim}${elem}`;
+                delim = ', ';
+            }
+        }
+        return (
+            <div className='listing-utilities'>
+                <div>
+                    {elements}
+                </div>
+                <div>{extras}</div>
+            </div>
+        );
+    }
+
+    const renderTiles = () => page.map(
+        (listing, index) => {
+            const property = properties.get(listing.propertyID);
+            const duration = JSON.parse(listing.duration);
+            const rate = JSON.parse(listing.rate);
+
+            // Card Background Color
+            let bgcolor = colors[1];
+            if (index < 2) {
+                bgcolor = colors[0];
+            } else if (index > 3) {
+                bgcolor = colors[2];
+            }
+
+            return (
+                <Card
+                    className='market-listing-card'
+                    onClick={() => { routeChange(listing.id) }}
+                    key={index}
+                    sx={{ backgroundColor: bgcolor }}>
+                    <CardContent>
+                        <div className='market-listing-card-body'>
+                            <div className='market-listing-card-left'>
+                                <h4>{property ? property.name : 'Loading...'}</h4>
+                                <div>{property ? property.address : 'Loading...'}</div>
+                                <div>{property ? `${property.city}, ${property.country}` : 'Loading...'}</div>
+                                <div>{convertDate(duration.lower)} - {convertDate(duration.upper)}</div>
+                            </div>
+                            <div className='market-listing-card-right'>
+                                <h4> </h4>
+                                <div>Asking for: $ {`${rate.lower} - ${rate.upper}`}</div>
+                                {renderUtilties(listing.utilities)}
+                            </div>
+                            <div className='market-listing-card-image'>
+                                <img
+                                    className="property-thumbnail"
+                                    src={sampleImg}
+                                    alt="Property Thumbnail"
+                                />
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            )
+        }
+    )
+
     return (
         <div className='Market'>
             <h1>Market</h1>
-            <div>
-                <div className='market-results-info'>
-                    Showing {6 * (pageNum - 1) + 1}-{6 * (pageNum - 1) + 6} of {listings.length} Results
+            {page.length ? (
+                <div>
+                    <div className='market-results-info'>
+                        Showing {6 * (pageNum - 1) + 1}-{6 * (pageNum - 1) + 6} of {listings.length} Results
+                    </div>
+                    <div className='market-listings'>
+                        {renderTiles()}
+                    </div>
                 </div>
-                <div className='market-listings'>
-                    {page.map((listing, index) => {
-                        const property = properties.get(listing.propertyID);
-                        const duration = JSON.parse(listing.duration);
-                        const rate = JSON.parse(listing.rate);
-                        // Card Background Color
-                        let bgcolor = colors[1];
-                        if (index < 2) {
-                            bgcolor = colors[0];
-                        } else if (index > 3) {
-                            bgcolor = colors[2];
-                        }
-                        return (
-                            <Card className='market-listing-card' key={index} sx={{ backgroundColor: bgcolor }}>
-                                <CardContent>
-                                    <div className='market-listing-card-body'>
-                                        <div className='market-listing-card-left'>
-                                            <div>{property ? property.name : 'Loading...'}</div>
-                                            <div>{property ? property.address : 'Loading...'}</div>
-                                            <div>{property ? `${property.city}, ${property.country}` : 'Loading...'}</div>
-                                            <div>{duration.lower} - {duration.upper}</div>
-                                        </div>
-                                        <div className='market-listing-card-right'>
-                                            <div>$ {`${rate.lower} - ${rate.upper}`}</div>
-                                            <div className='listing-utilities'>
-                                                {listing.utilities.map(util => (
-                                                    <div>{util}</div>
-                                                ))}
-                                            </div>
-                                        </div>
-                                        <div className='market-listing-card-image'>
-                                        <img src={sampleImg} width="100%" alt="Property Thumbnail" />
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        )
-                    })}
-                </div>
-            </div>
+            ) : (
+                <div>No Results Found</div>
+            )}
+
             <div className="pagination-wrapper">
                 <Pagination
                     count={Math.ceil(listings.length / 6)}

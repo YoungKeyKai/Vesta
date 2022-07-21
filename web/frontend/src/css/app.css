@@ -1,10 +1,13 @@
-.BackgroundContainer {
-    background-color: #E1E7FF;
+.app-container {
     height: 100vh;
 }
 
-.PageContainer {
-    height: 90%;
+.page-panel {
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 0;
+    min-height: 90%;
+    background-color: #E1E7FF;
 }
 
 body {

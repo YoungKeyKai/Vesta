@@ -18,7 +18,6 @@ export default function Homepage() {
                 alignItems: 'center',
                 justifyContent: 'space-evenly',
                 width: 1,
-                height: 1,
             }}
         >
             <Typography sx={{color: '#8860D0', fontSize: 96}}>

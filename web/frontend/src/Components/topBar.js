@@ -63,7 +63,7 @@ export default function TopBar(props) {
     );
 
     return (
-        <AppBar position="static" ref={menuAnchor} sx={{ height, width }}>
+        <AppBar position="static" ref={menuAnchor} sx={{ height, width: '100%' }}>
             <Toolbar sx={{ height, bgcolor: '#283860' }}>
                 <PageListButton />
                 <PageListMenu />

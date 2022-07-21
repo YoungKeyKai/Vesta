@@ -17,9 +17,9 @@ import './css/app.css';
 export default function App() {
     return (
         <Router>
-            <div className="BackgroundContainer">
-                <TopBar className="Topbar" sx={{ width: '100vw', height: '10vh' }} />
-                <div className="PageContainer">
+            <div className="app-container">
+                <TopBar sx={{ width: '100vw', height: '10vh' }} />
+                <div className="page-panel">
                     <Routes>
                         <Route path={pages.homepage.url} element={<Homepage />} />
                         <Route path={pages.market.url} element={<Market />} />

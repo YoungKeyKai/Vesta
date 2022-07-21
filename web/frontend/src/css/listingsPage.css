@@ -13,11 +13,6 @@
     padding: 0rem 1rem;
 }
 
-.map-wrapper {
-    flex: 1;
-}
-
 .google-maps-embed {
-    height: 100%;
-    width: 100%;
+    flex: 1;
 }

@@ -43,18 +43,16 @@ export default function ListingsPage() {
             {
                 listing && property && googleMapsAddr ?
                     <Grid className='listings-page-grid' container>
-                        <Grid item className='property-info' xs={propertyGridSize}  flexDirection="column">
+                        <Grid item className='property-info' xs={propertyGridSize} flexDirection="column">
                             <div className='address-price'>
                                 <h1>{property.name} {listing.unit}</h1>
                             </div>
-                            <div className="map-wrapper">
-                                <iframe
-                                    title='GoogleMapsEmbed'
-                                    className='google-maps-embed'
-                                    referrerPolicy="no-referrer-when-downgrade"
-                                    src={`https://www.google.com/maps/embed/v1/place?key=${googleMapsAPIKey}&q=${googleMapsAddr}`}
-                                />
-                            </div>
+                            <iframe
+                                title='GoogleMapsEmbed'
+                                className='google-maps-embed'
+                                referrerPolicy="no-referrer-when-downgrade"
+                                src={`https://www.google.com/maps/embed/v1/place?key=${googleMapsAPIKey}&q=${googleMapsAddr}`}
+                            />
                         </Grid>
                         <Grid item className='utilities-summary' xs={maxXS - propertyGridSize}>
                         </Grid>

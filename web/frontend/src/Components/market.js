@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Card, Tooltip, CardContent, Pagination } from '@mui/material';
-import { Wifi, ElectricBolt, Kitchen, LocalLaundryService, LocalDining } from '@mui/icons-material';
+import { Card, CardContent, Pagination } from '@mui/material';
 
 import '../css/market.css'
+import UtiltiesList from './UtiltiesList';
 import { colors, terms } from '../constants'
 import sampleImg from '../media/fergushousesample.jpg';
 
@@ -84,72 +84,6 @@ export default function Market() {
         )} ${dateObj.getFullYear()}`;
     }
 
-    const renderUtilties = (utilities) => {
-        let set = new Set();
-        let elements = [];
-        for (const util of utilities) {
-            set.add(util);
-        }
-        // Render out special icons first then render the rest
-        if (set.has('Wifi')) {
-            elements.push(
-                <Tooltip title="Wifi">
-                    <Wifi sx={{ color: '#283860' }} />
-                </Tooltip>
-            );
-            set.delete('Wifi');
-        }
-        if (set.has('Electricity')) {
-            elements.push(
-                <Tooltip title="Hydro">
-                    <ElectricBolt sx={{ color: '#283860' }} />
-                </Tooltip>
-            );
-            set.delete('Electricity');
-        }
-        if (set.has('Kitchen')) {
-            elements.push(
-                <Tooltip title="Kitchen">
-                    <Kitchen sx={{ color: '#283860' }} />
-                </Tooltip>
-            );
-            set.delete('Kitchen');
-        }
-        if (set.has('Laundry')) {
-            elements.push(
-                <Tooltip title="Laundry">
-                    <LocalLaundryService sx={{ color: '#283860' }} />
-                </Tooltip>
-            );
-            set.delete('Laundry');
-        }
-        if (set.has('Food')) {
-            elements.push(
-                <Tooltip title="Local Dining">
-                    <LocalDining sx={{ color: '#283860' }} />
-                </Tooltip>
-            );
-            set.delete('Food');
-        }
-
-        let extras = ``;
-        if (set.size) {
-            let delim = '+ ';
-            for (const elem of set) {
-                extras = `${extras}${delim}${elem}`;
-                delim = ', ';
-            }
-        }
-        return (
-            <div className='listing-utilities'>
-                <div>
-                    {elements}
-                </div>
-                <div>{extras}</div>
-            </div>
-        );
-    }
-
     const renderTiles = () => page.map(
         (listing, index) => {
             const property = properties.get(listing.propertyID);
@@ -181,7 +115,7 @@ export default function Market() {
                             <div className='market-listing-card-right'>
                                 <h4> </h4>
                                 <div>Asking for: $ {`${rate.lower} - ${rate.upper}`}</div>
-                                {renderUtilties(listing.utilities)}
+                                <UtiltiesList utilities={listing.utilities} />
                             </div>
                             <div className='market-listing-card-image'>
                                 <img

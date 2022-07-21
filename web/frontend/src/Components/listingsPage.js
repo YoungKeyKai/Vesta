@@ -42,9 +42,9 @@ export default function ListingsPage() {
         <div className='listings-page'>
             {
                 listing && property && googleMapsAddr ?
-                    <Grid className='listings-page-grid' container spacing={2}>
-                        <Grid className='property-info' xs={propertyGridSize}>
-                            <div className='AddressAndPrice'>
+                    <Grid className='listings-page-grid' container>
+                        <Grid item className='property-info' xs={propertyGridSize}  flexDirection="column">
+                            <div className='address-price'>
                                 <h1>{property.name} {listing.unit}</h1>
                             </div>
                             <div className="map-wrapper">
@@ -56,11 +56,11 @@ export default function ListingsPage() {
                                 />
                             </div>
                         </Grid>
-                        <Grid className='utilities-summary' xs={maxXS - propertyGridSize}>
+                        <Grid item className='utilities-summary' xs={maxXS - propertyGridSize}>
                         </Grid>
-                        <Grid className='tags' xs={tagGridSize}>
+                        <Grid item className='tags' xs={tagGridSize}>
                         </Grid>
-                        <Grid className='user-description' xs={maxXS - tagGridSize}>
+                        <Grid item className='user-description' xs={maxXS - tagGridSize}>
                         </Grid>
                     </Grid> :
                     <CircularProgress className="loading-circle" size="5rem" />

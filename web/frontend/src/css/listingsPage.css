@@ -8,11 +8,13 @@
     margin: auto;
 }
 
+.property-info {
+    display: flex;
+    padding: 0rem 1rem;
+}
+
 .map-wrapper {
-    height: 50%;
-    width: 100%;
-    text-align: center;
-    justify-content: center;
+    flex: 1;
 }
 
 .google-maps-embed {

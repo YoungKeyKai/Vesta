@@ -3,7 +3,6 @@ import {
     Route,
     BrowserRouter as Router
 } from "react-router-dom";
-import { Box } from "@mui/material";
 
 import { pages } from './Components/constants';
 import Market from './Components/market';
@@ -17,19 +16,16 @@ import './css/app.css';
 export default function App() {
     return (
         <Router>
-            <Box
-                className="BackgroundContainer"
-                sx={{ backgroundColor: "#E1E7FF", height: '100vh' }}
-            >
+            <div className="app-container">
                 <TopBar sx={{ width: '100vw', height: '10vh' }} />
-                <Box>
+                <div className="page-panel">
                     <Routes>
                         <Route path={pages.homepage.url} element={<Homepage />} />
                         <Route path={pages.market.url} element={<Market />} />
                         <Route path={pages.loginPage.url} element={<LoginPage />} />
                     </Routes>
-                </Box>
-            </Box>
+                </div>
+            </div>
         </Router>
     );
 }

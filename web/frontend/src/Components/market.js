@@ -184,7 +184,11 @@ export default function Market() {
                                 {renderUtilties(listing.utilities)}
                             </div>
                             <div className='market-listing-card-image'>
-                                <img src={sampleImg} width="100%" alt="Property Thumbnail" />
+                                <img
+                                    className="property-thumbnail"
+                                    src={sampleImg}
+                                    alt="Property Thumbnail"
+                                />
                             </div>
                         </div>
                     </CardContent>

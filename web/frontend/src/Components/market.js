@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Card, CardContent, Pagination } from '@mui/material';
 
 import '../css/market.css'
-import UtiltiesList from './UtiltiesList';
+import UtiltiesList from './utiltiesList';
 import { colors, terms } from '../constants'
 import sampleImg from '../media/fergushousesample.jpg';
 
@@ -77,12 +77,7 @@ export default function Market() {
         navigate(`/market/listing?id=${id}`);
     }
 
-    const convertDate = (date) => {
-        const dateObj = new Date(date);
-        return `${dateObj.toLocaleString(
-            'en-US', { month: 'short' }
-        )} ${dateObj.getFullYear()}`;
-    }
+    const convertDate = (date) => new Date(date).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
 
     const renderTiles = () => page.map(
         (listing, index) => {

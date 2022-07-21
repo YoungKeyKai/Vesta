@@ -18,7 +18,11 @@
 }
 
 .address-price>h3 {
-    margin: 0.3rem;
+    margin: 0.4rem;
+}
+
+.utilities-summary, .tags, .user-description {
+    padding: 1rem;
 }
 
 .google-maps-embed {

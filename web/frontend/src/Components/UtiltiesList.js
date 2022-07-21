@@ -14,46 +14,46 @@ export default function UtiltiesList(props) {
     // Render out special icons first then render the rest
     if (set.has('Wifi')) {
         elements.push(
-            <Tooltip title="Wifi">
-                <Wifi sx={{ color: '#283860' }} />
+            <Tooltip title="Wifi" key='wifiTooltip'>
+                <Wifi sx={{ color: '#283860' }} key='wifi' />
             </Tooltip>
         );
         set.delete('Wifi');
     }
     if (set.has('Electricity')) {
         elements.push(
-            <Tooltip title="Hydro">
-                <ElectricBolt sx={{ color: '#283860' }} />
+            <Tooltip title="Hydro" key='hydroTooltip'>
+                <ElectricBolt sx={{ color: '#283860' }} key='hydro' />
             </Tooltip>
         );
         set.delete('Electricity');
     }
     if (set.has('Kitchen')) {
         elements.push(
-            <Tooltip title="Kitchen">
-                <Kitchen sx={{ color: '#283860' }} />
+            <Tooltip title="Kitchen" key='kitchenTooltip'>
+                <Kitchen sx={{ color: '#283860' }} key='kitchen' />
             </Tooltip>
         );
         set.delete('Kitchen');
     }
     if (set.has('Laundry')) {
         elements.push(
-            <Tooltip title="Laundry">
-                <LocalLaundryService sx={{ color: '#283860' }} />
+            <Tooltip title="Laundry" key='laundryTooltip'>
+                <LocalLaundryService sx={{ color: '#283860' }} key='laundry' />
             </Tooltip>
         );
         set.delete('Laundry');
     }
     if (set.has('Food')) {
         elements.push(
-            <Tooltip title="Local Dining">
-                <LocalDining sx={{ color: '#283860' }} />
+            <Tooltip title="Local Dining" key='localDiningTooltip'>
+                <LocalDining sx={{ color: '#283860' }} key='localDining' />
             </Tooltip>
         );
         set.delete('Food');
     }
 
-    let extras = ``;
+    let extras = '';
     if (set.size) {
         let delim = '+ ';
         for (const elem of set) {

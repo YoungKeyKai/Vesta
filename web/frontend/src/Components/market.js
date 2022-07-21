@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Card, Tooltip } from '@mui/material';
-import CardContent from '@mui/material/CardContent'
-import Pagination from '@mui/material/Pagination';
+import { Card, Tooltip, CardContent, Pagination } from '@mui/material';
 import { Wifi, ElectricBolt, Kitchen, LocalLaundryService, LocalDining } from '@mui/icons-material';
 
 import '../css/market.css'
@@ -20,9 +18,9 @@ export default function Market() {
     const [pageNum, setPageNum] = useState(1);
     // Current Page of Listings
     const [page, setPage] = useState([]);
-    
+
     // History
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
 
     // useEffect Hook on Page Load
     useEffect(() => {
@@ -96,7 +94,7 @@ export default function Market() {
         if (set.has('Wifi')) {
             elements.push(
                 <Tooltip title="Wifi">
-                    <Wifi sx={{color: '#283860'}}/>
+                    <Wifi sx={{ color: '#283860' }} />
                 </Tooltip>
             );
             set.delete('Wifi');
@@ -104,7 +102,7 @@ export default function Market() {
         if (set.has('Electricity')) {
             elements.push(
                 <Tooltip title="Hydro">
-                    <ElectricBolt sx={{color: '#283860'}}/>
+                    <ElectricBolt sx={{ color: '#283860' }} />
                 </Tooltip>
             );
             set.delete('Electricity');
@@ -112,7 +110,7 @@ export default function Market() {
         if (set.has('Kitchen')) {
             elements.push(
                 <Tooltip title="Kitchen">
-                    <Kitchen sx={{color: '#283860'}} />
+                    <Kitchen sx={{ color: '#283860' }} />
                 </Tooltip>
             );
             set.delete('Kitchen');
@@ -120,7 +118,7 @@ export default function Market() {
         if (set.has('Laundry')) {
             elements.push(
                 <Tooltip title="Laundry">
-                    <LocalLaundryService sx={{color: '#283860'}}/>
+                    <LocalLaundryService sx={{ color: '#283860' }} />
                 </Tooltip>
             );
             set.delete('Laundry');
@@ -128,7 +126,7 @@ export default function Market() {
         if (set.has('Food')) {
             elements.push(
                 <Tooltip title="Local Dining">
-                    <LocalDining sx={{color: '#283860'}}/>
+                    <LocalDining sx={{ color: '#283860' }} />
                 </Tooltip>
             );
             set.delete('Food');
@@ -152,6 +150,49 @@ export default function Market() {
         );
     }
 
+    const renderTiles = () => page.map(
+        (listing, index) => {
+            const property = properties.get(listing.propertyID);
+            const duration = JSON.parse(listing.duration);
+            const rate = JSON.parse(listing.rate);
+
+            // Card Background Color
+            let bgcolor = colors[1];
+            if (index < 2) {
+                bgcolor = colors[0];
+            } else if (index > 3) {
+                bgcolor = colors[2];
+            }
+
+            return (
+                <Card
+                    className='market-listing-card'
+                    onClick={() => { routeChange(listing.id) }}
+                    key={index}
+                    sx={{ backgroundColor: bgcolor }}>
+                    <CardContent>
+                        <div className='market-listing-card-body'>
+                            <div className='market-listing-card-left'>
+                                <h4>{property ? property.name : 'Loading...'}</h4>
+                                <div>{property ? property.address : 'Loading...'}</div>
+                                <div>{property ? `${property.city}, ${property.country}` : 'Loading...'}</div>
+                                <div>{convertDate(duration.lower)} - {convertDate(duration.upper)}</div>
+                            </div>
+                            <div className='market-listing-card-right'>
+                                <h4> </h4>
+                                <div>Asking for: $ {`${rate.lower} - ${rate.upper}`}</div>
+                                {renderUtilties(listing.utilities)}
+                            </div>
+                            <div className='market-listing-card-image'>
+                                <img src={sampleImg} width="100%" alt="Property Thumbnail" />
+                            </div>
+                        </div>
+                    </CardContent>
+                </Card>
+            )
+        }
+    )
+
     return (
         <div className='Market'>
             <h1>Market</h1>
@@ -161,50 +202,12 @@ export default function Market() {
                         Showing {6 * (pageNum - 1) + 1}-{6 * (pageNum - 1) + 6} of {listings.length} Results
                     </div>
                     <div className='market-listings'>
-                        {page.map((listing, index) => {
-                            const property = properties.get(listing.propertyID);
-                            const duration = JSON.parse(listing.duration);
-                            const rate = JSON.parse(listing.rate);
-                            // Card Background Color
-                            let bgcolor = colors[1];
-                            if (index < 2) {
-                                bgcolor = colors[0];
-                            } else if (index > 3) {
-                                bgcolor = colors[2];
-                            }
-                            return (
-                                <Card 
-                                    className='market-listing-card' 
-                                    onClick={() => {routeChange(listing.id)}} 
-                                    key={index} 
-                                    sx={{ backgroundColor: bgcolor }}>
-                                    <CardContent>
-                                        <div className='market-listing-card-body'>
-                                            <div className='market-listing-card-left'>
-                                                <h4>{property ? property.name : 'Loading...'}</h4>
-                                                <div>{property ? property.address : 'Loading...'}</div>
-                                                <div>{property ? `${property.city}, ${property.country}` : 'Loading...'}</div>
-                                                <div>{convertDate(duration.lower)} - {convertDate(duration.upper)}</div>
-                                            </div>
-                                            <div className='market-listing-card-right'>
-                                                <h4></h4>
-                                                <div>Asking for: $ {`${rate.lower} - ${rate.upper}`}</div>
-                                                {renderUtilties(listing.utilities)}
-                                            </div>
-                                            <div className='market-listing-card-image'>
-                                            <img src={sampleImg} width="100%" alt="Property Thumbnail" />
-                                            </div>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            )
-                        })}
+                        {renderTiles()}
                     </div>
                 </div>
-                ) : (
-                    <div>No Results Found</div>
-                )
-            }
+            ) : (
+                <div>No Results Found</div>
+            )}
 
             <div className="pagination-wrapper">
                 <Pagination

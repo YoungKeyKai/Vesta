@@ -10,7 +10,15 @@
 
 .property-info {
     display: flex;
-    padding: 0rem 1rem;
+    padding: 1rem;
+}
+
+.address-price>h1 {
+    margin: 0rem;
+}
+
+.address-price>h3 {
+    margin: 0.3rem;
 }
 
 .google-maps-embed {

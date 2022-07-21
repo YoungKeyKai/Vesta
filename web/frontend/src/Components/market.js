@@ -5,7 +5,7 @@ import { Card, Tooltip, CardContent, Pagination } from '@mui/material';
 import { Wifi, ElectricBolt, Kitchen, LocalLaundryService, LocalDining } from '@mui/icons-material';
 
 import '../css/market.css'
-import { colors } from '../constants'
+import { colors, terms } from '../constants'
 import sampleImg from '../media/fergushousesample.jpg';
 
 export default function Market() {
@@ -173,9 +173,9 @@ export default function Market() {
                     <CardContent>
                         <div className='market-listing-card-body'>
                             <div className='market-listing-card-left'>
-                                <h4>{property ? property.name : 'Loading...'}</h4>
-                                <div>{property ? property.address : 'Loading...'}</div>
-                                <div>{property ? `${property.city}, ${property.country}` : 'Loading...'}</div>
+                                <h4>{property ? property.name : terms.loading}</h4>
+                                <div>{property ? property.address : terms.loading}</div>
+                                <div>{property ? `${property.city}, ${property.country}` : terms.loading}</div>
                                 <div>{convertDate(duration.lower)} - {convertDate(duration.upper)}</div>
                             </div>
                             <div className='market-listing-card-right'>

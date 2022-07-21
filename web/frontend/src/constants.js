@@ -1,3 +1,7 @@
+export const terms = {
+    loading: 'Loading...'
+}
+
 export const pages = {
     homepage: {
         display: true,

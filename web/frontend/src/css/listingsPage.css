@@ -1,21 +1,18 @@
-.ListingsPage {
+.listings-page {
     display: flex;
     flex-grow: 1;
-    column-count: 2;
-    padding: 0rem 1rem;
+    flex-shrink: 0;
 }
 
-.LeftColumn {
-    width: 100%;
-}
-
-.RightColumn {
-    width: 100%;
+.loading-circle {
+    margin: auto;
 }
 
 .map-wrapper {
     height: 50%;
     width: 100%;
+    text-align: center;
+    justify-content: center;
 }
 
 .google-maps-embed {

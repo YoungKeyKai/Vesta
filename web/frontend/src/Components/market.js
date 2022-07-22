@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { Card, Tooltip, CardContent, Pagination } from '@mui/material';
-import { Wifi, ElectricBolt, Kitchen, LocalLaundryService, LocalDining } from '@mui/icons-material';
+import { Card, CardContent, Pagination } from '@mui/material';
 
 import '../css/market.css'
-import { colors } from './constants'
+import UtiltiesList from './utiltiesList';
+import { colors, terms } from '../constants'
 import sampleImg from '../media/fergushousesample.jpg';
 
 export default function Market() {
@@ -77,78 +77,7 @@ export default function Market() {
         navigate(`/market/listing?id=${id}`);
     }
 
-    const convertDate = (date) => {
-        const dateObj = new Date(date);
-        return `${dateObj.toLocaleString(
-            'en-US', { month: 'short' }
-        )} ${dateObj.getFullYear()}`;
-    }
-
-    const renderUtilties = (utilities) => {
-        let set = new Set();
-        let elements = [];
-        for (const util of utilities) {
-            set.add(util);
-        }
-        // Render out special icons first then render the rest
-        if (set.has('Wifi')) {
-            elements.push(
-                <Tooltip title="Wifi">
-                    <Wifi sx={{ color: '#283860' }} />
-                </Tooltip>
-            );
-            set.delete('Wifi');
-        }
-        if (set.has('Electricity')) {
-            elements.push(
-                <Tooltip title="Hydro">
-                    <ElectricBolt sx={{ color: '#283860' }} />
-                </Tooltip>
-            );
-            set.delete('Electricity');
-        }
-        if (set.has('Kitchen')) {
-            elements.push(
-                <Tooltip title="Kitchen">
-                    <Kitchen sx={{ color: '#283860' }} />
-                </Tooltip>
-            );
-            set.delete('Kitchen');
-        }
-        if (set.has('Laundry')) {
-            elements.push(
-                <Tooltip title="Laundry">
-                    <LocalLaundryService sx={{ color: '#283860' }} />
-                </Tooltip>
-            );
-            set.delete('Laundry');
-        }
-        if (set.has('Food')) {
-            elements.push(
-                <Tooltip title="Local Dining">
-                    <LocalDining sx={{ color: '#283860' }} />
-                </Tooltip>
-            );
-            set.delete('Food');
-        }
-
-        let extras = ``;
-        if (set.size) {
-            let delim = '+ ';
-            for (const elem of set) {
-                extras = `${extras}${delim}${elem}`;
-                delim = ', ';
-            }
-        }
-        return (
-            <div className='listing-utilities'>
-                <div>
-                    {elements}
-                </div>
-                <div>{extras}</div>
-            </div>
-        );
-    }
+    const convertDate = (date) => new Date(date).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
 
     const renderTiles = () => page.map(
         (listing, index) => {
@@ -173,15 +102,15 @@ export default function Market() {
                     <CardContent>
                         <div className='market-listing-card-body'>
                             <div className='market-listing-card-left'>
-                                <h4>{property ? property.name : 'Loading...'}</h4>
-                                <div>{property ? property.address : 'Loading...'}</div>
-                                <div>{property ? `${property.city}, ${property.country}` : 'Loading...'}</div>
+                                <h4>{property ? property.name : terms.loading}</h4>
+                                <div>{property ? property.address : terms.loading}</div>
+                                <div>{property ? `${property.city}, ${property.country}` : terms.loading}</div>
                                 <div>{convertDate(duration.lower)} - {convertDate(duration.upper)}</div>
                             </div>
                             <div className='market-listing-card-right'>
                                 <h4> </h4>
                                 <div>Asking for: $ {`${rate.lower} - ${rate.upper}`}</div>
-                                {renderUtilties(listing.utilities)}
+                                <UtiltiesList utilities={listing.utilities} />
                             </div>
                             <div className='market-listing-card-image'>
                                 <img

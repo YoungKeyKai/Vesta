@@ -1,11 +1,21 @@
+export const terms = {
+    loading: 'Loading...'
+}
+
 export const pages = {
     homepage: {
+        display: true,
         url: '/',
         name: 'Home'
     },
     market: {
+        display: true,
         url: '/market',
-        name: 'Marketplace'
+        name: 'Market'
+    },
+    listings: {
+        url: '/market/listing',
+        name: 'Listing'
     },
     loginPage: {
         url: '/login',
@@ -19,3 +29,5 @@ export const colors = [
     "rgba(90, 185, 234, 0.5)",
     "rgba(136, 96, 208, 0.5)"
 ]
+
+export const googleMapsAPIKey = 'AIzaSyClRBH_pT4waqp3BxnTtJw_7z-6clxz_HU';

@@ -4,7 +4,7 @@ import { Grid, CircularProgress } from '@mui/material';
 import axios from 'axios';
 
 import '../css/listingsPage.css';
-import UtiltiesList from './utiltiesList';
+import UtiltiesList from './utilitiesList';
 import { googleMapsAPIKey } from '../constants';
 
 export default function ListingsPage() {

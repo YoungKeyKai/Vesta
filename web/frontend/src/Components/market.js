@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Card, CardContent, Pagination } from '@mui/material';
 
 import '../css/market.css'
-import UtiltiesList from './utiltiesList';
+import UtiltiesList from './utilitiesList';
 import { colors, terms } from '../constants'
 import sampleImg from '../media/fergushousesample.jpg';
 

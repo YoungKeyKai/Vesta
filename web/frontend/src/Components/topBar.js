@@ -37,7 +37,7 @@ export default function TopBar(props) {
             disablePortal
         >
             <ClickAwayListener onClickAway={togglePageListMenu}>
-                <Paper elevation={3}>
+                <Paper elevation={6} sx={{minWidth: '10rem'}}>
                     <MenuList
                         autoFocusItem={isPageListMenuOpen}
                         sx={{ backgroundColor: 'white' }}

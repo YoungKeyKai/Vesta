@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { AppBar, Toolbar, IconButton, Box, Popper, ClickAwayListener, MenuList } from '@mui/material';
+import { Paper, AppBar, Toolbar, IconButton, Box, Popper, ClickAwayListener, MenuList } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
@@ -37,22 +37,24 @@ export default function TopBar(props) {
             disablePortal
         >
             <ClickAwayListener onClickAway={togglePageListMenu}>
-                <MenuList
-                    autoFocusItem={isPageListMenuOpen}
-                    sx={{ backgroundColor: 'white' }}
-                >
-                    {Object.keys(pages).map(page =>
-                        pages[page].display &&
-                        <LinkMenuItem
-                            key={page}
-                            to={pages[page].url}
-                            onClick={togglePageListMenu}
-                            sx={{ color: 'black' }}
-                        >
-                            {pages[page].name}
-                        </LinkMenuItem>
-                    )}
-                </MenuList>
+                <Paper elevation={3}>
+                    <MenuList
+                        autoFocusItem={isPageListMenuOpen}
+                        sx={{ backgroundColor: 'white' }}
+                    >
+                        {Object.keys(pages).map(page =>
+                            pages[page].display &&
+                            <LinkMenuItem
+                                key={page}
+                                to={pages[page].url}
+                                onClick={togglePageListMenu}
+                                sx={{ color: 'black' }}
+                            >
+                                {pages[page].name}
+                            </LinkMenuItem>
+                        )}
+                    </MenuList>
+                </Paper>
             </ClickAwayListener>
         </Popper>
     );
@@ -71,7 +73,7 @@ export default function TopBar(props) {
                 <LinkButton
                     variant="text"
                     to={pages.homepage.url}
-                    sx={{color: 'white', 'fontSize': 18}}
+                    sx={{ color: 'white', 'fontSize': 18 }}
                 >
                     Vesta
                 </LinkButton>

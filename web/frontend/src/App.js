@@ -18,7 +18,7 @@ export default function App() {
     return (
         <Router>
             <div className="app-container">
-                <TopBar sx={{ width: '100vw', height: '10vh' }} />
+                <TopBar sx={{ height: '10vh' }} />
                 <div className="page-panel">
                     <Routes>
                         <Route path={pages.homepage.url} element={<Homepage />} />

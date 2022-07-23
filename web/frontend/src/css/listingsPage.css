@@ -21,10 +21,13 @@
     margin: 0.4rem;
 }
 
-.utilities-summary, .tags, .user-description {
+.utilities-summary,
+.tags,
+.user-description {
     padding: 1rem;
 }
 
 .google-maps-embed {
     flex: 1;
+    max-width: 50%;
 }

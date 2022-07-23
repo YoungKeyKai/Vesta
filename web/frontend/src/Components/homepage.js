@@ -1,5 +1,4 @@
-import { Typography, Box } from '@mui/material';
-
+import '../css/homepage.css';
 import { pages } from '../constants';
 import LinkButton from './linkButton';
 
@@ -10,29 +9,11 @@ export default function Homepage() {
     };
 
     return (
-        <Box
-            className='Homepage'
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                justifyContent: 'space-evenly',
-                width: 1,
-            }}
-        >
-            <Typography sx={{color: '#8860D0', fontSize: 96}}>
+        <div className='homepage'>
+            <h1 className='vesta-main-title'>
                 Vesta
-            </Typography>
-            <Box
-                className='ButtonBox'
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'row',
-                    justifyContent: 'space-evenly',
-                    width: 1,
-                    height: 1 / 3,
-                }}
-            >
+            </h1>
+            <div className='button-box'>
                 <LinkButton
                     to={pages.market.url}
                     sx={{
@@ -60,7 +41,7 @@ export default function Homepage() {
                 >
                     Your Listings
                 </LinkButton>
-            </Box>
-        </Box>
+            </div>
+        </div>
     );
 }

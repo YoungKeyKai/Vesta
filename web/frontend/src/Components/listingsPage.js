@@ -65,7 +65,7 @@ export default function ListingsPage() {
                     <Grid className='listings-page-grid' container>
                         <Grid item className='property-info' xs={propertyGridSize} flexDirection="column">
                             <div className='address-price'>
-                                <h1>{`${property.name}, Unit ${listing.unit}`} </h1>
+                                <h1>{property.name}{listing.unit ? `, Unit ${listing.unit}` : ''}</h1>
                                 <h3>{`${property.address}, ${property.city}, ${property.country}`}</h3>
                                 <h3>{stringifyRate(listing.rate)}</h3>
                                 <h3>{stringifyDuration(listing.duration)}</h3>
@@ -78,7 +78,7 @@ export default function ListingsPage() {
                             />
                         </Grid>
                         <Grid item className='utilities-summary' xs={maxXS - propertyGridSize}>
-                            <h2>Utilities</h2>
+                            <h2>Utilities and Amenities</h2>
                             <UtiltiesList utilities={listing.utilities} />
                         </Grid>
                         <Grid item className='tags' xs={tagGridSize}>

@@ -1,16 +1,17 @@
 import { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { AppBar, Toolbar, IconButton, Typography, Box, Popper, ClickAwayListener, MenuList } from '@mui/material';
+import { Paper, AppBar, Toolbar, IconButton, Box, Popper, ClickAwayListener, MenuList } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 import SearchBox from './searchBox';
 import LinkMenuItem from './linkMenuItem';
 import LinkIconButton from './linkIconButton';
+import LinkButton from './linkButton';
 import { pages } from '../constants';
 
 export default function TopBar(props) {
-    const { height, width } = props.sx;
+    const { height } = props.sx;
     const menuAnchor = useRef(null)
 
     const [isPageListMenuOpen, setIsPageListMenuOpen] = useState(false);
@@ -36,22 +37,24 @@ export default function TopBar(props) {
             disablePortal
         >
             <ClickAwayListener onClickAway={togglePageListMenu}>
-                <MenuList
-                    autoFocusItem={isPageListMenuOpen}
-                    sx={{ backgroundColor: 'white' }}
-                >
-                    {Object.keys(pages).map(page =>
-                        pages[page].display &&
-                        <LinkMenuItem
-                            key={page}
-                            to={pages[page].url}
-                            onClick={togglePageListMenu}
-                            sx={{ color: 'black' }}
-                        >
-                            {pages[page].name}
-                        </LinkMenuItem>
-                    )}
-                </MenuList>
+                <Paper elevation={6} sx={{minWidth: '10rem'}}>
+                    <MenuList
+                        autoFocusItem={isPageListMenuOpen}
+                        sx={{ backgroundColor: 'white' }}
+                    >
+                        {Object.keys(pages).map(page =>
+                            pages[page].display &&
+                            <LinkMenuItem
+                                key={page}
+                                to={pages[page].url}
+                                onClick={togglePageListMenu}
+                                sx={{ color: 'black' }}
+                            >
+                                {pages[page].name}
+                            </LinkMenuItem>
+                        )}
+                    </MenuList>
+                </Paper>
             </ClickAwayListener>
         </Popper>
     );
@@ -64,17 +67,16 @@ export default function TopBar(props) {
 
     return (
         <AppBar position="static" ref={menuAnchor} sx={{ height, width: '100%' }}>
-            <Toolbar sx={{ height, bgcolor: '#283860' }}>
+            <Toolbar sx={{ height: '100%', bgcolor: '#283860' }}>
                 <PageListButton />
                 <PageListMenu />
-                <Typography
-                    variant="h6"
-                    noWrap
-                    component="div"
-                    sx={{ display: { xs: 'none', sm: 'block' } }}
+                <LinkButton
+                    variant="text"
+                    to={pages.homepage.url}
+                    sx={{ color: 'white', 'fontSize': 18 }}
                 >
                     Vesta
-                </Typography>
+                </LinkButton>
                 <SearchBox />
                 <Box sx={{ flexGrow: 1 }} />
                 <ProfileButton />
@@ -93,6 +95,5 @@ TopBar.propTypes = {
 TopBar.defaultProps = {
     sx: {
         height: '10vh',
-        width: '100vw',
     }
 }

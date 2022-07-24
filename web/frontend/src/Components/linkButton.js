@@ -16,6 +16,7 @@ LinkButton.propTypes = {
     to: PropTypes.string.isRequired,
     variant: PropTypes.string,
     sx: PropTypes.object,
+    className: PropTypes.string,
 }
 
 LinkButton.defaultProps = {

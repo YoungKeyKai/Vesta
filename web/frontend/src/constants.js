@@ -21,6 +21,10 @@ export const pages = {
         url: '/login',
         name: 'Login'
     },
+    createListingPage: {
+        url: '/create',
+        name: 'Create'
+    }
 };
 
 // Light Blue, Blue, and Purple on 50% Opacity Respectively

@@ -8,6 +8,7 @@ import { pages } from './Components/constants';
 import Market from './Components/market';
 import Homepage from './Components/homepage';
 import LoginPage from "./Components/loginPage";
+import CreateListing from './Components/createListing'
 import TopBar from "./Components/topBar";
 
 import "@fontsource/josefin-sans";
@@ -23,6 +24,7 @@ export default function App() {
                         <Route path={pages.homepage.url} element={<Homepage />} />
                         <Route path={pages.market.url} element={<Market />} />
                         <Route path={pages.loginPage.url} element={<LoginPage />} />
+                        <Route path={pages.createListingPage.url} element={<CreateListing />} />
                     </Routes>
                 </div>
             </div>

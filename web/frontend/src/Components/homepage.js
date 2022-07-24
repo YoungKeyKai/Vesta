@@ -43,7 +43,7 @@ export default function Homepage() {
                     Find Listings
                 </LinkButton>
                 <LinkButton
-                    to={pages.loginPage.url}
+                    to={pages.createListingPage.url}
                     sx={{
                         backgroundColor: "#5AB9EA",
                         ...linkButtonSize,

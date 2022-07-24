@@ -3,15 +3,16 @@ import {
     Route,
     BrowserRouter as Router
 } from "react-router-dom";
+import "@fontsource/josefin-sans";
 
-import { pages } from './Components/constants';
+import { pages } from './constants';
 import Market from './Components/market';
 import Homepage from './Components/homepage';
 import LoginPage from "./Components/loginPage";
 import CreateListing from './Components/createListing'
 import TopBar from "./Components/topBar";
+import ListingsPage from './Components/listingsPage';
 
-import "@fontsource/josefin-sans";
 import './css/app.css';
 
 export default function App() {
@@ -25,6 +26,7 @@ export default function App() {
                         <Route path={pages.market.url} element={<Market />} />
                         <Route path={pages.loginPage.url} element={<LoginPage />} />
                         <Route path={pages.createListingPage.url} element={<CreateListing />} />
+                        <Route path={pages.listings.url} element={<ListingsPage />} />
                     </Routes>
                 </div>
             </div>

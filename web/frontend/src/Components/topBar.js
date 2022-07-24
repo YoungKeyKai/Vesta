@@ -7,7 +7,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SearchBox from './searchBox';
 import LinkMenuItem from './linkMenuItem';
 import LinkIconButton from './linkIconButton';
-import { pages } from './constants';
+import { pages } from '../constants';
 
 export default function TopBar(props) {
     const { height, width } = props.sx;
@@ -41,6 +41,7 @@ export default function TopBar(props) {
                     sx={{ backgroundColor: 'white' }}
                 >
                     {Object.keys(pages).map(page =>
+                        pages[page].display &&
                         <LinkMenuItem
                             key={page}
                             to={pages[page].url}

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { TextField, Autocomplete, ToggleButton, ToggleButtonGroup, Box, InputAdornment, Button } from '@mui/material/';
 import { AttachMoney } from '@mui/icons-material';
 
@@ -14,6 +15,9 @@ export default function CreateListing () {
         duration: { bounds: "[)" },
         rate: { bounds: "[)" }
     });
+
+    // History
+    const navigate = useNavigate();
 
     // useEffect Hook on Page Load
     useEffect(() => {
@@ -131,7 +135,11 @@ export default function CreateListing () {
             owner: 3,   // Need to remove hardcoded user, and use current user
             duration: JSON.stringify(listing.duration),
             rate: JSON.stringify(listing.rate),
-        }).catch((err) => console.log(err));
+        })
+        .then((res) => {
+            navigate(`/market/listing?id=${res.data.id}`);
+        })
+        .catch((err) => console.log(err));
     }
 
     return (

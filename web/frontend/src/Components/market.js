@@ -69,7 +69,7 @@ export default function Market() {
         if (listings.length < 6 * value) {
             setPage(listings.slice(6 * (value - 1)));
         } else {
-            setPage(listings.slice(6 * (value - 1), 6));
+            setPage(listings.slice(6 * (value - 1), 6 * value));
         }
     }
 

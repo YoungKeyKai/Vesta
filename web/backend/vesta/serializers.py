@@ -19,7 +19,7 @@ class UserPreferencesSerializer(serializers.ModelSerializer):
 class ListingPropertySerializer(serializers.ModelSerializer):
     class Meta:
         model = ListingProperty
-        fields = ('id', 'name', 'address', 'city', 'province')
+        fields = ('id', 'name', 'address', 'city', 'country')
 
 class ListingListingSerializer(serializers.ModelSerializer):
     class Meta:

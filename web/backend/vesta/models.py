@@ -156,7 +156,7 @@ class ListingProperty(models.Model):
     name = models.CharField(max_length=64, null=False)
     address = models.CharField(max_length=128, null=False)
     city = models.CharField(max_length=64, null=False)
-    country = models.CharField(max_length=64, null=False)
+    province = models.CharField(max_length=2, null=False)
 
     class Meta:
         db_table = 'property'

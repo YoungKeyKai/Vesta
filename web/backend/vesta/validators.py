@@ -6,6 +6,7 @@ from .consts import PROVINCES
 def validate_province(value):
     if value not in PROVINCES:
         raise ValidationError(
-            _('%(value) is not a valid Canadian province abbreviation'),
+            _('%(value)s is not a valid Canadian province abbreviation'),
+            code='InvalidProvinceAbbreviation',
             params={'value': value},
         )

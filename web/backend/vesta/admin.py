@@ -11,7 +11,7 @@ class UserPreferencesAdmin(admin.ModelAdmin):
     list_display = ('owner', 'pricerange', 'timerange', 'location', 'rating')
 
 class ListingPropertyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'address', 'city', 'country')
+    list_display = ('name', 'address', 'city', 'province')
 
 class ListingListingAdmin(admin.ModelAdmin):
     list_display = ('owner', 'propertyID', 'unit', 'duration', 'rate', 'utilities', 'floorplan', 'proof', 'status')

@@ -4,6 +4,8 @@ from django.contrib.postgres.fields import IntegerRangeField, DateRangeField, Ar
 from psycopg2.extras import register_composite
 from psycopg2.extensions import register_adapter, adapt, AsIs
 
+from .validators import validate_province
+
 # Django Auto-generated models
 
 class AuthGroup(models.Model):
@@ -156,7 +158,7 @@ class ListingProperty(models.Model):
     name = models.CharField(max_length=64, null=False)
     address = models.CharField(max_length=128, null=False)
     city = models.CharField(max_length=64, null=False)
-    country = models.CharField(max_length=64, null=False)
+    province = models.CharField(max_length=2, null=False, validators=[validate_province])
 
     class Meta:
         db_table = 'property'

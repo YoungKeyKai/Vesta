@@ -6,12 +6,12 @@ import {
 import "@fontsource/josefin-sans";
 
 import { pages } from './constants';
-import Market from './Components/market';
-import Homepage from './Components/homepage';
-import LoginPage from "./Components/loginPage";
-import CreateListing from './Components/createListing'
-import TopBar from "./Components/topBar";
-import ListingsPage from './Components/listingsPage';
+import Market from './components/market';
+import Homepage from './components/homepage';
+import LoginPage from "./components/loginPage";
+import CreateListing from './components/createListing'
+import TopBar from "./components/topBar";
+import ListingsPage from './components/listingsPage';
 
 import './css/app.css';
 

@@ -163,7 +163,7 @@ export default function CreateListing () {
                     <TextField type="text" variant="filled" disabled={property?.id != null} label="Name" name="name" onChange={handlePropertyChange} />
                     <TextField type="text" variant="filled" disabled={property?.id != null} label="Address" name="address" onChange={handlePropertyChange} />
                     <TextField type="text" variant="filled" disabled={property?.id != null} label="City" name="city" onChange={handlePropertyChange} />
-                    <TextField type="text" variant="filled" disabled={property?.id != null} label="Country" name="country" onChange={handlePropertyChange} />
+                    <TextField type="text" variant="filled" disabled={property?.id != null} label="Province" name="province" onChange={handlePropertyChange} />
                 </Box>
                 <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>
                     <TextField type="text" variant="filled" label="Unit" name="unit" onChange={handleListingChange} />

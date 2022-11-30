@@ -10,6 +10,10 @@ import { createEmotionCache } from '../utils/create-emotion-cache';
 import { registerChartJs } from '../utils/register-chart-js';
 import { theme } from '../theme';
 
+import '../css/app.css';
+import '../css/homepage.css';
+import '../css/market.css';
+
 registerChartJs();
 
 const clientSideEmotionCache = createEmotionCache();

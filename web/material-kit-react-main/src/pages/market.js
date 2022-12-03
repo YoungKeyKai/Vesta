@@ -10,13 +10,12 @@ import {
     Pagination 
 } from '@mui/material';
 
-//import '../css/market.css'
 import { DashboardLayout } from '../components/dashboard-layout';
 import UtiltiesList from '../components/utilitiesList';
 import { colors, terms } from '../constants'
 import sampleImg from '../media/fergushousesample.jpg';
 
-const Page = () => {
+const Market = () => {
 
     // Listings: array
     const [listings, setListings] = useState([]);
@@ -180,10 +179,10 @@ const Page = () => {
     );
 }
 
-Page.getLayout = (page) => (
+Market.getLayout = (page) => (
     <DashboardLayout>
         {page}
     </DashboardLayout>
 );
 
-export default Page;
+export default Market;

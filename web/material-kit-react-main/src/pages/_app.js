@@ -10,9 +10,12 @@ import { createEmotionCache } from '../utils/create-emotion-cache';
 import { registerChartJs } from '../utils/register-chart-js';
 import { theme } from '../theme';
 
+import '../css/index.css';
 import '../css/app.css';
 import '../css/homepage.css';
 import '../css/market.css';
+import '../css/listingsPage.css';
+import '../css/createListing.css';
 
 registerChartJs();
 

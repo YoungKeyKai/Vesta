@@ -1,23 +1,13 @@
 # Setup Virtual Environment
 
-Run `python -m venv ./venv` in this directory.
-Try with `python3` if `python` doesn't work.
+* Ensure you have `pipenv` installed.
+* Ensure you have `python 3.8.5` installed.
 
-# Activate the Virtual Environment
+1. Run `pipenv install` to install from `Pipfile`.
+2. Run `where python` (Mac) or `get-command python` (Windows) to see the current Python install location.
+3. Run `pipenv shell` to spin up the virtual environment.
+4. To confirm the virtual env is running, run `where python` (Mac) or `get-command python` (Windows) again, and ensure the location now differs.
 
-Run `./venv/Scripts/activate.bat` on Windows or `source ./venv/bin/activate` on Mac or Linux.
+# Leaving the virtual environment
 
-It should show in the terminal where the name of the venv shows in parentheses.
-If it does not, be cautious that it might not be activated.
-
-You might also be able to configure the python interpreter in your IDE to point to this venv to save yourself some work.
-
-# Install PIP Dependencies
-
-Use `./venv/Scripts/pip.exe install -r requirements.txt` to install dependencies.
-
-Replace `Scripts` with `bin` if on Mac or Linux
-
-# Deactivating the Venv
-
-Use `deactivate` when the venv is activated to deactivate it.
+Run `exit` to leave the virtual environment.

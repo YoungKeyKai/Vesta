@@ -81,7 +81,7 @@ const Market = () => {
     }
 
     const routeChange = (id) => {
-        router.push(`/market/listing?id=${id}`);
+        router.push(`/listing?id=${id}`);
     }
 
     const convertDate = (date) => new Date(date).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })

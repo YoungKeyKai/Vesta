@@ -17,9 +17,8 @@ The folder structure here is vital as the CI pipeline builds the project expecti
 
 # Setup
 Some notes for setup after cloning:
-1. Need to create a new virtual python environment in the project web directory and install python packages using pip (pip install -r requirements.txt).
-2. Install Node.js v16.15.1 from their [Previous Releases](https://nodejs.org/en/download/releases/) or using NVM (node version manager).
-3. Go to web/frontend and install the node packages using `npm install`.
+1. Install Node.js v16.15.1 from their [Previous Releases](https://nodejs.org/en/download/releases/) or using NVM (node version manager).
+2. Go to web/frontend and install the node packages using `npm install`.
 
 # PRs
 ***ALWAYS*** commit to `develop` branch as `master` is tied to the CI pipeline. We do not want code changes to go into the pipeline constantly without any prior review and testing.

@@ -207,8 +207,8 @@ onChange={handlePropertyChange} />
                             <TextField type="text"
 variant="filled"
 disabled={property?.id != null}
-label="Country"
-name="country"
+label="Province"
+name="province"
 onChange={handlePropertyChange} />
                         </Box>
                         <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>

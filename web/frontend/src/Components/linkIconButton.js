@@ -6,7 +6,8 @@ export default function LinkIconButton(props) {
     const {children, ...otherProps} = props
 
     return (
-        <IconButton component={Link} {...otherProps} >
+        <IconButton component={Link}
+{...otherProps} >
             {children}
         </IconButton>
     );

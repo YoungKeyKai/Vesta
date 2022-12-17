@@ -1,49 +1,44 @@
 {
-  "name": "frontend",
-  "version": "0.1.0",
-  "license": "MIT",
-  "description": "Frontend of FYDP - Vesta",
-  "private": true,
-  "proxy": "http://localhost:8000",
-  "dependencies": {
-    "@emotion/react": "^11.9.3",
-    "@emotion/styled": "^11.9.3",
-    "@fontsource/josefin-sans": "^4.5.9",
-    "@mui/icons-material": "^5.8.4",
-    "@mui/material": "^5.8.7",
-    "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^13.3.0",
-    "@testing-library/user-event": "^13.5.0",
-    "axios": "^0.27.2",
-    "prop-types": "^15.8.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.3.0",
-    "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
-  },
+  "name": "Vesta",
+  "author": "FYDP Group 2023.26",
+  "licence": "MIT",
+  "version": "2.1.1",
+  "private": false,
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "next",
+    "build": "next build",
+    "start": "next start",
+    "export": "next export",
+    "lint": "next lint",
+    "lint-fix": "next lint --fix"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "dependencies": {
+    "@emotion/cache": "11.10.3",
+    "@emotion/react": "11.10.4",
+    "@emotion/server": "11.10.0",
+    "@emotion/styled": "11.10.4",
+    "@mui/icons-material": "5.10.3",
+    "@mui/lab": "5.0.0-alpha.99",
+    "@mui/material": "5.10.5",
+    "@mui/system": "5.10.5",
+    "@mui/x-date-pickers": "5.0.1",
+    "@zalter/identity-js": "1.2.1",
+    "axios": "^1.2.0",
+    "chart.js": "3.9.1",
+    "date-fns": "2.29.3",
+    "formik": "2.2.9",
+    "next": "12.3.0",
+    "nprogress": "0.2.0",
+    "prop-types": "15.8.1",
+    "react": "18.2.0",
+    "react-chartjs-2": "4.3.1",
+    "react-dom": "18.2.0",
+    "react-perfect-scrollbar": "1.5.8",
+    "uuid": "9.0.0",
+    "yup": "0.32.11"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "devDependencies": {
+    "eslint": "8.23.1",
+    "eslint-config-next": "12.3.0"
   }
 }

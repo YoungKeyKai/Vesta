@@ -6,7 +6,8 @@ export default function LinkMenuItem(props) {
     const {children, ...otherProps} = props
 
     return (
-        <MenuItem component={Link} {...otherProps} >
+        <MenuItem component={Link}
+{...otherProps} >
             {children}
         </MenuItem>
     );

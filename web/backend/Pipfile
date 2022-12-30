@@ -34,6 +34,7 @@ sqlparse = "*"
 tzdata = "*"
 virtualenv = "*"
 virtualenv-clone = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 

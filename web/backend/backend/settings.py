@@ -27,7 +27,7 @@ DB_PASSWORD = config("DB_PASSWORD")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["vestabackend-env.eba-3n8qb2pp.ca-central-1.elasticbeanstalk.com"]
 
 
 # Application definition

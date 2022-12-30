@@ -1,4 +1,3 @@
-from tkinter import CASCADE
 from django.db import models, connection
 from django.contrib.postgres.fields import IntegerRangeField, DateRangeField, ArrayField
 from psycopg2.extras import register_composite

@@ -29,7 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['vestabackend-env.eba-3n8qb2pp.ca-central-1.elasticbeanstalk.com']
 if DEBUG:
-    ALLOWED_HOSTS += ['localhost']
+    ALLOWED_HOSTS += ['localhost', '127.0.0.1']
 
 # Application definition
 

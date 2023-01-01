@@ -29,7 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['vestabackend-env.eba-3n8qb2pp.ca-central-1.elasticbeanstalk.com']
 if DEBUG:
-    ALLOWED_HOSTS += ['127.0.0.1']
+    ALLOWED_HOSTS += ['localhost']
 
 # Application definition
 
@@ -144,6 +144,8 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000'
+CORS_ALLOWED_ORIGINS = [
+    'https://d10rmc0b8eol3g.cloudfront.net'
 ]
+if DEBUG:
+    CORS_ALLOWED_ORIGINS += ['http://localhost:3000']

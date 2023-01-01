@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 from decouple import config
-import datetime
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -64,8 +64,11 @@ REST_FRAMEWORK = {
 }
 
 JWT_AUTH = {
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(minutes=5),
-    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=1),
+    'JWT_EXPIRATION_DELTA': timedelta(minutes=5),
+    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=1),
+
+    # Custom
+    'JWT_REFRESH_TOKEN_COOKIE_NAME': 'vesta_refresh_token',
 }
 
 ROOT_URLCONF = 'backend.urls'

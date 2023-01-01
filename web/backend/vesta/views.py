@@ -1,9 +1,42 @@
+from math import floor
+from django.conf import settings
 from rest_framework import viewsets
+from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 from .serializers import *
 from .models import *
 
 
-# Create your views here.
+class CookieTokenObtainPairView(TokenObtainPairView):
+    def finalize_response(self, request, response, *args, **kwargs):
+        if response.data.get('refresh'):
+            cookie_max_age = floor(settings.JWT_AUTH['JWT_REFRESH_EXPIRATION_DELTA'].total_seconds())
+            response.set_cookie(
+                settings.JWT_AUTH['JWT_REFRESH_TOKEN_COOKIE_NAME'],
+                response.data['refresh'],
+                max_age=cookie_max_age,
+                httponly=True,
+                secure=True
+            )
+            del response.data['refresh']
+        return super().finalize_response(request, response, *args, **kwargs)
+
+
+class CookieTokenRefreshView(TokenRefreshView):
+    serializer_class = CookieTokenRefreshSerializer
+
+    def finalize_response(self, request, response, *args, **kwargs):
+        if response.data.get('refresh'):
+            cookie_max_age = floor(settings.JWT_AUTH['JWT_REFRESH_EXPIRATION_DELTA'].total_seconds())
+            response.set_cookie(
+                settings.JWT_AUTH['JWT_REFRESH_TOKEN_COOKIE_NAME'],
+                response.data['refresh'],
+                max_age=cookie_max_age,
+                httponly=True,
+                secure=True
+            )
+            del response.data['refresh']
+        return super().finalize_response(request, response, *args, **kwargs)
+
 
 class UserUploadView(viewsets.ModelViewSet):
     serializer_class = UserUploadSerializer

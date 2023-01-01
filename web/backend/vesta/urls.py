@@ -1,6 +1,5 @@
 from rest_framework import routers
 from django.urls import path, include
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from . import views
 
 router = routers.DefaultRouter()
@@ -16,6 +15,6 @@ router.register(r'messagingchats', views.MessagingChatView, 'messagingchat')
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('token/', TokenObtainPairView.as_view(), name='vesta_obtaintoken'),
-    path('token/refresh/', TokenRefreshView.as_view(), name='vesta_refreshtoken'),
+    path('auth/login/', views.CookieTokenObtainPairView.as_view(), name='vesta_login'),
+    path('auth/refreshtoken/', views.CookieTokenRefreshView.as_view(), name='vesta_refreshtoken'),
 ]

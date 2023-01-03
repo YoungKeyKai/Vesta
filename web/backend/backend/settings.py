@@ -60,6 +60,9 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
     )
 }
 
@@ -69,6 +72,7 @@ JWT_AUTH = {
 
     # Custom
     'JWT_REFRESH_TOKEN_COOKIE_NAME': 'vesta_refresh_token',
+    'JWT_REFRESH_TOKEN_COOKIE_PATH': '/api/auth/token/',
 }
 
 ROOT_URLCONF = 'backend.urls'

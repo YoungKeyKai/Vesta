@@ -1,4 +1,4 @@
-version: 0.2
+version: 0.3
 
 phases:
   pre_build:
@@ -7,11 +7,11 @@ phases:
       - cd ./web/backend && cd ../../
   build:
     commands:
-      - cd ./web/frontend && npm run build && cd ../../
+      - cd ./web/frontend && npm run build && npm run export && cd ../../
       - cd ./web/backend && cd ../../
   post_build:
     commands:
-      - mv ./web/frontend/build ./build
+      - mv ./web/frontend/out ./build
       - mv ./web/backend ./backend
 artifacts:
   secondary-artifacts:

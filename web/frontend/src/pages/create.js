@@ -10,7 +10,8 @@ import {
     Box,
     InputAdornment,
     Button,
-    Container 
+    Container,
+    MenuItem
 } from '@mui/material/';
 import { AttachMoney } from '@mui/icons-material';
 
@@ -124,7 +125,7 @@ const CreateListing = () => {
     const handleSubmit = (event) => {
         if (property?.id == null) {
             // first create the new property to use with new listing
-            axios.post('http://localhost:8000/api/listingproperties/', property)
+            axios.post('/api/listingproperties/', property)
                 .then((response) => {
                     setProperty(response.data); 
                     postListing(response.data.id);
@@ -139,7 +140,7 @@ const CreateListing = () => {
 
     const postListing = (newPropertyID = null) => {
         // next create the new listing, using new (or existing) propertyID
-        axios.post('http://localhost:8000/api/listinglistings/', {
+        axios.post('/api/listinglistings/', {
             ...listing,
             propertyID: property?.id || newPropertyID,   // use newPropertyID if property.id is null
             owner: 3,   // Need to remove hardcoded user, and use current user
@@ -147,7 +148,7 @@ const CreateListing = () => {
             rate: JSON.stringify(listing.rate),
         })
         .then((res) => {
-            router.push(`/market/listing?id=${res.data.id}`);
+            router.push(`/listing?id=${res.data.id}`);
         })
         .catch((err) => console.log(err));
     }
@@ -209,7 +210,23 @@ variant="filled"
 disabled={property?.id != null}
 label="Province"
 name="province"
-onChange={handlePropertyChange} />
+select
+onChange={handlePropertyChange}
+                            >
+                                <MenuItem value={'AB'}>AB</MenuItem>
+                                <MenuItem value={'BC'}>BC</MenuItem>
+                                <MenuItem value={'MB'}>MB</MenuItem>
+                                <MenuItem value={'NB'}>NB</MenuItem>
+                                <MenuItem value={'NL'}>NL</MenuItem>
+                                <MenuItem value={'NT'}>NT</MenuItem>
+                                <MenuItem value={'NS'}>NS</MenuItem>
+                                <MenuItem value={'NU'}>NU</MenuItem>
+                                <MenuItem value={'ON'}>ON</MenuItem>
+                                <MenuItem value={'PE'}>PE</MenuItem>
+                                <MenuItem value={'QC'}>QC</MenuItem>
+                                <MenuItem value={'SK'}>SK</MenuItem>
+                                <MenuItem value={'YT'}>YT</MenuItem>
+                            </TextField>
                         </Box>
                         <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>
                             <TextField type="text"

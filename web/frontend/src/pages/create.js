@@ -180,38 +180,38 @@ const CreateListing = () => {
                                 onChange={handleSelectedPropertyChange}
                                 sx={{ width: 300 }}
                                 renderInput={(params) => <TextField variant="filled"
-hiddenLabel
-{...params} />}
+                                hiddenLabel
+                                {...params} />}
                             />
                         </Box>
                         <br/>
                         Info
                         <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>
                             <TextField type="text"
-variant="filled"
-disabled={property?.id != null}
-label="Name"
-name="name"
-onChange={handlePropertyChange} />
+                                variant="filled"
+                                disabled={property?.id != null}
+                                label="Name"
+                                name="name"
+                                onChange={handlePropertyChange} />
                             <TextField type="text"
-variant="filled"
-disabled={property?.id != null}
-label="Address"
-name="address"
-onChange={handlePropertyChange} />
+                                variant="filled"
+                                disabled={property?.id != null}
+                                label="Address"
+                                name="address"
+                                onChange={handlePropertyChange} />
                             <TextField type="text"
-variant="filled"
-disabled={property?.id != null}
-label="City"
-name="city"
-onChange={handlePropertyChange} />
+                                variant="filled"
+                                disabled={property?.id != null}
+                                label="City"
+                                name="city"
+                                onChange={handlePropertyChange} />
                             <TextField type="text"
-variant="filled"
-disabled={property?.id != null}
-label="Province"
-name="province"
-select
-onChange={handlePropertyChange}
+                                variant="filled"
+                                disabled={property?.id != null}
+                                label="Province"
+                                name="province"
+                                select
+                                onChange={handlePropertyChange}
                             >
                                 <MenuItem value={'AB'}>AB</MenuItem>
                                 <MenuItem value={'BC'}>BC</MenuItem>
@@ -230,38 +230,38 @@ onChange={handlePropertyChange}
                         </Box>
                         <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>
                             <TextField type="text"
-variant="filled"
-label="Unit"
-name="unit"
-onChange={handleListingChange} />
+                                variant="filled"
+                                label="Unit"
+                                name="unit"
+                                onChange={handleListingChange} />
                         </Box>
                         <br/>
                         Duration
                         <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>
                             <TextField type="date"
-variant="filled"
-label="From"
-InputLabelProps={{ shrink: true }}
-onChange={handleListingDurationLowerChange} />
+                                variant="filled"
+                                label="From"
+                                InputLabelProps={{ shrink: true }}
+                                onChange={handleListingDurationLowerChange} />
                             <TextField type="date"
-variant="filled"
-label="To"
-InputLabelProps={{ shrink: true }}
-onChange={handleListingDurationUpperChange} />
+                                variant="filled"
+                                label="To"
+                                InputLabelProps={{ shrink: true }}
+                                onChange={handleListingDurationUpperChange} />
                         </Box>
                         <br/>
                         Rate
                         <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>
                             <TextField type="text"
-variant="filled"
-label="Minimum"
-InputProps={{ startAdornment: (<InputAdornment position="start"><AttachMoney /></InputAdornment>) }}
-onChange={handleListingRateLowerChange} />
+                                variant="filled"
+                                label="Minimum"
+                                InputProps={{ startAdornment: (<InputAdornment position="start"><AttachMoney /></InputAdornment>) }}
+                                onChange={handleListingRateLowerChange} />
                             <TextField type="text"
-variant="filled"
-label="Maximum"
-InputProps={{ startAdornment: (<InputAdornment position="start"><AttachMoney /></InputAdornment>) }}
-onChange={handleListingRateUpperChange} />
+                                variant="filled"
+                                label="Maximum"
+                                InputProps={{ startAdornment: (<InputAdornment position="start"><AttachMoney /></InputAdornment>) }}
+                                onChange={handleListingRateUpperChange} />
                         </Box>
                         <br/>
                         Utilities:
@@ -274,8 +274,8 @@ onChange={handleListingRateUpperChange} />
                                 freeSolo
                                 renderInput={ (params) => (
                                     <TextField hiddenLabel
-variant="filled"
-{...params} />
+                                        variant="filled"
+                                        {...params} />
                                 )}
                             />
                         </Box>
@@ -300,8 +300,7 @@ variant="filled"
                         </Box>
                     </div>
                     <br/>
-                    <Button variant="contained"
-onClick={handleSubmit}>Create</Button>
+                    <Button variant="contained" onClick={handleSubmit}>Create</Button>
                 </div>
             </Container>
         </Box>

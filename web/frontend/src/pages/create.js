@@ -21,7 +21,7 @@ const CreateListing = () => {
 
     const [property, setProperty] = useState(null);
     const [properties, setProperties] = useState([]);
-    const [owner, setOwner] = useState(null);  
+    //const [owner, setOwner] = useState(null);  
     const [listing, setListing] = useState({
         duration: { bounds: "[)" },
         rate: { bounds: "[)" }
@@ -122,7 +122,7 @@ const CreateListing = () => {
         });
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = () => {
         if (property?.id == null) {
             // first create the new property to use with new listing
             axios.post('/api/listingproperties/', property)

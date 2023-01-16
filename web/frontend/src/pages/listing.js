@@ -84,7 +84,11 @@ const ListingsPage = () => {
                     {
                         listing && property && googleMapsAddr ?
                             <Grid className='listings-page-grid' container>
-                                <Grid item className='property-info' xs={propertyGridSize} flexDirection="column">
+                                <Grid item
+                                    className='property-info'
+                                    xs={propertyGridSize}
+                                    flexDirection="column"
+                                >
                                     <div className='address-price'>
                                         <h1>{property.name}{listing.unit ? `, Unit ${listing.unit}` : ''}</h1>
                                         <h3>{`${property.address}, ${property.city}, ${property.province}`}</h3>
@@ -98,18 +102,25 @@ const ListingsPage = () => {
                                         src={`https://www.google.com/maps/embed/v1/place?key=${googleMapsAPIKey}&q=${googleMapsAddr}`}
                                     />
                                 </Grid>
-                                <Grid item className='utilities-summary' xs={maxXS - propertyGridSize}>
+                                <Grid item
+className='utilities-summary'
+xs={maxXS - propertyGridSize}>
                                     <h2>Utilities and Amenities</h2>
                                     <UtiltiesList utilities={listing.utilities} />
                                 </Grid>
-                                <Grid item className='tags' xs={tagGridSize}>
+                                <Grid item
+className='tags'
+xs={tagGridSize}>
                                     <h2>Tags</h2>
                                 </Grid>
-                                <Grid item className='user-description' xs={maxXS - tagGridSize}>
+                                <Grid item
+className='user-description'
+xs={maxXS - tagGridSize}>
                                     <h2>Description</h2>
                                 </Grid>
                             </Grid> :
-                            <CircularProgress className="loading-circle" size="5rem" />
+                            <CircularProgress className="loading-circle"
+size="5rem" />
                     }
                 </div>
             </Container>

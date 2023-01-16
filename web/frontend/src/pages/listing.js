@@ -24,14 +24,14 @@ const ListingsPage = () => {
     const propertyGridSize = 7;
     const tagGridSize = 4;
 
-    const formatAddr = (addr, city, country) => `${addr.replaceAll(/ +/g, '+')},${city}+${country}`;
+    const formatAddr = (addr, city, province) => `${addr.replaceAll(/ +/g, '+')},${city}+${province}`;
     useEffect(() => {
         const getProperty = id => axios
             .get(`/api/listingproperties/${id}`)
             .then((res) => {
                 const data = res.data;
                 setProperty(data);
-                setGoogleMapsAddr(formatAddr(data.address, data.city, data.country));
+                setGoogleMapsAddr(formatAddr(data.address, data.city, data.province));
             })
             .catch((err) => {
                 //Replace with formal error handling
@@ -87,7 +87,7 @@ const ListingsPage = () => {
                                 <Grid item className='property-info' xs={propertyGridSize} flexDirection="column">
                                     <div className='address-price'>
                                         <h1>{property.name}{listing.unit ? `, Unit ${listing.unit}` : ''}</h1>
-                                        <h3>{`${property.address}, ${property.city}, ${property.country}`}</h3>
+                                        <h3>{`${property.address}, ${property.city}, ${property.province}`}</h3>
                                         <h3>{stringifyRate(listing.rate)}</h3>
                                         <h3>{stringifyDuration(listing.duration)}</h3>
                                     </div>

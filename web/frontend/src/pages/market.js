@@ -12,8 +12,7 @@ import {
 
 import { DashboardLayout } from '../components/dashboard-layout';
 import UtiltiesList from '../components/utilitiesList';
-import { colors, terms } from '../constants'
-import sampleImg from '../media/fergushousesample.jpg';
+import { colors, terms } from '../constants';
 
 const Market = () => {
 
@@ -111,7 +110,7 @@ const Market = () => {
                             <div className='market-listing-card-left'>
                                 <h4>{property ? property.name : terms.loading}</h4>
                                 <div>{property ? property.address : terms.loading}</div>
-                                <div>{property ? `${property.city}, ${property.country}` : terms.loading}</div>
+                                <div>{property ? `${property.city}, ${property.province}` : terms.loading}</div>
                                 <div>{convertDate(duration.lower)} - {convertDate(duration.upper)}</div>
                             </div>
                             <div className='market-listing-card-right'>
@@ -122,7 +121,7 @@ const Market = () => {
                             <div className='market-listing-card-image'>
                                 <img
                                     className="property-thumbnail"
-                                    src={sampleImg}
+                                    src="/static/images/fergushousesample.jpg"
                                     alt="Property Thumbnail"
                                 />
                             </div>

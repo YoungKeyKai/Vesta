@@ -3,15 +3,15 @@ import NextLink from 'next/link';
 import Router from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
+import { Box, Button, Container, Link, TextField, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import axios from 'axios';
 
 const Login = () => {
   const formik = useFormik({
     initialValues: {
-      email: 'demo@devias.io',
-      password: 'Password123'
+      email: '',
+      password: ''
     },
     validationSchema: Yup.object({
       email: Yup
@@ -25,7 +25,7 @@ const Login = () => {
         .required('Password is required')
     }),
     onSubmit: (values, actions) => {
-      axios.post('http://localhost:8000/api/auth/login/',
+      axios.post('/api/auth/login/',
         {
           username: values.email,
           password: values.password,
@@ -98,6 +98,7 @@ const Login = () => {
               type="email"
               value={formik.values.email}
               variant="outlined"
+              placeholder='Email'
             />
             <TextField
               error={Boolean(formik.touched.password && formik.errors.password)}
@@ -111,6 +112,7 @@ const Login = () => {
               type="password"
               value={formik.values.password}
               variant="outlined"
+              placeholder='Password'
             />
             <Box sx={{ py: 2 }}>
               <Button

@@ -5,6 +5,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import axios from 'axios';
 
 const Login = () => {
   const formik = useFormik({
@@ -23,10 +24,24 @@ const Login = () => {
         .max(255)
         .required('Password is required')
     }),
-    onSubmit: () => {
-      Router
-        .push('/')
-        .catch(console.error);
+    onSubmit: (values, actions) => {
+      axios.post('http://localhost:8000/api/auth/login/',
+        {
+          username: values.email,
+          password: values.password,
+        },
+        {withCredentials: true}
+      )
+      .then(() => {
+        actions.setSubmitting(false)
+        Router
+          .push('/')
+          .catch(console.error)
+      })
+      .catch(function (error) {
+        actions.setSubmitting(false)
+        console.log(error);
+      })
     }
   });
 

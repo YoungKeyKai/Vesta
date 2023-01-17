@@ -3,7 +3,7 @@ import NextLink from 'next/link';
 import Router from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Box, Button, Container, Link, TextField, Typography } from '@mui/material';
+import { Box, Button, Container, Link, TextField, Typography, Alert } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import axios from 'axios';
 import { useAuthContext } from '../contexts/auth-context';
@@ -27,7 +27,7 @@ const Login = () => {
         .max(255)
         .required('Password is required')
     }),
-    onSubmit: async (values) =>
+    onSubmit: async (values, actions) =>
       axios.post('/api/auth/login/',
         {
           username: values.email,
@@ -36,13 +36,20 @@ const Login = () => {
         {withCredentials: true}
       )
       .then((response) => {
+        actions.setStatus(null)
         login(response.data.access)
         Router
           .push('/')
           .catch(console.error)
       })
       .catch((error) => {
-        console.log(error);
+        let submissionError = ''
+        if (error.response.status == 401) {
+          submissionError = "No user found with this credential. Please check the email and password, then try again."
+        } else {
+          submissionError = "Something unexpected has happened, please try again."
+        }
+        actions.setStatus({submissionError})
       })
   });
 
@@ -126,6 +133,13 @@ const Login = () => {
               >
                 Login Now
               </Button>
+              {formik.status?.submissionError &&
+                (
+                  <Alert className='LoginError' severity='error'>
+                    {formik.status?.submissionError}
+                  </Alert>
+                )
+              }
             </Box>
             <Typography
               color="textSecondary"

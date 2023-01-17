@@ -2,26 +2,20 @@ import { useContext } from 'react';
 import Router from 'next/router';
 import PropTypes from 'prop-types';
 import { Box, MenuItem, MenuList, Popover, Typography } from '@mui/material';
-import { AuthContext } from '../contexts/auth-context';
+import { useAuthContext } from '../contexts/auth-context';
 
 export const AccountPopover = (props) => {
   const { anchorEl, onClose, open, ...other } = props;
-  const authContext = useContext(AuthContext);
+  const {signOut} = useAuthContext();
 
   const handleSignOut = async () => {
     onClose?.();
+    signOut();
 
-    try {
-      // Update Auth Context state
-      authContext.signOut();
-
-      // Redirect to login page
-      Router
-        .push('/login')
-        .catch(console.error);
-    } catch (err) {
-      console.error(err);
-    }
+    // Redirect to login page
+    Router
+    .push('/login')
+    .catch(console.error);
   };
 
   return (

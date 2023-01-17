@@ -14,8 +14,8 @@ export const AccountPopover = (props) => {
 
     // Redirect to login page
     Router
-    .push('/login')
-    .catch(console.error);
+      .push('/login')
+      .catch(console.error);
   };
 
   return (

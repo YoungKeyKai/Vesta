@@ -58,5 +58,5 @@ DashboardLayout.propTypes = {
 };
 
 DashboardLayout.defaultProps = {
-    noGuard: false
+  noGuard: false
 }

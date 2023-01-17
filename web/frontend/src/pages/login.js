@@ -35,22 +35,22 @@ const Login = () => {
         },
         {withCredentials: true}
       )
-      .then((response) => {
-        actions.setStatus(null)
-        login(response.data.access)
-        Router
-          .push('/')
-          .catch(console.error)
-      })
-      .catch((error) => {
-        let submissionError = ''
-        if (error.response.status == 401) {
-          submissionError = "No user found with this credential. Please check the email and password, then try again."
-        } else {
-          submissionError = "Something unexpected has happened, please try again."
-        }
-        actions.setStatus({submissionError})
-      })
+        .then((response) => {
+          actions.setStatus(null)
+          login(response.data.access)
+          Router
+            .push('/')
+            .catch(console.error)
+        })
+        .catch((error) => {
+          let submissionError = ''
+          if (error.response.status == 401) {
+            submissionError = "No user found with this credential. Please check the email and password, then try again."
+          } else {
+            submissionError = "Something unexpected has happened, please try again."
+          }
+          actions.setStatus({submissionError})
+        })
   });
 
   return (

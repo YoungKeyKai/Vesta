@@ -3,16 +3,18 @@ import NextLink from 'next/link';
 import Router from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import { Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
+import { Box, Button, Container, Link, TextField, Typography, Alert } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Facebook as FacebookIcon } from '../icons/facebook';
-import { Google as GoogleIcon } from '../icons/google';
+import axios from 'axios';
+import { useAuthContext } from '../contexts/auth-context';
 
 const Login = () => {
+  const {login} = useAuthContext()
+
   const formik = useFormik({
     initialValues: {
-      email: 'demo@devias.io',
-      password: 'Password123'
+      email: '',
+      password: ''
     },
     validationSchema: Yup.object({
       email: Yup
@@ -25,11 +27,30 @@ const Login = () => {
         .max(255)
         .required('Password is required')
     }),
-    onSubmit: () => {
-      Router
-        .push('/')
-        .catch(console.error);
-    }
+    onSubmit: async (values, actions) =>
+      axios.post('/api/auth/login/',
+        {
+          username: values.email,
+          password: values.password,
+        },
+        {withCredentials: true}
+      )
+        .then((response) => {
+          actions.setStatus(null)
+          login(response.data.access)
+          Router
+            .push('/')
+            .catch(console.error)
+        })
+        .catch((error) => {
+          let submissionError = ''
+          if (error.response.status == 401) {
+            submissionError = "No user found with this credential. Please check the email and password, then try again."
+          } else {
+            submissionError = "Something unexpected has happened, please try again."
+          }
+          actions.setStatus({submissionError})
+        })
   });
 
   return (
@@ -59,58 +80,6 @@ const Login = () => {
             </Button>
           </NextLink>
           <form onSubmit={formik.handleSubmit}>
-            <Box sx={{ my: 3 }}>
-              <Typography
-                color="textPrimary"
-                variant="h4"
-              >
-                Sign in
-              </Typography>
-              <Typography
-                color="textSecondary"
-                gutterBottom
-                variant="body2"
-              >
-                Sign in on the internal platform
-              </Typography>
-            </Box>
-            <Grid
-              container
-              spacing={3}
-            >
-              <Grid
-                item
-                xs={12}
-                md={6}
-              >
-                <Button
-                  color="info"
-                  fullWidth
-                  startIcon={<FacebookIcon />}
-                  onClick={() => formik.handleSubmit()}
-                  size="large"
-                  variant="contained"
-                >
-                  Login with Facebook
-                </Button>
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                md={6}
-              >
-                <Button
-                  color="error"
-                  fullWidth
-                  onClick={() => formik.handleSubmit()}
-                  size="large"
-                  startIcon={<GoogleIcon />}
-                  variant="contained"
-                >
-                  Login with Google
-                </Button>
-              </Grid>
-            </Grid>
             <Box
               sx={{
                 pb: 1,
@@ -122,14 +91,14 @@ const Login = () => {
                 color="textSecondary"
                 variant="body1"
               >
-                or login with email address
+                Login with email address
               </Typography>
             </Box>
             <TextField
               error={Boolean(formik.touched.email && formik.errors.email)}
               fullWidth
               helperText={formik.touched.email && formik.errors.email}
-              label="Email Address"
+              label="Email"
               margin="normal"
               name="email"
               onBlur={formik.handleBlur}
@@ -137,6 +106,7 @@ const Login = () => {
               type="email"
               value={formik.values.email}
               variant="outlined"
+              placeholder='Email'
             />
             <TextField
               error={Boolean(formik.touched.password && formik.errors.password)}
@@ -150,18 +120,26 @@ const Login = () => {
               type="password"
               value={formik.values.password}
               variant="outlined"
+              placeholder='Password'
             />
             <Box sx={{ py: 2 }}>
               <Button
                 color="primary"
-                disabled={formik.isSubmitting}
+                disabled={!formik.isValid || formik.isSubmitting}
                 fullWidth
                 size="large"
                 type="submit"
                 variant="contained"
               >
-                Sign In Now
+                Login Now
               </Button>
+              {formik.status?.submissionError &&
+                (
+                  <Alert className='LoginError' severity='error'>
+                    {formik.status?.submissionError}
+                  </Alert>
+                )
+              }
             </Box>
             <Typography
               color="textSecondary"

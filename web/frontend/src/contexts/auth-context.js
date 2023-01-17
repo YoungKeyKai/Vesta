@@ -1,53 +1,30 @@
-import { createContext, useContext, useEffect, useReducer, useRef } from 'react';
+import { createContext, useContext, useReducer } from 'react';
 import PropTypes from 'prop-types';
-import { auth, ENABLE_AUTH } from '../lib/auth';
 
 const HANDLERS = {
-  INITIALIZE: 'INITIALIZE',
-  SIGN_IN: 'SIGN_IN',
-  SIGN_OUT: 'SIGN_OUT'
+  LOGIN: 'LOGIN',
+  LOGOUT: 'LOGOUT'
 };
 
-const initialState = {
+const defaultContext = {
   isAuthenticated: false,
-  isLoading: true,
-  user: null
+  accessToken: null,
 };
 
 const handlers = {
-  [HANDLERS.INITIALIZE]: (state, action) => {
-    const user = action.payload;
-
-    return {
-      ...state,
-      ...(
-        // if payload (user) is provided, then is authenticated
-        user
-          ? ({
-            isAuthenticated: true,
-            isLoading: false,
-            user
-          })
-          : ({
-            isLoading: false
-          })
-      )
-    };
-  },
-  [HANDLERS.SIGN_IN]: (state, action) => {
-    const user = action.payload;
-
+  [HANDLERS.LOGIN]: (state, action) => {
+    const accessToken = action.payload;
     return {
       ...state,
       isAuthenticated: true,
-      user
+      accessToken,
     };
   },
-  [HANDLERS.SIGN_OUT]: (state) => {
+  [HANDLERS.LOGOUT]: (state) => {
     return {
       ...state,
       isAuthenticated: false,
-      user: null
+      accessToken: null,
     };
   }
 };
@@ -58,86 +35,22 @@ const reducer = (state, action) => (
 
 // The role of this context is to propagate authentication state through the App tree.
 
-export const AuthContext = createContext({ undefined });
+export const AuthContext = createContext(defaultContext);
 
 export const AuthProvider = (props) => {
   const { children } = props;
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const initialized = useRef(false);
+  const [state, dispatch] = useReducer(reducer, defaultContext);
 
-  const initialize = async () => {
-    // Prevent from calling twice in development mode with React.StrictMode enabled
-    if (initialized.current) {
-      return;
-    }
-
-    initialized.current = true;
-
-    // Check if auth has been skipped
-    // From sign-in page we may have set "skip-auth" to "true"
-    const authSkipped = globalThis.sessionStorage.getItem('skip-auth') === 'true';
-
-    if (authSkipped) {
-      const user = {};
-
-      dispatch({
-        type: HANDLERS.INITIALIZE,
-        payload: user
-      });
-      return;
-    }
-
-    // Check if authentication with Zalter is enabled
-    // If not, then set user as authenticated
-    if (!ENABLE_AUTH) {
-      const user = {};
-
-      dispatch({
-        type: HANDLERS.INITIALIZE,
-        payload: user
-      });
-      return;
-    }
-
-    try {
-      // Check if user is authenticated
-      const isAuthenticated = await auth.isAuthenticated();
-
-      if (isAuthenticated) {
-        // Get user from your database
-        const user = {};
-
-        dispatch({
-          type: HANDLERS.INITIALIZE,
-          payload: user
-        });
-      } else {
-        dispatch({
-          type: HANDLERS.INITIALIZE
-        });
-      }
-    } catch (err) {
-      console.error(err);
-      dispatch({
-        type: HANDLERS.INITIALIZE
-      });
-    }
-  };
-
-  useEffect(() => {
-    initialize().catch(console.error);
-  }, []);
-
-  const signIn = (user) => {
+  const login = (accessToken) => {
     dispatch({
-      type: HANDLERS.SIGN_IN,
-      payload: user
+      type: HANDLERS.LOGIN,
+      payload: accessToken
     });
   };
 
-  const signOut = () => {
+  const logout = () => {
     dispatch({
-      type: HANDLERS.SIGN_OUT
+      type: HANDLERS.LOGOUT
     });
   };
 
@@ -145,8 +58,8 @@ export const AuthProvider = (props) => {
     <AuthContext.Provider
       value={{
         ...state,
-        signIn,
-        signOut
+        login,
+        logout
       }}
     >
       {children}

@@ -24,7 +24,7 @@ const Login = () => {
         .max(255)
         .required('Password is required')
     }),
-    onSubmit: (values, actions) => {
+    onSubmit: async (values, actions) =>
       axios.post('/api/auth/login/',
         {
           username: values.email,
@@ -33,16 +33,13 @@ const Login = () => {
         {withCredentials: true}
       )
       .then(() => {
-        actions.setSubmitting(false)
         Router
           .push('/')
           .catch(console.error)
       })
-      .catch(function (error) {
-        actions.setSubmitting(false)
+      .catch((error) => {
         console.log(error);
       })
-    }
   });
 
   return (
@@ -90,7 +87,7 @@ const Login = () => {
               error={Boolean(formik.touched.email && formik.errors.email)}
               fullWidth
               helperText={formik.touched.email && formik.errors.email}
-              label="Email Address"
+              label="Email"
               margin="normal"
               name="email"
               onBlur={formik.handleBlur}
@@ -117,7 +114,7 @@ const Login = () => {
             <Box sx={{ py: 2 }}>
               <Button
                 color="primary"
-                disabled={formik.isSubmitting}
+                disabled={!formik.isValid || formik.isSubmitting}
                 fullWidth
                 size="large"
                 type="submit"

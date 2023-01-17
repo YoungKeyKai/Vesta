@@ -6,8 +6,11 @@ import * as Yup from 'yup';
 import { Box, Button, Container, Link, TextField, Typography } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import axios from 'axios';
+import { useAuthContext } from '../contexts/auth-context';
 
 const Login = () => {
+  const {signIn} = useAuthContext()
+
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -24,7 +27,7 @@ const Login = () => {
         .max(255)
         .required('Password is required')
     }),
-    onSubmit: async (values, actions) =>
+    onSubmit: async (values) =>
       axios.post('/api/auth/login/',
         {
           username: values.email,
@@ -32,7 +35,8 @@ const Login = () => {
         },
         {withCredentials: true}
       )
-      .then(() => {
+      .then((response) => {
+        signIn(response.data.access)
         Router
           .push('/')
           .catch(console.error)

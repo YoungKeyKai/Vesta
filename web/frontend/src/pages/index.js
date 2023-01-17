@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { Box, Container, Grid } from '@mui/material';
+import { Box, Container } from '@mui/material';
 
 import { DashboardLayout } from '../components/dashboard-layout';
 import { pages } from '../constants';
@@ -25,39 +25,39 @@ const Page = () => (
       }}
     >
       <Container maxWidth={false}>
-      <div className='homepage'>
-            <h1 className='vesta-main-title'>
+        <div className='homepage'>
+          <h1 className='vesta-main-title'>
                 Vesta
-            </h1>
-            <div className='button-box'>
-                <LinkButton
-                    href={pages.market.url}
-                    sx={{
-                        backgroundColor: "#84CEEB",
-                        ...linkButtonSize,
-                    }}
-                >
+          </h1>
+          <div className='button-box'>
+            <LinkButton
+              href={pages.market.url}
+              sx={{
+                backgroundColor: "#84CEEB",
+                ...linkButtonSize,
+              }}
+            >
                     Find Listings
-                </LinkButton>
-                <LinkButton
-                    href={pages.createListingPage.url}
-                    sx={{
-                        backgroundColor: "#5AB9EA",
-                        ...linkButtonSize,
-                    }}
-                >
+            </LinkButton>
+            <LinkButton
+              href={pages.createListingPage.url}
+              sx={{
+                backgroundColor: "#5AB9EA",
+                ...linkButtonSize,
+              }}
+            >
                     Create Listings
-                </LinkButton>
-                <LinkButton
-                    href={pages.loginPage.url}
-                    sx={{
-                        backgroundColor: "#8860D0",
-                        ...linkButtonSize,
-                    }}
-                >
+            </LinkButton>
+            <LinkButton
+              href={pages.loginPage.url}
+              sx={{
+                backgroundColor: "#8860D0",
+                ...linkButtonSize,
+              }}
+            >
                     Your Listings
-                </LinkButton>
-            </div>
+            </LinkButton>
+          </div>
         </div>
       </Container>
     </Box>

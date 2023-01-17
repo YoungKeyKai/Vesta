@@ -65,7 +65,7 @@ const Page = () => (
 );
 
 Page.getLayout = (page) => (
-  <DashboardLayout>
+  <DashboardLayout noGuard={true}>
     {page}
   </DashboardLayout>
 );

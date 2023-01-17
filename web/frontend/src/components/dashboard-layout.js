@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { AuthGuard } from './auth-guard';
@@ -16,11 +17,11 @@ const DashboardLayoutRoot = styled('div')(({ theme }) => ({
 }));
 
 export const DashboardLayout = (props) => {
-  const { children } = props;
+  const { children, noGuard } = props;
   const [isSidebarOpen, setSidebarOpen] = useState(true);
 
-  return (
-    <AuthGuard>
+  const dashboard = (
+    <div>
       <DashboardLayoutRoot>
         <Box
           sx={{
@@ -38,6 +39,24 @@ export const DashboardLayout = (props) => {
         onClose={() => setSidebarOpen(false)}
         open={isSidebarOpen}
       />
+    </div>
+  )
+
+  if (noGuard) {
+    return dashboard;
+  }
+
+  return (
+    <AuthGuard>
+      {dashboard}
     </AuthGuard>
   );
 };
+
+DashboardLayout.propTypes = {
+  noGuard: PropTypes.bool
+};
+
+DashboardLayout.defaultProps = {
+    noGuard: false
+}

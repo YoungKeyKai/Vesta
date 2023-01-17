@@ -180,7 +180,7 @@ const Market = () => {
 }
 
 Market.getLayout = (page) => (
-    <DashboardLayout>
+    <DashboardLayout noGuard={true}>
         {page}
     </DashboardLayout>
 );

@@ -214,7 +214,7 @@ const Register = () => {
                   variant="subtitle2"
                   underline="hover"
                 >
-                  Sign In
+                  Login
                 </Link>
               </NextLink>
             </Typography>

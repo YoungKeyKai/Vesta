@@ -6,11 +6,11 @@ import { useAuthContext } from '../contexts/auth-context';
 
 export const AccountPopover = (props) => {
   const { anchorEl, onClose, open, ...other } = props;
-  const {signOut} = useAuthContext();
+  const {logout} = useAuthContext();
 
-  const handleSignOut = async () => {
+  const handleLogout = async () => {
     onClose?.();
-    signOut();
+    logout();
 
     // Redirect to login page
     Router
@@ -61,8 +61,8 @@ export const AccountPopover = (props) => {
           }
         }}
       >
-        <MenuItem onClick={handleSignOut}>
-          Sign out
+        <MenuItem onClick={handleLogout}>
+          Logout
         </MenuItem>
       </MenuList>
     </Popover>

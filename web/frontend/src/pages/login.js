@@ -9,7 +9,7 @@ import axios from 'axios';
 import { useAuthContext } from '../contexts/auth-context';
 
 const Login = () => {
-  const {signIn} = useAuthContext()
+  const {login} = useAuthContext()
 
   const formik = useFormik({
     initialValues: {
@@ -36,7 +36,7 @@ const Login = () => {
         {withCredentials: true}
       )
       .then((response) => {
-        signIn(response.data.access)
+        login(response.data.access)
         Router
           .push('/')
           .catch(console.error)
@@ -124,7 +124,7 @@ const Login = () => {
                 type="submit"
                 variant="contained"
               >
-                Sign In Now
+                Login Now
               </Button>
             </Box>
             <Typography

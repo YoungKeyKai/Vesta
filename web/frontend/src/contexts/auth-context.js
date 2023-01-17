@@ -2,8 +2,8 @@ import { createContext, useContext, useReducer } from 'react';
 import PropTypes from 'prop-types';
 
 const HANDLERS = {
-  SIGN_IN: 'SIGN_IN',
-  SIGN_OUT: 'SIGN_OUT'
+  LOGIN: 'LOGIN',
+  LOGOUT: 'LOGOUT'
 };
 
 const defaultContext = {
@@ -12,7 +12,7 @@ const defaultContext = {
 };
 
 const handlers = {
-  [HANDLERS.SIGN_IN]: (state, action) => {
+  [HANDLERS.LOGIN]: (state, action) => {
     const accessToken = action.payload;
     return {
       ...state,
@@ -20,7 +20,7 @@ const handlers = {
       accessToken,
     };
   },
-  [HANDLERS.SIGN_OUT]: (state) => {
+  [HANDLERS.LOGOUT]: (state) => {
     return {
       ...state,
       isAuthenticated: false,
@@ -41,16 +41,16 @@ export const AuthProvider = (props) => {
   const { children } = props;
   const [state, dispatch] = useReducer(reducer, defaultContext);
 
-  const signIn = (accessToken) => {
+  const login = (accessToken) => {
     dispatch({
-      type: HANDLERS.SIGN_IN,
+      type: HANDLERS.LOGIN,
       payload: accessToken
     });
   };
 
-  const signOut = () => {
+  const logout = () => {
     dispatch({
-      type: HANDLERS.SIGN_OUT
+      type: HANDLERS.LOGOUT
     });
   };
 
@@ -58,8 +58,8 @@ export const AuthProvider = (props) => {
     <AuthContext.Provider
       value={{
         ...state,
-        signIn,
-        signOut
+        login,
+        logout
       }}
     >
       {children}

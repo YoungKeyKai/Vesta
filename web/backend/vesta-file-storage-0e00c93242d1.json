@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "vesta-file-storage",
+  "private_key_id": "0e00c93242d1eeee7a224af38216b81edb118d75",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDyxWaYxRulRZiM\nIUCjobKMGecbso/KnzuEdKvOcK5s5rP/fUED53aSb78QAzoPJdN/Tu70QFkseuHv\nbbb2PB+6ERrJVhAyLbE88D6XdCkoYEoZ3JgZCtVC+v5TmEQJ25ZPm731NVgEygnS\nTUtY49EEg5EE1HQ6BAI5/jggmugre5aDMjpdLtCDTQ1AaY30S5TCofmOg3AmOrfi\n3lEhtq3Atyk5+IlB9ItI2Dh1jwMRYdPqyuXGaMIG6K+kygzjxobQGGNAoqo6HffK\ne7GB51WH6tBxqxcCx0CZrtkmHgGgUq+TbHYVA959h08IE11DY/Q7M7vf9RZA3vWA\nD96aR7WdAgMBAAECggEAJz+VNukU71sJTsxYcivj3QUaCS8M0qX8Hg2rsgAjHu2M\nV6eFEY/D6mhBBCJ1ajoED56wAJJ/qDKEoOwEqpntSixWP4sXqrka4J55jAxGVCX/\nDN/OQiwvbrj70YF6LHrQ+fVUmFZDsOCGBncjEY+hPODVWunLEY8Q2hXYtqK8mry7\na8PkeSRaf3NOappvOiBkV6mejQvHAn1q+sxKBW776YDGE1QuA8BoVhDWexVBe4VM\nx70Oi/Ymxtxs+tNfMYHyWWTVJBCwpG1kUBqoNQUtJ9V0WN11VQi772l9zZhRQnUl\nXVQJaq6TBWSbK79sLwMyL9FKEFsmeWnz6C3ZlVqDuQKBgQD7oOjCD7DzKR1j4Mhk\nI0LjnJ9GeKGRC+A2lcX6klBRmCubfiaxcf2FDKgiubqXUkXr3FYUUje/N/5ZhKSx\nJ/YUEtC167tPHgHfzd75itg1gn3+hR38txd1bYaZRTgPuNw75b0FaK8yftEEvCZ+\n/wGeVCRl0SXkKwgnty9Xqpbf5QKBgQD2/RlXB/bdCXE4xRH/MyJHsW/dAhkUbXQi\nqpatqG/2RLzIBwqMZisgiSzT9hP9Kdrcm+EMy3PzkWN5rfkbCAXr8dh3NKn3yLJK\nH16fEvyjF67D4/E0ygoAmktdC7Q0lYCRX7e4wSiNuJdvIPH8c+nJpKbgKC+lwhu0\nmVB/nEBzWQKBgQDW5mbDDimekjeijGA4fZDr2WCCDBZYTR8xHxrVVE46UU603rln\nBKZzEgsqlRqRj9ddh3EQq+MmcUjN5SXOkwVrwWH0bJ4tBMCvBiDvWDAtCwRV8hRZ\nN3lWdbLlhaNKciPNF/kl/HDcHEig1Zu/DESylsP7HPNSeZneaWmKYou2LQKBgQCP\nlF6wu06E/EI3cEigBEe/SaTv45JUz7QdmvFxDmPX0+mylnVJXPNhPJ00su630ycJ\n7AwN9g/33eLoD3yqfCWFHdhqo9DS3HbYpBfLfawj21abRd0ohPL/mrKI6o7dqrNM\nz0nsO02p5U8TKSHDUlbsA62GzZW1VHvqpt2m8Vx+MQKBgQCThdot70sPtvcBYp60\nDWNrKX4Zkvkdz7bEH+su7KzjMAMKnUgPUElFspk++asq46w8DVOzhMb3aCh9EoG2\ndFhBp9KdVVpu7Np3yVRc8N3vWvGlYvMJqIlPBEMqRCZ5v2aOlEBmJDj3CXqojvnj\n6qcATi0/BONpqBJvhJ84kjPj+g==\n-----END PRIVATE KEY-----\n",
+  "client_email": "vesta-admin@vesta-file-storage.iam.gserviceaccount.com",
+  "client_id": "103335971620427049383",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/vesta-admin%40vesta-file-storage.iam.gserviceaccount.com"
+}

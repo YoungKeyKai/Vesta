@@ -2,8 +2,12 @@ from django.db import models, connection
 from django.contrib.postgres.fields import IntegerRangeField, DateRangeField, ArrayField
 from psycopg2.extras import register_composite
 from psycopg2.extensions import register_adapter, adapt, AsIs
+from gdstorage.storage import GoogleDriveStorage
 
 from .validators import validate_province
+
+# Define Google Drive Storage for static files
+gd_storage = GoogleDriveStorage()
 
 # Django Auto-generated models
 
@@ -127,7 +131,7 @@ class DjangoSession(models.Model):
 class UserUpload(models.Model):
     owner = models.ForeignKey("AuthUser", on_delete=models.CASCADE, null=False)
     uploadtime = models.DateTimeField(null=True)
-    content = models.FileField(upload_to='uploads')
+    content = models.FileField(upload_to='uploads', storage=gd_storage)
 
     class Meta:
         db_table = 'uploads'

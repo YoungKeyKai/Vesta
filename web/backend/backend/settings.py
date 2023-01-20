@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'corsheaders',
+    'gdstorage',
     'rest_framework',
     'rest_framework_simplejwt',
     'vesta',
@@ -142,6 +143,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+# Google Drive Storage Settings
+# https://django-googledrive-storage.readthedocs.io/en/latest/
+
+GOOGLE_DRIVE_STORAGE_JSON_KEY_FILE = 'vesta-file-storage-0e00c93242d1.json'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

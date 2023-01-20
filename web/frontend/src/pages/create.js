@@ -19,7 +19,7 @@ import { useAuthContext } from '../contexts/auth-context';
 import { DashboardLayout } from '../components/dashboard-layout';
 
 const CreateListing = () => {
-  const {accessToken} = useAuthContext();
+  const {accessToken, userId} = useAuthContext();
 
   const [property, setProperty] = useState(null);
   const [properties, setProperties] = useState([]);
@@ -155,7 +155,7 @@ const CreateListing = () => {
       {
         ...listing,
         propertyID: property?.id || newPropertyID,   // use newPropertyID if property.id is null
-        owner: 3,   // Need to remove hardcoded user, and use current user
+        owner: userId,
         duration: JSON.stringify(listing.duration),
         rate: JSON.stringify(listing.rate),
       },

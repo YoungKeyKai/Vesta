@@ -1,4 +1,5 @@
 import { createContext, useContext, useReducer } from 'react';
+import jwtDecode from 'jwt-decode';
 import PropTypes from 'prop-types';
 
 const HANDLERS = {
@@ -9,15 +10,19 @@ const HANDLERS = {
 const defaultContext = {
   isAuthenticated: false,
   accessToken: null,
+  userId: null,
 };
 
 const handlers = {
   [HANDLERS.LOGIN]: (state, action) => {
     const accessToken = action.payload;
+    const {user_id: userId} = jwtDecode(accessToken)
+
     return {
       ...state,
       isAuthenticated: true,
       accessToken,
+      userId,
     };
   },
   [HANDLERS.LOGOUT]: (state) => {
@@ -25,6 +30,7 @@ const handlers = {
       ...state,
       isAuthenticated: false,
       accessToken: null,
+      userId: null,
     };
   }
 };

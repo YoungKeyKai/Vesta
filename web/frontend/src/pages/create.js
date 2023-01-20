@@ -15,9 +15,11 @@ import {
 } from '@mui/material/';
 import { AttachMoney } from '@mui/icons-material';
 
+import { useAuthContext } from '../contexts/auth-context';
 import { DashboardLayout } from '../components/dashboard-layout';
 
 const CreateListing = () => {
+  const {accessToken} = useAuthContext();
 
   const [property, setProperty] = useState(null);
   const [properties, setProperties] = useState([]);
@@ -125,7 +127,15 @@ const CreateListing = () => {
   const handleSubmit = () => {
     if (property?.id == null) {
       // first create the new property to use with new listing
-      axios.post('/api/listingproperties/', property)
+      axios.post(
+        '/api/listingproperties/',
+        property,
+        {
+          headers: {
+            'Authorization': `Bearer ${accessToken}` 
+          }
+        }
+      )
         .then((response) => {
           setProperty(response.data); 
           postListing(response.data.id);
@@ -140,13 +150,21 @@ const CreateListing = () => {
 
   const postListing = (newPropertyID = null) => {
     // next create the new listing, using new (or existing) propertyID
-    axios.post('/api/listinglistings/', {
-      ...listing,
-      propertyID: property?.id || newPropertyID,   // use newPropertyID if property.id is null
-      owner: 3,   // Need to remove hardcoded user, and use current user
-      duration: JSON.stringify(listing.duration),
-      rate: JSON.stringify(listing.rate),
-    })
+    axios.post(
+      '/api/listinglistings/', 
+      {
+        ...listing,
+        propertyID: property?.id || newPropertyID,   // use newPropertyID if property.id is null
+        owner: 3,   // Need to remove hardcoded user, and use current user
+        duration: JSON.stringify(listing.duration),
+        rate: JSON.stringify(listing.rate),
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${accessToken}` 
+        }
+      }
+    )
       .then((res) => {
         router.push(`/listing?id=${res.data.id}`);
       })

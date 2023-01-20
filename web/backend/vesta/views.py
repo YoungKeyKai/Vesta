@@ -3,7 +3,7 @@ from django.conf import settings
 from rest_framework import viewsets, status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 from .serializers import *
 from .models import *
@@ -72,13 +72,13 @@ class UserPreferencesView(viewsets.ModelViewSet):
 
 
 class ListingPropertyView(viewsets.ModelViewSet):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = ListingPropertySerializer
     queryset = ListingProperty.objects.all()
 
 
 class ListingListingView(viewsets.ModelViewSet):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = ListingListingSerializer
     queryset = ListingListing.objects.all()
 

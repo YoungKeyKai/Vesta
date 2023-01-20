@@ -14,7 +14,7 @@ import {
   MenuItem
 } from '@mui/material/';
 import { AttachMoney } from '@mui/icons-material';
-
+import { MuiFileInput } from "mui-file-input";
 import { DashboardLayout } from '../components/dashboard-layout';
 
 const CreateListing = () => {
@@ -123,8 +123,8 @@ const CreateListing = () => {
     });
   }
 
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+  const handleFileChange = (newFile) => {
+    setFile(newFile);
   }
 
   const handleSubmit = () => {
@@ -324,8 +324,9 @@ const CreateListing = () => {
               <br/>
               Floorplan:
               <Box>
-                <TextField 
-                  type="file"
+                <MuiFileInput
+                  placeholder="Upload Attachment"
+                  value={file}
                   onChange={handleFileChange}
                 />
               </Box>

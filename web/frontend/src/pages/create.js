@@ -15,6 +15,7 @@ import {
 } from '@mui/material/';
 import { AttachMoney } from '@mui/icons-material';
 
+import { provinces } from '../constants';
 import { useAuthContext } from '../contexts/auth-context';
 import { DashboardLayout } from '../components/dashboard-layout';
 
@@ -231,19 +232,11 @@ const CreateListing = () => {
                   select
                   onChange={handlePropertyChange}
                 >
-                  <MenuItem value={'AB'}>AB</MenuItem>
-                  <MenuItem value={'BC'}>BC</MenuItem>
-                  <MenuItem value={'MB'}>MB</MenuItem>
-                  <MenuItem value={'NB'}>NB</MenuItem>
-                  <MenuItem value={'NL'}>NL</MenuItem>
-                  <MenuItem value={'NT'}>NT</MenuItem>
-                  <MenuItem value={'NS'}>NS</MenuItem>
-                  <MenuItem value={'NU'}>NU</MenuItem>
-                  <MenuItem value={'ON'}>ON</MenuItem>
-                  <MenuItem value={'PE'}>PE</MenuItem>
-                  <MenuItem value={'QC'}>QC</MenuItem>
-                  <MenuItem value={'SK'}>SK</MenuItem>
-                  <MenuItem value={'YT'}>YT</MenuItem>
+                  {
+                    provinces.map((provinceCode) => (
+                      <MenuItem value={provinceCode}>{provinceCode}</MenuItem>
+                    ))
+                  }
                 </TextField>
               </Box>
               <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>

@@ -20,7 +20,7 @@ import { useAuthContext } from '../contexts/auth-context';
 import { DashboardLayout } from '../components/dashboard-layout';
 
 const CreateListing = () => {
-  const {accessToken, userId} = useAuthContext();
+  const {authAxios, userId} = useAuthContext();
 
   const [property, setProperty] = useState(null);
   const [properties, setProperties] = useState([]);
@@ -128,15 +128,7 @@ const CreateListing = () => {
   const handleSubmit = () => {
     if (property?.id == null) {
       // first create the new property to use with new listing
-      axios.post(
-        '/api/listingproperties/',
-        property,
-        {
-          headers: {
-            'Authorization': `Bearer ${accessToken}` 
-          }
-        }
-      )
+      authAxios.post('/api/listingproperties/', property)
         .then((response) => {
           setProperty(response.data); 
           postListing(response.data.id);
@@ -151,7 +143,7 @@ const CreateListing = () => {
 
   const postListing = (newPropertyID = null) => {
     // next create the new listing, using new (or existing) propertyID
-    axios.post(
+    authAxios.post(
       '/api/listinglistings/', 
       {
         ...listing,
@@ -159,11 +151,6 @@ const CreateListing = () => {
         owner: userId,
         duration: JSON.stringify(listing.duration),
         rate: JSON.stringify(listing.rate),
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${accessToken}` 
-        }
       }
     )
       .then((res) => {
@@ -234,7 +221,7 @@ const CreateListing = () => {
                 >
                   {
                     provinces.map((provinceCode) => (
-                      <MenuItem value={provinceCode}>{provinceCode}</MenuItem>
+                      <MenuItem value={provinceCode} key={provinceCode}>{provinceCode}</MenuItem>
                     ))
                   }
                 </TextField>

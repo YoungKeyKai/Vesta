@@ -1,10 +1,12 @@
+import axios from 'axios';
 import { createContext, useContext, useReducer } from 'react';
 import jwtDecode from 'jwt-decode';
 import PropTypes from 'prop-types';
 
 const HANDLERS = {
   LOGIN: 'LOGIN',
-  LOGOUT: 'LOGOUT'
+  LOGOUT: 'LOGOUT',
+  REFRESH: 'REFRESH',
 };
 
 const defaultContext = {
@@ -32,7 +34,19 @@ const handlers = {
       accessToken: null,
       userId: null,
     };
-  }
+  },
+  [HANDLERS.REFRESH]: (state, action) => {
+    if (!state.isAuthenticated) {
+      throw Error("Trying to refresh when not logged in.")
+    }
+
+    const accessToken = action.payload;
+
+    return {
+      ...state,
+      accessToken,
+    };
+  },
 };
 
 const reducer = (state, action) => (
@@ -50,22 +64,51 @@ export const AuthProvider = (props) => {
   const login = (accessToken) => {
     dispatch({
       type: HANDLERS.LOGIN,
-      payload: accessToken
+      payload: accessToken,
     });
   };
 
   const logout = () => {
     dispatch({
-      type: HANDLERS.LOGOUT
+      type: HANDLERS.LOGOUT,
     });
   };
+
+  const refresh = (accessToken) => {
+    dispatch({
+      type: HANDLERS.REFRESH,
+      payload: accessToken,
+    })
+  }
+
+  const authAxios = axios.create({
+    headers: {
+      'Authorization': `Bearer ${state.accessToken}` 
+    }
+  });
+  authAxios.interceptors.response.use(
+    response => response,
+    error => {
+      if (error.response.status == 401 && error.response.data?.code == 'token_not_valid') {
+        axios.post('/api/auth/token/refresh/', {}, {withCredentials: true})
+          .then((response) => {
+            refresh(response.data.access)
+
+            error.config.headers.Authorization = `Bearer ${response.data.access}`
+            return axios.request(error.config);
+          })
+          .catch(() => logout())
+      }
+    }
+  );
 
   return (
     <AuthContext.Provider
       value={{
         ...state,
         login,
-        logout
+        logout,
+        authAxios,
       }}
     >
       {children}

@@ -25,6 +25,8 @@ The folder structure here is vital as the CI pipeline builds the project expecti
 # PRs
 ***ALWAYS*** commit to `develop` branch as `master` is tied to the CI pipeline. We do not want code changes to go into the pipeline constantly without any prior review and testing.
 
+It is also a good practice to run `npm run lint` before submitting your code for proper formatting.
+
 ## Best Practices
 1. Create new branches for each issue you are tackling.
 2. Use descriptive branch names.

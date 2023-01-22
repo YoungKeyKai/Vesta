@@ -11,18 +11,18 @@ from .models import *
 
 def set_jwt_refresh_token_cookie(response, value, max_age):
     response.set_cookie(
-        settings.JWT_AUTH['JWT_REFRESH_TOKEN_COOKIE_NAME'],
+        settings.SIMPLE_JWT['JWT_REFRESH_TOKEN_COOKIE_NAME'],
         value=value,
         max_age=max_age,
         httponly=True,
         secure=True,
-        path=settings.JWT_AUTH['JWT_REFRESH_TOKEN_COOKIE_PATH']
+        path=settings.SIMPLE_JWT['JWT_REFRESH_TOKEN_COOKIE_PATH']
     )
 
 
 def set_jwt_refresh_token_cookie_if_it_exists(response):
     if response.data.get('refresh'):
-        cookie_max_age = floor(settings.JWT_AUTH['JWT_REFRESH_EXPIRATION_DELTA'].total_seconds())
+        cookie_max_age = floor(settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds())
         set_jwt_refresh_token_cookie(response, response.data['refresh'], cookie_max_age)
         del response.data['refresh']
 

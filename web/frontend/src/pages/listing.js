@@ -5,6 +5,7 @@ import {
   Grid,
   CircularProgress,
   Box,
+  Button,
   Container
 } from '@mui/material';
 import axios from 'axios';
@@ -65,6 +66,17 @@ const ListingsPage = () => {
     return `${toDesiredString(duration.lower)} - ${toDesiredString(duration.upper)}`;
   }
 
+  const handleDelete = () => {
+    if (window.confirm('Are you sure you wish to delete this listing?')){
+      axios.delete('/api/listinglistings/'+ id)
+        .then(() => {       
+          alert("Listing deleted successfully!");
+          router.push(`/market`);
+        })
+        .catch((err) => console.log(err));
+    }   
+  }
+
   return (
     <>
       <Head>
@@ -117,6 +129,11 @@ const ListingsPage = () => {
                     className='user-description'
                     xs={maxXS - tagGridSize}>
                     <h2>Description</h2>
+                  </Grid>
+                  <Grid item
+                    className='delete'
+                    xs={maxXS - tagGridSize}>
+                    <Button className='delete-button' variant="contained" color="error" onClick={handleDelete}>Delete</Button>
                   </Grid>
                 </Grid> :
                 <CircularProgress className="loading-circle"

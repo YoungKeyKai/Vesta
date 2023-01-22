@@ -52,7 +52,7 @@ class ListingPropertySerializer(serializers.ModelSerializer):
 class ListingListingSerializer(serializers.ModelSerializer):
     class Meta:
         model = ListingListing
-        fields = ('id', 'owner', 'propertyID', 'unit', 'duration', 'rate', 'utilities', 'floorplan', 'proof', 'status')
+        fields = ('id', 'owner', 'propertyID', 'unit', 'duration', 'rate', 'utilities', 'floorplan', 'proof', 'status', 'description')
 
 
 class ListingInterestSerializer(serializers.ModelSerializer):

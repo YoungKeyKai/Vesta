@@ -332,6 +332,18 @@ const CreateListing = () => {
               </Box>
             </div>
             <br/>
+            <Box sx={{'& > :not(style)': { m: 1 }}}>
+              <TextField TextField type="text"
+                fullWidth
+                multiline
+                variant="filled"
+                label="Description"
+                name="description"
+                inputProps={{ maxLength: 1024 }}
+                onChange={handleListingChange}>
+              </TextField>
+            </Box>
+            <br/>
             <Button variant="contained" onClick={handleSubmit}>Create</Button>
           </div>
         </Container>

@@ -176,6 +176,7 @@ class ListingListing(models.Model):
         models.CharField(max_length=32),
         blank=True
     )
+    description = models.TextField(blank=True, null=True)
     floorplan = models.ForeignKey(UserUpload, related_name='floorplan_fk', on_delete=models.SET_NULL, null=True, blank=True)
     proof = models.ForeignKey(UserUpload, related_name='proof_fk', on_delete=models.SET_NULL, null=True, blank=True)
     

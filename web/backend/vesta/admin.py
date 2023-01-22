@@ -14,7 +14,7 @@ class ListingPropertyAdmin(admin.ModelAdmin):
     list_display = ('name', 'address', 'city', 'province')
 
 class ListingListingAdmin(admin.ModelAdmin):
-    list_display = ('owner', 'propertyID', 'unit', 'duration', 'rate', 'utilities', 'floorplan', 'proof', 'status')
+    list_display = ('owner', 'propertyID', 'unit', 'duration', 'rate', 'utilities', 'floorplan', 'description', 'proof', 'status')
 
 class ListingInterestAdmin(admin.ModelAdmin):
     list_display = ('buyer', 'seller', 'listing', 'status')

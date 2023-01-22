@@ -88,9 +88,9 @@ export const AuthProvider = (props) => {
   });
   authAxios.interceptors.response.use(
     response => response,
-    error => {
+    async error => {
       if (error.response.status == 401 && error.response.data?.code == 'token_not_valid') {
-        axios.post('/api/auth/token/refresh/', {}, {withCredentials: true})
+        return axios.post('/api/auth/token/refresh/', {}, {withCredentials: true})
           .then((response) => {
             refresh(response.data.access)
 
@@ -99,6 +99,8 @@ export const AuthProvider = (props) => {
           })
           .catch(() => logout())
       }
+
+      return Promise.reject(error)
     }
   );
 

@@ -14,7 +14,7 @@ import {
   MenuItem
 } from '@mui/material/';
 import { AttachMoney } from '@mui/icons-material';
-
+import { MuiFileInput } from "mui-file-input";
 import { DashboardLayout } from '../components/dashboard-layout';
 
 const CreateListing = () => {
@@ -26,6 +26,7 @@ const CreateListing = () => {
     duration: { bounds: "[)" },
     rate: { bounds: "[)" }
   });
+  const [file, setFile] = useState(null);
 
   // History
   const router = useRouter();
@@ -122,6 +123,10 @@ const CreateListing = () => {
     });
   }
 
+  const handleFileChange = (newFile) => {
+    setFile(newFile);
+  }
+
   const handleSubmit = () => {
     if (property?.id == null) {
       // first create the new property to use with new listing
@@ -139,14 +144,32 @@ const CreateListing = () => {
   }
 
   const postListing = (newPropertyID = null) => {
+    // first try to upload file if it exists
+    if (file != null) {
+      axios.post('/api/useruploads/', {
+        owner: 3, // Need to remove hardcoded user, and use current user
+        uploadtime: new Date(), // gets the current date/time
+        content: file
+      }, { 
+        headers : { 'Content-Type': 'multipart/form-data'}
+      })
+      .then((response) => {
+        setListing({
+          ...listing,
+          floorplan: response.data.id // use the upload ID
+        });
+      })
+      .catch(error => console.log(error))
+    }
+
     // next create the new listing, using new (or existing) propertyID
     axios.post('/api/listinglistings/', {
-      ...listing,
-      propertyID: property?.id || newPropertyID,   // use newPropertyID if property.id is null
-      owner: 3,   // Need to remove hardcoded user, and use current user
-      duration: JSON.stringify(listing.duration),
-      rate: JSON.stringify(listing.rate),
-    })
+        ...listing,
+        propertyID: property?.id || newPropertyID,   // use newPropertyID if property.id is null
+        owner: 3,   // Need to remove hardcoded user, and use current user
+        duration: JSON.stringify(listing.duration),
+        rate: JSON.stringify(listing.rate),
+      })
       .then((res) => {
         router.push(`/listing?id=${res.data.id}`);
       })
@@ -297,6 +320,15 @@ const CreateListing = () => {
                                     Unavailable
                   </ToggleButton>
                 </ToggleButtonGroup>
+              </Box>
+              <br/>
+              Floorplan:
+              <Box>
+                <MuiFileInput
+                  placeholder="Upload Attachment"
+                  value={file}
+                  onChange={handleFileChange}
+                />
               </Box>
             </div>
             <br/>

@@ -1,7 +1,7 @@
 # Vesta
 Webservice for Landlords, Tenants, and Subtenants.
 
-The fourth year design project of group 23 of the 2023 cohort in the department of Computer Engineering at the University of Waterloo.
+The fourth year design project of group 26 of the 2023 cohort in the department of Computer Engineering at the University of Waterloo.
 
 ## Group Members
 1. Hong Bin Jiang

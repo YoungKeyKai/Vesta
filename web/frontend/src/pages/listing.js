@@ -5,13 +5,9 @@ import {
   Grid,
   CircularProgress,
   Box,
-<<<<<<< HEAD
   Button,
-  Container
-=======
   Container,
   ToggleButton
->>>>>>> added description column to listing table and added interested button
 } from '@mui/material';
 import axios from 'axios';
 
@@ -73,7 +69,6 @@ const ListingsPage = () => {
     return `${toDesiredString(duration.lower)} - ${toDesiredString(duration.upper)}`;
   }
 
-<<<<<<< HEAD
   const handleDelete = () => {
     if (window.confirm('Are you sure you wish to delete this listing?')){
       axios.delete('/api/listinglistings/'+ id)
@@ -82,11 +77,10 @@ const ListingsPage = () => {
           router.push(`/market`);
         })
         .catch((err) => console.log(err));
-    }   
-=======
+    }
+  }
   function changeButtonText() {
     setButtonText(prev => prev === "Interested" ? "Uninterested" : "Interested");
->>>>>>> added description column to listing table and added interested button
   }
 
   return (

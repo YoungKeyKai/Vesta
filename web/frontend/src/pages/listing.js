@@ -6,7 +6,8 @@ import {
   CircularProgress,
   Box,
   Button,
-  Container
+  Container,
+  ToggleButton
 } from '@mui/material';
 import axios from 'axios';
 
@@ -18,12 +19,15 @@ const ListingsPage = () => {
   const [listing, setListing] = useState({});
   const [property, setProperty] = useState({});
   const [googleMapsAddr, setGoogleMapsAddr] = useState('');
+  const [buttonText, setButtonText] = useState("Interested");
   const router = useRouter();
   const { id } = router.query;
 
   const maxXS = 12;
   const propertyGridSize = 7;
-  const tagGridSize = 4;
+  const utilityGridSize = 7;
+  const descriptionGridSize = 10;
+  const deleteGridSize = 4;
 
   const formatAddr = (addr, city, province) => `${addr.replaceAll(/ +/g, '+')},${city}+${province}`;
   useEffect(() => {
@@ -74,7 +78,10 @@ const ListingsPage = () => {
           router.push(`/market`);
         })
         .catch((err) => console.log(err));
-    }   
+    }
+  }
+  function changeButtonText() {
+    setButtonText(prev => prev === "Interested" ? "Uninterested" : "Interested");
   }
 
   return (
@@ -115,24 +122,26 @@ const ListingsPage = () => {
                     />
                   </Grid>
                   <Grid item
-                    className='utilities-summary'
                     xs={maxXS - propertyGridSize}>
+                    <ToggleButton
+                      selected={buttonText}
+                      onClick={() => changeButtonText()}>{buttonText}</ToggleButton>   
+                  </Grid>
+                  <Grid item
+                    className='utilities-summary'
+                    xs={utilityGridSize}>
                     <h2>Utilities and Amenities</h2>
                     <UtiltiesList utilities={listing.utilities} />
                   </Grid>
                   <Grid item
-                    className='tags'
-                    xs={tagGridSize}>
-                    <h2>Tags</h2>
-                  </Grid>
-                  <Grid item
                     className='user-description'
-                    xs={maxXS - tagGridSize}>
+                    xs={descriptionGridSize}>
                     <h2>Description</h2>
+                    <h3>{listing.description}</h3>
                   </Grid>
                   <Grid item
                     className='delete'
-                    xs={maxXS - tagGridSize}>
+                    xs={maxXS - deleteGridSize}>
                     <Button className='delete-button' variant="contained" color="error" onClick={handleDelete}>Delete</Button>
                   </Grid>
                 </Grid> :

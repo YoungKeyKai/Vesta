@@ -27,6 +27,7 @@ const ListingsPage = () => {
   const propertyGridSize = 7;
   const utilityGridSize = 7;
   const descriptionGridSize = 10;
+  const deleteGridSize = 4;
 
   const formatAddr = (addr, city, province) => `${addr.replaceAll(/ +/g, '+')},${city}+${province}`;
   useEffect(() => {
@@ -140,7 +141,7 @@ const ListingsPage = () => {
                   </Grid>
                   <Grid item
                     className='delete'
-                    xs={maxXS - tagGridSize}>
+                    xs={maxXS - deleteGridSize}>
                     <Button className='delete-button' variant="contained" color="error" onClick={handleDelete}>Delete</Button>
                   </Grid>
                 </Grid> :

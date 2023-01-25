@@ -49,8 +49,6 @@ const Market = () => {
     const getListings = () => {
       const reqFilters = new URLSearchParams(params).toString();
       axios.get(`/api/listinglistings?${reqFilters}`)
-      const reqFilters = new URLSearchParams(params).toString();
-      axios.get(`/api/listinglistings?${reqFilters}`)
         .then((res) => {
           setListings(res.data);
           setPage(res.data.slice(0, 6));

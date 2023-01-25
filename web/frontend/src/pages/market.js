@@ -7,7 +7,10 @@ import {
   Container,
   Card,
   CardContent,
-  Pagination 
+  Pagination, 
+  Slider,
+  Typography,
+  TextField,
 } from '@mui/material';
 
 import { DashboardLayout } from '../components/dashboard-layout';
@@ -28,10 +31,15 @@ const Market = () => {
   // History
   const router = useRouter();
 
+  // Parse URL Parameters
+  const params = router.query;
+  const [filters, setFilters] = useState(params);
+
   // useEffect Hook on Page Load
   useEffect(() => {
     const getListings = () => {
-      axios.get('/api/listinglistings')
+      const reqFilters = new URLSearchParams(params).toString();
+      axios.get(`/api/listinglistings?${reqFilters}`)
         .then((res) => {
           setListings(res.data);
           setPage(res.data.slice(0, 6));
@@ -149,6 +157,41 @@ const Market = () => {
         <Container maxWidth={false}>
           <div className='Market'>
             <h1>Market</h1>
+            <Box className='advanced-filters' sx={{ display: 'flex', my: 3 }}>
+              <Box sx={{ width: 200, mx: 2 }}>
+                <Typography>
+                  Price ($)
+                </Typography>
+                <Slider
+                  value={filters.price ?? [0, 4000]}
+                  step={100}
+                  min={0}
+                  max={4000}
+                  onChange={(event, newValue) => { setFilters({ ...filters, price: newValue }) }}
+                  valueLabelDisplay="auto"
+                ></Slider>
+              </Box>
+              <Box sx={{ width: 200, mx: 2 }}>
+                <Typography>
+                  Start Date
+                </Typography>
+                <TextField 
+                  type="date"
+                  onChange={(event, newValue) => { setFilters({ ...filters, startDate: newValue }) }}
+                >
+                </TextField>
+              </Box>
+              <Box sx={{ width: 200, mx: 2 }}>
+                <Typography>
+                  End Date
+                </Typography>
+                <TextField 
+                  type="date"
+                  onChange={(event, newValue) => { setFilters({ ...filters, endDate: newValue }) }}
+                >
+                </TextField>
+              </Box>
+            </Box>
             {page.length ? (
               <div>
                 <div className='market-results-info'>

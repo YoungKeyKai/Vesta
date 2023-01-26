@@ -127,24 +127,7 @@ const CreateListing = () => {
     setFile(newFile);
   }
 
-  const handleSubmit = () => {
-    if (property?.id == null) {
-      // first create the new property to use with new listing
-      axios.post('/api/listingproperties/', property)
-        .then((response) => {
-          setProperty(response.data); 
-          postListing(response.data.id);
-        })
-        .catch((err) => console.log(err));
-    } else {
-      // jsut create the listing using existing property
-      postListing();
-    }
-        
-  }
-
-  const postListing = (newPropertyID = null) => {
-    // first try to upload file if it exists
+  const postFloorplan = () => {
     if (file != null) {
       axios.post('/api/useruploads/', {
         owner: 3, // Need to remove hardcoded user, and use current user
@@ -154,18 +137,37 @@ const CreateListing = () => {
         headers : { 'Content-Type': 'multipart/form-data'}
       })
       .then((response) => {
-        setListing({
-          ...listing,
-          floorplan: response.data.id // use the upload ID
-        });
+        postProperty({floorplan: response.data.id})
       })
       .catch(error => console.log(error))
+    } else {
+      postProperty();
     }
+  }
 
+  const postProperty = (foreignKeys = {}) => {
+    if (property?.id == null) {
+      // first create the new property to use with new listing
+      axios.post('/api/listingproperties/', property)
+        .then((response) => {
+          setProperty(response.data);
+          foreignKeys.propertyID = response.data.id; 
+          postListing(foreignKeys);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      // just create the listing using existing property
+      foreignKeys.propertyID = property.id;
+      postListing(foreignKeys);
+    }
+        
+  }
+
+  const postListing = (foreignKeys = {}) => {
     // next create the new listing, using new (or existing) propertyID
     axios.post('/api/listinglistings/', {
         ...listing,
-        propertyID: property?.id || newPropertyID,   // use newPropertyID if property.id is null
+        ...foreignKeys,
         owner: 3,   // Need to remove hardcoded user, and use current user
         duration: JSON.stringify(listing.duration),
         rate: JSON.stringify(listing.rate),
@@ -344,7 +346,7 @@ const CreateListing = () => {
               </TextField>
             </Box>
             <br/>
-            <Button variant="contained" onClick={handleSubmit}>Create</Button>
+            <Button variant="contained" onClick={postFloorplan}>Create</Button>
           </div>
         </Container>
       </Box>

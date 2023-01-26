@@ -80,6 +80,11 @@ const ListingsPage = () => {
         .catch((err) => console.log(err));
     }
   }
+
+  const handleEdit = () => {
+     router.push(`/edit?id=${id}`);
+  }
+
   function changeButtonText() {
     setButtonText(prev => prev === "Interested" ? "Uninterested" : "Interested");
   }
@@ -140,9 +145,11 @@ const ListingsPage = () => {
                     <h3>{listing.description}</h3>
                   </Grid>
                   <Grid item
-                    className='delete'
+                    className='modify-buttons'
                     xs={maxXS - deleteGridSize}>
+                    <Button className='edit-button' variant="contained" color="success" onClick={handleEdit}>Edit</Button>
                     <Button className='delete-button' variant="contained" color="error" onClick={handleDelete}>Delete</Button>
+                    
                   </Grid>
                 </Grid> :
                 <CircularProgress className="loading-circle"

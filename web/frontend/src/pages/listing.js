@@ -20,6 +20,7 @@ const ListingsPage = () => {
   const [property, setProperty] = useState({});
   const [googleMapsAddr, setGoogleMapsAddr] = useState('');
   const [buttonText, setButtonText] = useState("Interested");
+  const [interest, setInterest] = useState({});
   const router = useRouter();
   const { id } = router.query;
 
@@ -43,12 +44,33 @@ const ListingsPage = () => {
         console.log(err);
       });
 
+    // const getInterest = id => axios
+    //   .get(`/api/listinginterest/${id}`)
+    //   .then((res) => {
+    //     const data = res.data;
+    //     console.log(data);
+    //     setInterest(data);
+    //   })
+    //   .catch((err) => {
+    //     //Replace with formal error handling
+    //     console.log(err);
+    //   })
+    
+    //set interest on initial load as this will not change
+    
+
     const getListing = () => axios
       .get(`/api/listinglistings/${id}`)
       .then((res) => {
         const data = res.data;
         setListing(data);
         getProperty(data.propertyID);
+        setInterest({
+          buyer: 5, // Need to remove hardcoded buyer,
+          seller: data.owner,
+          listing: data.id
+        });
+        // getInterest(data.listing);
       })
       .catch((err) => {
         //Replace with formal error handling
@@ -80,10 +102,25 @@ const ListingsPage = () => {
         .catch((err) => console.log(err));
     }
   }
-  function changeButtonText() {
+  function changeButtonText(buttonText) {
+    if (buttonText === "Interested") {
+      axios.post('/api/listinginterests/', 
+      interest
+      ).then((res) => {
+        const data = res.data;
+        setInterest({
+          ...interest,
+          id: data.id,
+        });
+      })
+      .catch((err) => console.log(err));
+    } else if(buttonText === "Uninterested") {
+        axios.delete('/api/listinginterests/'+ interest.id)
+        .catch((err) => console.log(err));
+    }
     setButtonText(prev => prev === "Interested" ? "Uninterested" : "Interested");
   }
-
+ 
   return (
     <>
       <Head>
@@ -125,7 +162,7 @@ const ListingsPage = () => {
                     xs={maxXS - propertyGridSize}>
                     <ToggleButton
                       selected={buttonText}
-                      onClick={() => changeButtonText()}>{buttonText}</ToggleButton>   
+                      onClick={() => changeButtonText(buttonText)}>{buttonText}</ToggleButton>   
                   </Grid>
                   <Grid item
                     className='utilities-summary'

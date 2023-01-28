@@ -85,6 +85,7 @@ class ListingListingView(viewsets.ModelViewSet):
 
 
 class ListingInterestView(viewsets.ModelViewSet):
+    permission_classes = [AllowAny]
     serializer_class = ListingInterestSerializer
     queryset = ListingInterest.objects.all()
 

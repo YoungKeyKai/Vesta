@@ -153,23 +153,23 @@ const CreateListing = () => {
       }, { 
         headers : { 'Content-Type': 'multipart/form-data'}
       })
-      .then((response) => {
-        setListing({
-          ...listing,
-          floorplan: response.data.id // use the upload ID
-        });
-      })
-      .catch(error => console.log(error))
+        .then((response) => {
+          setListing({
+            ...listing,
+            floorplan: response.data.id // use the upload ID
+          });
+        })
+        .catch(error => console.log(error))
     }
 
     // next create the new listing, using new (or existing) propertyID
     axios.post('/api/listinglistings/', {
-        ...listing,
-        propertyID: property?.id || newPropertyID,   // use newPropertyID if property.id is null
-        owner: 3,   // Need to remove hardcoded user, and use current user
-        duration: JSON.stringify(listing.duration),
-        rate: JSON.stringify(listing.rate),
-      })
+      ...listing,
+      propertyID: property?.id || newPropertyID,   // use newPropertyID if property.id is null
+      owner: 3,   // Need to remove hardcoded user, and use current user
+      duration: JSON.stringify(listing.duration),
+      rate: JSON.stringify(listing.rate),
+    })
       .then((res) => {
         router.push(`/listing?id=${res.data.id}`);
       })

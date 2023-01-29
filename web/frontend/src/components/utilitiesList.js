@@ -1,7 +1,12 @@
 import PropTypes from 'prop-types';
 
-import { Wifi, ElectricBolt, Kitchen, LocalLaundryService, LocalDining } from '@mui/icons-material';
-import { Tooltip } from '@mui/material';
+import { 
+  WifiTooltip,
+  ElectricToolTip,
+  KitchenTooltip,
+  LaundryTooltip,
+  LocalDiningTooltip 
+} from '../icons/utilities';
 
 export default function UtiltiesList(props) {
   const { utilities } = props;
@@ -14,51 +19,31 @@ export default function UtiltiesList(props) {
   // Render out special icons first then render the rest
   if (set.has('Wifi')) {
     elements.push(
-      <Tooltip title="Wifi"
-        key='wifiTooltip'>
-        <Wifi sx={{ color: '#283860' }}
-          key='wifi' />
-      </Tooltip>
+      <WifiTooltip />
     );
     set.delete('Wifi');
   }
   if (set.has('Electricity')) {
     elements.push(
-      <Tooltip title="Hydro"
-        key='hydroTooltip'>
-        <ElectricBolt sx={{ color: '#283860' }}
-          key='hydro' />
-      </Tooltip>
+      <ElectricToolTip />
     );
     set.delete('Electricity');
   }
   if (set.has('Kitchen')) {
     elements.push(
-      <Tooltip title="Kitchen"
-        key='kitchenTooltip'>
-        <Kitchen sx={{ color: '#283860' }}
-          key='kitchen' />
-      </Tooltip>
+      <KitchenTooltip />
     );
     set.delete('Kitchen');
   }
   if (set.has('Laundry')) {
     elements.push(
-      <Tooltip title="Laundry"
-        key='laundryTooltip'>
-        <LocalLaundryService sx={{ color: '#283860' }}
-          key='laundry' />
-      </Tooltip>
+      <LaundryTooltip />
     );
     set.delete('Laundry');
   }
   if (set.has('Food')) {
     elements.push(
-      <Tooltip title="Local Dining"
-        key='localDiningTooltip'>
-        <LocalDining sx={{ color: '#283860' }}
-          key='localDining' />
-      </Tooltip>
+      <LocalDiningTooltip />
     );
     set.delete('Food');
   }

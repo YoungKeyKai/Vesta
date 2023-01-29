@@ -4,15 +4,27 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import { 
   Box,
+  Button,
   Container,
   Card,
   CardContent,
-  Pagination 
+  Checkbox,
+  Pagination, 
+  Slider,
+  Typography,
+  TextField,
 } from '@mui/material';
 
 import { DashboardLayout } from '../components/dashboard-layout';
 import UtiltiesList from '../components/utilitiesList';
 import { colors, terms } from '../constants';
+import { 
+  WifiTooltip,
+  ElectricToolTip,
+  KitchenTooltip,
+  LaundryTooltip,
+  LocalDiningTooltip 
+} from '../icons/utilities';
 
 const Market = () => {
 
@@ -28,10 +40,15 @@ const Market = () => {
   // History
   const router = useRouter();
 
+  // Parse URL Parameters
+  const params = router.query;
+  const [filters, setFilters] = useState({});
+
   // useEffect Hook on Page Load
   useEffect(() => {
     const getListings = () => {
-      axios.get('/api/listinglistings')
+      const reqFilters = new URLSearchParams(params).toString();
+      axios.get(`/api/listinglistings?${reqFilters}`)
         .then((res) => {
           setListings(res.data);
           setPage(res.data.slice(0, 6));
@@ -45,6 +62,7 @@ const Market = () => {
     }
 
     // Fetch Listings
+    setFilters(params);
     getListings();
   }, []);
 
@@ -81,6 +99,10 @@ const Market = () => {
 
   const routeChange = (id) => {
     router.push(`/listing?id=${id}`);
+  }
+
+  const applyFilter = () => {
+    router.push(`/market?${new URLSearchParams(filters).toString()}`);
   }
 
   const convertDate = (date) => new Date(date).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
@@ -149,6 +171,89 @@ const Market = () => {
         <Container maxWidth={false}>
           <div className='Market'>
             <h1>Market</h1>
+            <Box className='advanced-filters' sx={{ display: 'flex', my: 3 }}>
+              <Box sx={{ width: 200, mx: 2 }}>
+                <Typography>
+                  Price ($)
+                </Typography>
+                <Slider
+                  value={filters.price ?? [0, 4000]}
+                  step={100}
+                  min={0}
+                  max={4000}
+                  onChange={(event, newValue) => { setFilters({ ...filters, price: newValue }) }}
+                  valueLabelDisplay="auto"
+                ></Slider>
+              </Box>
+              <Box sx={{ mx: 3, display: 'flex' }}>
+                <Box sx={{ width: 200, mx: 1 }}>
+                  <Typography>
+                    Start Date
+                  </Typography>
+                  <TextField 
+                    type="date"
+                    onChange={(e) => { setFilters({ ...filters, startDate: e.target.value }) }}
+                  >
+                  </TextField>
+                </Box>
+                <Box sx={{ width: 200, mx: 1 }}>
+                  <Typography>
+                    End Date
+                  </Typography>
+                  <TextField 
+                    type="date"
+                    onChange={(e) => { setFilters({ ...filters, endDate: e.target.value }) }}
+                  >
+                  </TextField>
+                </Box>
+              </Box>
+              <Box sx={{ width: 300, mx: 1 }}>
+                <Typography>
+                  Location (city)
+                </Typography>
+                <TextField
+                  onChange={(e) => { setFilters({ ...filters, location: e.target.value })}}
+                >  
+                </TextField>
+              </Box>
+              <Box sx={{ width: 600, mx: 3, display: 'flex', justifyContent: 'center' }}>
+                <Box>
+                  <WifiTooltip />
+                  <Checkbox color="primary" 
+                    onChange={(e, newValue) => { setFilters({ ...filters, wifi: newValue }) }}
+                  />
+                </Box>
+                <Box>
+                  <ElectricToolTip />
+                  <Checkbox color="primary" 
+                    onChange={(e, newValue) => { setFilters({ ...filters, electricity: newValue }) }}
+                  />
+                </Box>
+                <Box>
+                  <KitchenTooltip />
+                  <Checkbox color="primary" 
+                    onChange={(e, newValue) => { setFilters({ ...filters, kitchen: newValue }) }}
+                  />
+                </Box>
+                <Box>
+                  <LaundryTooltip />
+                  <Checkbox color="primary" 
+                    onChange={(e, newValue) => { setFilters({ ...filters, laundry: newValue }) }}
+                  />
+                </Box>
+                <Box>
+                  <LocalDiningTooltip />
+                  <Checkbox color="primary" 
+                    onChange={(e, newValue) => { setFilters({ ...filters, dining: newValue }) }}
+                  />
+                </Box>
+              </Box>
+              <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                <Button onClick={applyFilter} variant="outlined">
+                  Apply
+                </Button>
+              </Box>
+            </Box>
             {page.length ? (
               <div>
                 <div className='market-results-info'>

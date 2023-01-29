@@ -136,6 +136,7 @@ const CreateListing = () => {
       }, { 
         headers : { 'Content-Type': 'multipart/form-data'}
       })
+
       .then((response) => {
         postProperty({floorplan: response.data.id})
       })

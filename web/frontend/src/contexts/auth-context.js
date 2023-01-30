@@ -38,7 +38,7 @@ const handlers = {
   [HANDLERS.REFRESH]: (state, action) => {
     if (!state.isAuthenticated) {
       console.error("Trying to refresh when not logged in.")
-      return;
+      return state
     }
 
     const accessToken = action.payload;

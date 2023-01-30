@@ -17,6 +17,7 @@ import { AttachMoney } from '@mui/icons-material';
 
 import { provinces } from '../constants';
 import { useAuthContext } from '../contexts/auth-context';
+import { MuiFileInput } from "mui-file-input";
 import { DashboardLayout } from '../components/dashboard-layout';
 
 const CreateListing = () => {
@@ -29,6 +30,7 @@ const CreateListing = () => {
     duration: { bounds: "[)" },
     rate: { bounds: "[)" }
   });
+  const [file, setFile] = useState(null);
 
   // History
   const router = useRouter();
@@ -125,29 +127,54 @@ const CreateListing = () => {
     });
   }
 
-  const handleSubmit = () => {
+  const handleFileChange = (newFile) => {
+    setFile(newFile);
+  }
+
+  const postFloorplan = () => {
+    if (file != null) {
+      axios.post('/api/useruploads/', {
+        owner: 3, // Need to remove hardcoded user, and use current user
+        uploadtime: new Date(), // gets the current date/time
+        content: file
+      }, { 
+        headers : { 'Content-Type': 'multipart/form-data'}
+      })
+
+        .then((response) => {
+          postProperty({floorplan: response.data.id})
+        })
+        .catch(error => console.log(error))
+    } else {
+      postProperty();
+    }
+  }
+
+  const postProperty = (foreignKeys = {}) => {
     if (property?.id == null) {
       // first create the new property to use with new listing
       authAxios.post('/api/listingproperties/', property)
         .then((response) => {
-          setProperty(response.data); 
-          postListing(response.data.id);
+          setProperty(response.data);
+          foreignKeys.propertyID = response.data.id; 
+          postListing(foreignKeys);
         })
         .catch((err) => console.log(err));
     } else {
-      // jsut create the listing using existing property
-      postListing();
+      // just create the listing using existing property
+      foreignKeys.propertyID = property.id;
+      postListing(foreignKeys);
     }
         
   }
 
-  const postListing = (newPropertyID = null) => {
+  const postListing = (foreignKeys = {}) => {
     // next create the new listing, using new (or existing) propertyID
     authAxios.post(
       '/api/listinglistings/', 
       {
         ...listing,
-        propertyID: property?.id || newPropertyID,   // use newPropertyID if property.id is null
+        ...foreignKeys,
         owner: userId,
         duration: JSON.stringify(listing.duration),
         rate: JSON.stringify(listing.rate),
@@ -177,7 +204,7 @@ const CreateListing = () => {
           <div className='create-listing'>
             <h1>Create Listing</h1>
             <div>
-                        Property
+              Property
               <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>
                 <Autocomplete
                   disablePortal
@@ -191,7 +218,7 @@ const CreateListing = () => {
                 />
               </Box>
               <br/>
-                        Info
+              Info
               <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>
                 <TextField type="text"
                   variant="filled"
@@ -234,7 +261,7 @@ const CreateListing = () => {
                   onChange={handleListingChange} />
               </Box>
               <br/>
-                        Duration
+              Duration
               <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>
                 <TextField type="date"
                   variant="filled"
@@ -248,7 +275,7 @@ const CreateListing = () => {
                   onChange={handleListingDurationUpperChange} />
               </Box>
               <br/>
-                        Rate
+              Rate
               <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>
                 <TextField type="text"
                   variant="filled"
@@ -262,7 +289,7 @@ const CreateListing = () => {
                   onChange={handleListingRateUpperChange} />
               </Box>
               <br/>
-                        Utilities:
+              Utilities:
               <Box sx={{'& > :not(style)': { m: 1 }}}>
                 <Autocomplete
                   multiple
@@ -278,7 +305,7 @@ const CreateListing = () => {
                 />
               </Box>
               <br/>
-                        Status:
+              Status:
               <Box sx={{'& > :not(style)': { m: 1 }}}>
                 <ToggleButtonGroup
                   exclusive
@@ -296,9 +323,30 @@ const CreateListing = () => {
                   </ToggleButton>
                 </ToggleButtonGroup>
               </Box>
+              <br/>
+              Floorplan:
+              <Box>
+                <MuiFileInput
+                  placeholder="Upload Attachment"
+                  value={file}
+                  onChange={handleFileChange}
+                />
+              </Box>
             </div>
             <br/>
-            <Button variant="contained" onClick={handleSubmit}>Create</Button>
+            <Box sx={{'& > :not(style)': { m: 1 }}}>
+              <TextField TextField type="text"
+                fullWidth
+                multiline
+                variant="filled"
+                label="Description"
+                name="description"
+                inputProps={{ maxLength: 1024 }}
+                onChange={handleListingChange}>
+              </TextField>
+            </Box>
+            <br/>
+            <Button variant="contained" onClick={postFloorplan}>Create</Button>
           </div>
         </Container>
       </Box>

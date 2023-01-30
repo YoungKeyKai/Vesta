@@ -5,7 +5,9 @@ import {
   Grid,
   CircularProgress,
   Box,
-  Container
+  Button,
+  Container,
+  ToggleButton
 } from '@mui/material';
 import axios from 'axios';
 
@@ -17,12 +19,15 @@ const ListingsPage = () => {
   const [listing, setListing] = useState({});
   const [property, setProperty] = useState({});
   const [googleMapsAddr, setGoogleMapsAddr] = useState('');
+  const [buttonText, setButtonText] = useState("Interested");
   const router = useRouter();
   const { id } = router.query;
 
   const maxXS = 12;
   const propertyGridSize = 7;
-  const tagGridSize = 4;
+  const utilityGridSize = 7;
+  const descriptionGridSize = 10;
+  const deleteGridSize = 4;
 
   const formatAddr = (addr, city, province) => `${addr.replaceAll(/ +/g, '+')},${city}+${province}`;
   useEffect(() => {
@@ -65,6 +70,20 @@ const ListingsPage = () => {
     return `${toDesiredString(duration.lower)} - ${toDesiredString(duration.upper)}`;
   }
 
+  const handleDelete = () => {
+    if (window.confirm('Are you sure you wish to delete this listing?')){
+      axios.delete('/api/listinglistings/'+ id)
+        .then(() => {       
+          alert("Listing deleted successfully!");
+          router.push(`/market`);
+        })
+        .catch((err) => console.log(err));
+    }
+  }
+  function changeButtonText() {
+    setButtonText(prev => prev === "Interested" ? "Uninterested" : "Interested");
+  }
+
   return (
     <>
       <Head>
@@ -103,20 +122,27 @@ const ListingsPage = () => {
                     />
                   </Grid>
                   <Grid item
-                    className='utilities-summary'
                     xs={maxXS - propertyGridSize}>
+                    <ToggleButton
+                      selected={buttonText}
+                      onClick={() => changeButtonText()}>{buttonText}</ToggleButton>   
+                  </Grid>
+                  <Grid item
+                    className='utilities-summary'
+                    xs={utilityGridSize}>
                     <h2>Utilities and Amenities</h2>
                     <UtiltiesList utilities={listing.utilities} />
                   </Grid>
                   <Grid item
-                    className='tags'
-                    xs={tagGridSize}>
-                    <h2>Tags</h2>
+                    className='user-description'
+                    xs={descriptionGridSize}>
+                    <h2>Description</h2>
+                    <h3>{listing.description}</h3>
                   </Grid>
                   <Grid item
-                    className='user-description'
-                    xs={maxXS - tagGridSize}>
-                    <h2>Description</h2>
+                    className='delete'
+                    xs={maxXS - deleteGridSize}>
+                    <Button className='delete-button' variant="contained" color="error" onClick={handleDelete}>Delete</Button>
                   </Grid>
                 </Grid> :
                 <CircularProgress className="loading-circle"

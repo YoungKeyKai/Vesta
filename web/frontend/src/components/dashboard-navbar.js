@@ -5,8 +5,6 @@ import { AppBar, Avatar, Badge, Box, IconButton, InputAdornment, TextField, Tool
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import { Bell as BellIcon } from '../icons/bell';
-import { UserCircle as UserCircleIcon } from '../icons/user-circle';
-import { Users as UsersIcon } from '../icons/users';
 import { AccountPopover } from './account-popover';
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
@@ -18,6 +16,39 @@ export const DashboardNavbar = (props) => {
   const { onSidebarOpen, ...other } = props;
   const settingsRef = useRef(null);
   const [openAccountPopover, setOpenAccountPopover] = useState(false);
+
+  function stringToColor(string) {
+    let hash = 0;
+    let i;
+  
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+  
+    let color = '#';
+  
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+  
+    return color;
+  }
+
+  function stringAvatar(name) {
+    return {
+      sx: {
+        cursor: 'pointer',
+        height: 40,
+        width: 40,
+        ml: 1,
+        bgcolor: stringToColor(name),
+      },
+      children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+    };
+  }
 
   return (
     <>
@@ -65,11 +96,6 @@ export const DashboardNavbar = (props) => {
           >
           </TextField>
           <Box sx={{ flexGrow: 1 }} />
-          <Tooltip title="Contacts">
-            <IconButton sx={{ ml: 1 }}>
-              <UsersIcon fontSize="small" />
-            </IconButton>
-          </Tooltip>
           <Tooltip title="Notifications">
             <IconButton sx={{ ml: 1 }}>
               <Badge
@@ -84,16 +110,8 @@ export const DashboardNavbar = (props) => {
           <Avatar
             onClick={() => setOpenAccountPopover(true)}
             ref={settingsRef}
-            sx={{
-              cursor: 'pointer',
-              height: 40,
-              width: 40,
-              ml: 1
-            }}
-            src="/static/images/avatars/avatar_1.png"
-          >
-            <UserCircleIcon fontSize="small" />
-          </Avatar>
+            {...stringAvatar('Kent Dodds')}
+          />
         </Toolbar>
       </DashboardNavbarRoot>
       <AccountPopover

@@ -133,14 +133,13 @@ const CreateListing = () => {
 
   const postFloorplan = () => {
     if (file != null) {
-      axios.post('/api/useruploads/', {
-        owner: 3, // Need to remove hardcoded user, and use current user
+      authAxios.post('/api/useruploads/', {
+        owner: userId,
         uploadtime: new Date(), // gets the current date/time
         content: file
       }, { 
-        headers : { 'Content-Type': 'multipart/form-data'}
+        headers: {'Content-Type': 'multipart/form-data'}
       })
-
         .then((response) => {
           postProperty({floorplan: response.data.id})
         })

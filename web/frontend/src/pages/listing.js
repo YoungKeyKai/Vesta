@@ -14,12 +14,14 @@ import axios from 'axios';
 import { DashboardLayout } from '../components/dashboard-layout';
 import UtiltiesList from '../components/utilitiesList';
 import { googleMapsAPIKey } from '../constants';
+import { useAuthContext } from '../contexts/auth-context';
 
 const ListingsPage = () => {
   const [listing, setListing] = useState({});
   const [property, setProperty] = useState({});
   const [googleMapsAddr, setGoogleMapsAddr] = useState('');
   const [buttonText, setButtonText] = useState("Interested");
+  const {authAxios} = useAuthContext;
   const router = useRouter();
   const { id } = router.query;
 
@@ -72,7 +74,7 @@ const ListingsPage = () => {
 
   const handleDelete = () => {
     if (window.confirm('Are you sure you wish to delete this listing?')){
-      axios.delete('/api/listinglistings/'+ id)
+      authAxios.delete(`/api/listinglistings/${id}`)
         .then(() => {       
           alert("Listing deleted successfully!");
           router.push(`/market`);

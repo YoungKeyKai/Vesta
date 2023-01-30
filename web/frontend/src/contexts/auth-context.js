@@ -82,11 +82,13 @@ export const AuthProvider = (props) => {
     })
   }
 
-  const authAxios = axios.create({
-    headers: {
-      'Authorization': `Bearer ${state.accessToken}` 
+  const authAxios = axios.create();
+  authAxios.interceptors.request.use(
+    config => {
+      config.headers['Authorization'] = `Bearer ${state.accessToken}`
+      return config
     }
-  });
+  )
   authAxios.interceptors.response.use(
     response => response,
     async error => {

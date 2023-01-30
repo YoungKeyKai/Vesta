@@ -39,7 +39,9 @@ const Login = () => {
           actions.setStatus(null)
           login(response.data.access)
           Router
-            .push('/')
+            .replace({
+              pathname: Router.query.continueUrl,
+            })
             .catch(console.error)
         })
         .catch((error) => {

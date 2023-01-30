@@ -57,7 +57,7 @@ class CookieTokenRemoveView(GenericAPIView):
 
 
 class UserUploadView(viewsets.ModelViewSet):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = UserUploadSerializer
     queryset = UserUpload.objects.all()
 

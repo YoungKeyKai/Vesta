@@ -21,7 +21,7 @@ const ListingsPage = () => {
   const [property, setProperty] = useState({});
   const [googleMapsAddr, setGoogleMapsAddr] = useState('');
   const [buttonText, setButtonText] = useState("Interested");
-  const {authAxios} = useAuthContext;
+  const {authAxios} = useAuthContext();
   const router = useRouter();
   const { id } = router.query;
 

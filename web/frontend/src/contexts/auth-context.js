@@ -98,7 +98,9 @@ export const AuthProvider = (props) => {
             refresh(response.data.access)
 
             error.config.headers.Authorization = `Bearer ${response.data.access}`
-            return authAxios(error.config);
+
+            // Use normal axios for the retry to avoid infinite loops
+            return axios(error.config);
           })
           .catch(() => logout())
       }

@@ -95,7 +95,7 @@ export const AuthProvider = (props) => {
             refresh(response.data.access)
 
             error.config.headers.Authorization = `Bearer ${response.data.access}`
-            return axios.request(error.config);
+            return authAxios(error.config);
           })
           .catch(() => logout())
       }

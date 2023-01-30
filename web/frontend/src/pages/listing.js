@@ -130,7 +130,7 @@ const ListingsPage = () => {
 }
 
 ListingsPage.getLayout = (page) => (
-  <DashboardLayout>
+  <DashboardLayout noGuard={true}>
     {page}
   </DashboardLayout>
 );

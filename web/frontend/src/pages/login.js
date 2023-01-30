@@ -40,7 +40,7 @@ const Login = () => {
           login(response.data.access)
           Router
             .replace({
-              pathname: Router.query.continueUrl,
+              pathname: Router.query.continueUrl ? Router.query.continueUrl : '/',
             })
             .catch(console.error)
         })

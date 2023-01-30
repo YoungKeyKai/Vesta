@@ -102,7 +102,10 @@ export const AuthProvider = (props) => {
             // Use normal axios for the retry to avoid infinite loops
             return axios(error.config);
           })
-          .catch(() => logout())
+          .catch((error) => {
+            logout()
+            return Promise.reject(error)
+          })
       }
 
       return Promise.reject(error)

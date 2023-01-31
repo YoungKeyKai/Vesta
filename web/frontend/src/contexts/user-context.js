@@ -7,19 +7,32 @@ const HANDLERS = {
 };
 
 const defaultContext = {
-  userId: null,
-  name: null,
-  email: null,
+  id: null,
+  username: null,
+  firstName: null,
+  lastName: null,
+  lastLoginTime: null,
+  dateJoined: null,
 };
 
 const handlers = {
   [HANDLERS.SET_USER]: (state, action) => {
-    const {userId, name, email} = action.payload;
+    const {
+      id,
+      username,
+      first_name: firstName,
+      last_name: lastName,
+      last_login: lastLoginTime,
+      date_joined: dateJoined
+    } = action.payload;
     return {
       ...state,
-      userId,
-      name,
-      email,
+      id,
+      username,
+      firstName,
+      lastName,
+      lastLoginTime,
+      dateJoined
     };
   },
   [HANDLERS.REMOVE_USER]: () => {

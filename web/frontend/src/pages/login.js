@@ -7,9 +7,48 @@ import { Box, Button, Container, Link, TextField, Typography, Alert } from '@mui
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import axios from 'axios';
 import { useAuthContext } from '../contexts/auth-context';
+import { useUserContext } from '../contexts/user-context';
 
 const Login = () => {
-  const {login} = useAuthContext()
+  const {login, authAxios} = useAuthContext()
+  const {setUser} = useUserContext()
+
+  const loginRequest = async (values, actions) => axios
+    .post(
+      '/api/auth/login/',
+      {
+        username: values.email,
+        password: values.password,
+      },
+      {withCredentials: true}
+    )
+    .then((response) => {
+      actions.setStatus(null)
+      login(response.data.access)
+      getUserInfo(actions)
+    })
+    .catch((error) => {
+      let submissionError = ''
+      if (error.response.status == 401) {
+        submissionError = "No user found with this credential. Please check the email and password, then try again."
+      } else {
+        submissionError = "Something unexpected has happened, please try again."
+      }
+      actions.setStatus({submissionError})
+    })
+
+  const getUserInfo = async (actions) => authAxios
+    .get('/api/userinfo/')
+    .then((response) => {
+      setUser(response.data)
+      Router
+        .push('/')
+        .catch(console.error)
+    })
+    .catch(() => {
+      let submissionError = "Unable to retrieve your user information, please try again."
+      actions.setStatus({submissionError})
+    })
 
   const formik = useFormik({
     initialValues: {
@@ -27,30 +66,7 @@ const Login = () => {
         .max(255)
         .required('Password is required')
     }),
-    onSubmit: async (values, actions) =>
-      axios.post('/api/auth/login/',
-        {
-          username: values.email,
-          password: values.password,
-        },
-        {withCredentials: true}
-      )
-        .then((response) => {
-          actions.setStatus(null)
-          login(response.data.access)
-          Router
-            .push('/')
-            .catch(console.error)
-        })
-        .catch((error) => {
-          let submissionError = ''
-          if (error.response.status == 401) {
-            submissionError = "No user found with this credential. Please check the email and password, then try again."
-          } else {
-            submissionError = "Something unexpected has happened, please try again."
-          }
-          actions.setStatus({submissionError})
-        })
+    onSubmit: loginRequest
   });
 
   return (

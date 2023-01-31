@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
@@ -12,18 +12,9 @@ import { UserAdd as UserAddIcon } from '../icons/user-add';
 import { Users as UsersIcon } from '../icons/users';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
+import { useAuthContext } from '../contexts/auth-context';
 
-const items = [
-  {
-    href: '/',
-    icon: (<ChartBarIcon fontSize="small" />),
-    title: 'Home'
-  },
-  {
-    href: '/market',
-    icon: (<UsersIcon fontSize="small" />),
-    title: 'Market'
-  },
+const authItems = [
   {
     href: '/create',
     icon: (<ShoppingBagIcon fontSize="small" />),
@@ -39,6 +30,9 @@ const items = [
     icon: (<CogIcon fontSize="small" />),
     title: 'Settings'
   },
+];
+
+const unauthItems = [
   {
     href: '/login',
     icon: (<LockIcon fontSize="small" />),
@@ -51,8 +45,23 @@ const items = [
   },
 ];
 
+const defaultItems = [
+  {
+    href: '/',
+    icon: (<ChartBarIcon fontSize="small" />),
+    title: 'Home'
+  },
+  {
+    href: '/market',
+    icon: (<UsersIcon fontSize="small" />),
+    title: 'Market'
+  },
+];
+
 export const DashboardSidebar = (props) => {
   const { open, onClose } = props;
+  const [ navItems, setNavItems ] = useState(defaultItems.concat(unauthItems));
+  const {isAuthenticated} = useAuthContext()
   const router = useRouter();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'), {
     defaultMatches: true,
@@ -68,9 +77,15 @@ export const DashboardSidebar = (props) => {
       if (open) {
         onClose?.();
       }
+
+      if (isAuthenticated) {
+        setNavItems(defaultItems.concat(authItems))
+      } else {
+        setNavItems(defaultItems.concat(unauthItems))
+      }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [router.asPath]
+    [router.asPath, isAuthenticated]
   );
 
   const content = (
@@ -134,14 +149,16 @@ export const DashboardSidebar = (props) => {
           }}
         />
         <Box sx={{ flexGrow: 1 }}>
-          {items.map((item) => (
-            <NavItem
-              key={item.title}
-              icon={item.icon}
-              href={item.href}
-              title={item.title}
-            />
-          ))}
+          {
+            navItems.map((item) => (
+              <NavItem
+                key={item.title}
+                icon={item.icon}
+                href={item.href}
+                title={item.title}
+              />
+            ))
+          }
         </Box>
         <Divider sx={{ borderColor: '#2D3748' }} />
       </Box>

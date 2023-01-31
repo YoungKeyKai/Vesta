@@ -55,6 +55,13 @@ class CookieTokenRemoveView(GenericAPIView):
             set_jwt_refresh_token_cookie(response, '', -1)
             return response
 
+class UserInfoView(viewsets.ModelViewSet):
+    serializer_class = UserInfoSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        return AuthUser.objects.filter(id=user.id)
+
 
 class UserUploadView(viewsets.ModelViewSet):
     permission_classes = [AllowAny]

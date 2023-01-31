@@ -25,6 +25,12 @@ class CookieTokenRemoveSerializer(serializers.Serializer):
             raise InvalidToken("No valid refresh token found")
 
 
+class UserInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AuthUser
+        fields = ('id', 'username', 'first_name', 'last_name', 'last_login', 'date_joined')
+
+
 class UserUploadSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserUpload

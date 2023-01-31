@@ -1,12 +1,14 @@
 import { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useRouter } from 'next/router';
 import styled from '@emotion/styled';
-import { AppBar, Avatar, Badge, Box, IconButton, InputAdornment, TextField, Toolbar, Tooltip } from '@mui/material';
+import { AppBar, Avatar, Badge, Box, Button, IconButton, InputAdornment, TextField, Toolbar, Tooltip } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import { Bell as BellIcon } from '../icons/bell';
 import { AccountPopover } from './account-popover';
 import {useUserContext} from '../contexts/user-context';
+import { useAuthContext } from '../contexts/auth-context';
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -17,9 +19,17 @@ export const DashboardNavbar = (props) => {
   const { onSidebarOpen, ...other } = props;
   const settingsRef = useRef(null);
   const [openAccountPopover, setOpenAccountPopover] = useState(false);
+  const {isAuthenticated} = useAuthContext();
   const {firstName, lastName} = useUserContext();
+  const router = useRouter();
 
-  function stringToColor(string) {
+  const avatarSize = {
+    height: 40,
+    width: 40,
+    ml: 1,
+  }
+
+  const stringToColor = (string) => {
     let hash = 0;
     let i;
   
@@ -39,17 +49,22 @@ export const DashboardNavbar = (props) => {
     return color;
   }
 
-  function stringAvatar(name) {
-    return {
-      sx: {
-        cursor: 'pointer',
-        height: 40,
-        width: 40,
-        ml: 1,
-        bgcolor: stringToColor(name),
-      },
-      children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
-    };
+  const stringAvatar = (name) => ({
+    sx: {
+      cursor: 'pointer',
+      ...avatarSize,
+      bgcolor: stringToColor(name),
+    },
+    children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
+  })
+
+  const redirectToLogin = () => {
+    router
+      .replace({
+        pathname: '/login',
+        query: router.asPath !== '/' ? { continueUrl: router.asPath } : undefined
+      })
+      .catch(console.error);
   }
 
   return (
@@ -109,11 +124,17 @@ export const DashboardNavbar = (props) => {
               </Badge>
             </IconButton>
           </Tooltip>
-          <Avatar
-            onClick={() => setOpenAccountPopover(true)}
-            ref={settingsRef}
-            {...stringAvatar(`${firstName} ${lastName}`)}
-          />
+          {
+            isAuthenticated ? 
+              <Avatar
+                onClick={() => setOpenAccountPopover(true)}
+                ref={settingsRef}
+                {...stringAvatar(`${firstName} ${lastName}`)}
+              /> :
+              <Button onClick={redirectToLogin} variant="contained" sx={avatarSize}>
+                Login
+              </Button>
+          }
         </Toolbar>
       </DashboardNavbarRoot>
       <AccountPopover

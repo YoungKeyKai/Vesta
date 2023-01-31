@@ -10,7 +10,7 @@ import { useAuthContext } from '../contexts/auth-context';
 import { useUserContext } from '../contexts/user-context';
 
 const Login = () => {
-  const {login, authAxios} = useAuthContext()
+  const {login, logout, authAxios} = useAuthContext()
   const {setUser} = useUserContext()
 
   const loginRequest = async (values, actions) => axios
@@ -23,6 +23,7 @@ const Login = () => {
       {withCredentials: true}
     )
     .then((response) => {
+      // If login succeeded, update auth context and get the user info
       actions.setStatus(null)
       login(response.data.access)
       getUserInfo(actions)
@@ -40,12 +41,15 @@ const Login = () => {
   const getUserInfo = async (actions) => authAxios
     .get('/api/userinfo/')
     .then((response) => {
+      // If user info was retrieved successfully, redirect
       setUser(response.data)
       Router
         .push('/')
         .catch(console.error)
     })
     .catch(() => {
+      // If user info failed to be retrieved, remove the auth context info
+      logout()
       let submissionError = "Unable to retrieve your user information, please try again."
       actions.setStatus({submissionError})
     })

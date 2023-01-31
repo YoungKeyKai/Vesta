@@ -6,6 +6,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import { Bell as BellIcon } from '../icons/bell';
 import { AccountPopover } from './account-popover';
+import {useUserContext} from '../contexts/user-context';
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -16,6 +17,7 @@ export const DashboardNavbar = (props) => {
   const { onSidebarOpen, ...other } = props;
   const settingsRef = useRef(null);
   const [openAccountPopover, setOpenAccountPopover] = useState(false);
+  const {firstName, lastName} = useUserContext();
 
   function stringToColor(string) {
     let hash = 0;
@@ -110,7 +112,7 @@ export const DashboardNavbar = (props) => {
           <Avatar
             onClick={() => setOpenAccountPopover(true)}
             ref={settingsRef}
-            {...stringAvatar('Kent Dodds')}
+            {...stringAvatar(`${firstName} ${lastName}`)}
           />
         </Toolbar>
       </DashboardNavbarRoot>

@@ -2,10 +2,12 @@ import Router from 'next/router';
 import PropTypes from 'prop-types';
 import { Box, MenuItem, MenuList, Popover, Typography } from '@mui/material';
 import { useAuthContext } from '../contexts/auth-context';
+import { useUserContext } from '../contexts/user-context';
 
 export const AccountPopover = (props) => {
   const { anchorEl, onClose, open, ...other } = props;
   const {logout} = useAuthContext();
+  const {firstName, lastName} = useUserContext();
 
   const handleLogout = async () => {
     onClose?.();
@@ -44,7 +46,7 @@ export const AccountPopover = (props) => {
           color="text.secondary"
           variant="body2"
         >
-          John Doe
+          {`${firstName} ${lastName}`}
         </Typography>
       </Box>
       <MenuList

@@ -42,17 +42,21 @@ const App = (props) => {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <AuthProvider>
-            <AuthConsumer>
-              <UserProvider>
-                <UserConsumer>
-                  {
-                    (auth) => auth.isLoading
-                      ? <Fragment />
-                      : getLayout(<Component {...pageProps} />)
-                  }
-                </UserConsumer>
-              </UserProvider>
-            </AuthConsumer>
+            <UserProvider>
+              <AuthConsumer>
+                {
+                  (auth) => (
+                    <UserConsumer>
+                      {
+                        () => auth.isLoading
+                          ? <Fragment />
+                          : getLayout(<Component {...pageProps} />)
+                      }
+                    </UserConsumer>
+                  )
+                }
+              </AuthConsumer>
+            </UserProvider>
           </AuthProvider>
         </ThemeProvider>
       </LocalizationProvider>

@@ -44,21 +44,6 @@ const ListingsPage = () => {
         console.log(err);
       });
 
-    // const getInterest = id => axios
-    //   .get(`/api/listinginterest/${id}`)
-    //   .then((res) => {
-    //     const data = res.data;
-    //     console.log(data);
-    //     setInterest(data);
-    //   })
-    //   .catch((err) => {
-    //     //Replace with formal error handling
-    //     console.log(err);
-    //   })
-    
-    //set interest on initial load as this will not change
-    
-
     const getListing = () => axios
       .get(`/api/listinglistings/${id}`)
       .then((res) => {

@@ -22,7 +22,7 @@ const ListingsPage = () => {
   const [googleMapsAddr, setGoogleMapsAddr] = useState('');
   const [buttonText, setButtonText] = useState("Interested");
   const [interest, setInterest] = useState({});
-  const {authAxios} = useAuthContext();
+  const {authAxios, userId, isAuthenticated} = useAuthContext();
   const router = useRouter();
   const { id } = router.query;
 
@@ -53,7 +53,6 @@ const ListingsPage = () => {
         setListing(data);
         getProperty(data.propertyID);
         setInterest({
-          buyer: 5, // Need to remove hardcoded buyer,
           seller: data.owner,
           listing: data.id
         });
@@ -91,8 +90,11 @@ const ListingsPage = () => {
   }
   function changeButtonText(buttonText) {
     if (buttonText === "Interested") {
-      authAxios.post('/api/listinginterests/', 
-      interest
+      authAxios.post('/api/listinginterests/',
+      {
+        ...interest,
+        buyer: userId,
+      }
       ).then((res) => {
         const data = res.data;
         setInterest({
@@ -146,10 +148,18 @@ const ListingsPage = () => {
                     />
                   </Grid>
                   <Grid item
-                    xs={maxXS - propertyGridSize}>
-                    <ToggleButton
-                      selected={buttonText}
-                      onClick={() => changeButtonText(buttonText)}>{buttonText}</ToggleButton>   
+                    xs={maxXS - propertyGridSize}
+                  >
+                      {
+                        isAuthenticated ? 
+                          <ToggleButton
+                            selected={buttonText}
+                            onClick={() => changeButtonText(buttonText)}
+                          >
+                            {buttonText}
+                          </ToggleButton> :
+                          null
+                      }
                   </Grid>
                   <Grid item
                     className='utilities-summary'

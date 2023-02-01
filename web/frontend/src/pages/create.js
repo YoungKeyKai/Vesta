@@ -14,10 +14,14 @@ import {
   MenuItem
 } from '@mui/material/';
 import { AttachMoney } from '@mui/icons-material';
+
+import { provinces } from '../constants';
+import { useAuthContext } from '../contexts/auth-context';
 import { MuiFileInput } from "mui-file-input";
 import { DashboardLayout } from '../components/dashboard-layout';
 
 const CreateListing = () => {
+  const {authAxios, userId} = useAuthContext();
 
   const [property, setProperty] = useState(null);
   const [properties, setProperties] = useState([]);
@@ -129,18 +133,17 @@ const CreateListing = () => {
 
   const postFloorplan = () => {
     if (file != null) {
-      axios.post('/api/useruploads/', {
-        owner: 3, // Need to remove hardcoded user, and use current user
+      authAxios.post('/api/useruploads/', {
+        owner: userId,
         uploadtime: new Date(), // gets the current date/time
         content: file
       }, { 
-        headers : { 'Content-Type': 'multipart/form-data'}
+        headers: {'Content-Type': 'multipart/form-data'}
       })
-
-      .then((response) => {
-        postProperty({floorplan: response.data.id})
-      })
-      .catch(error => console.log(error))
+        .then((response) => {
+          postProperty({floorplan: response.data.id})
+        })
+        .catch(error => console.log(error))
     } else {
       postProperty();
     }
@@ -149,7 +152,7 @@ const CreateListing = () => {
   const postProperty = (foreignKeys = {}) => {
     if (property?.id == null) {
       // first create the new property to use with new listing
-      axios.post('/api/listingproperties/', property)
+      authAxios.post('/api/listingproperties/', property)
         .then((response) => {
           setProperty(response.data);
           foreignKeys.propertyID = response.data.id; 
@@ -166,13 +169,16 @@ const CreateListing = () => {
 
   const postListing = (foreignKeys = {}) => {
     // next create the new listing, using new (or existing) propertyID
-    axios.post('/api/listinglistings/', {
+    authAxios.post(
+      '/api/listinglistings/', 
+      {
         ...listing,
         ...foreignKeys,
-        owner: 3,   // Need to remove hardcoded user, and use current user
+        owner: userId,
         duration: JSON.stringify(listing.duration),
         rate: JSON.stringify(listing.rate),
-      })
+      }
+    )
       .then((res) => {
         router.push(`/listing?id=${res.data.id}`);
       })
@@ -197,7 +203,7 @@ const CreateListing = () => {
           <div className='create-listing'>
             <h1>Create Listing</h1>
             <div>
-                        Property
+              Property
               <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>
                 <Autocomplete
                   disablePortal
@@ -211,7 +217,7 @@ const CreateListing = () => {
                 />
               </Box>
               <br/>
-                        Info
+              Info
               <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>
                 <TextField type="text"
                   variant="filled"
@@ -239,19 +245,11 @@ const CreateListing = () => {
                   select
                   onChange={handlePropertyChange}
                 >
-                  <MenuItem value={'AB'}>AB</MenuItem>
-                  <MenuItem value={'BC'}>BC</MenuItem>
-                  <MenuItem value={'MB'}>MB</MenuItem>
-                  <MenuItem value={'NB'}>NB</MenuItem>
-                  <MenuItem value={'NL'}>NL</MenuItem>
-                  <MenuItem value={'NT'}>NT</MenuItem>
-                  <MenuItem value={'NS'}>NS</MenuItem>
-                  <MenuItem value={'NU'}>NU</MenuItem>
-                  <MenuItem value={'ON'}>ON</MenuItem>
-                  <MenuItem value={'PE'}>PE</MenuItem>
-                  <MenuItem value={'QC'}>QC</MenuItem>
-                  <MenuItem value={'SK'}>SK</MenuItem>
-                  <MenuItem value={'YT'}>YT</MenuItem>
+                  {
+                    provinces.map((provinceCode) => (
+                      <MenuItem value={provinceCode} key={provinceCode}>{provinceCode}</MenuItem>
+                    ))
+                  }
                 </TextField>
               </Box>
               <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>
@@ -262,7 +260,7 @@ const CreateListing = () => {
                   onChange={handleListingChange} />
               </Box>
               <br/>
-                        Duration
+              Duration
               <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>
                 <TextField type="date"
                   variant="filled"
@@ -276,7 +274,7 @@ const CreateListing = () => {
                   onChange={handleListingDurationUpperChange} />
               </Box>
               <br/>
-                        Rate
+              Rate
               <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>
                 <TextField type="text"
                   variant="filled"
@@ -290,7 +288,7 @@ const CreateListing = () => {
                   onChange={handleListingRateUpperChange} />
               </Box>
               <br/>
-                        Utilities:
+              Utilities:
               <Box sx={{'& > :not(style)': { m: 1 }}}>
                 <Autocomplete
                   multiple
@@ -306,7 +304,7 @@ const CreateListing = () => {
                 />
               </Box>
               <br/>
-                        Status:
+              Status:
               <Box sx={{'& > :not(style)': { m: 1 }}}>
                 <ToggleButtonGroup
                   exclusive

@@ -13,13 +13,17 @@ import axios from 'axios';
 
 import { DashboardLayout } from '../components/dashboard-layout';
 import UtiltiesList from '../components/utilitiesList';
+import ButtonFileDownload from '../components/button-file-download'
 import { googleMapsAPIKey } from '../constants';
+import { useAuthContext } from '../contexts/auth-context';
 
 const ListingsPage = () => {
   const [listing, setListing] = useState({});
   const [property, setProperty] = useState({});
   const [googleMapsAddr, setGoogleMapsAddr] = useState('');
   const [buttonText, setButtonText] = useState("Interested");
+  const [interest, setInterest] = useState({});
+  const {authAxios, userId, isAuthenticated} = useAuthContext();
   const router = useRouter();
   const { id } = router.query;
 
@@ -49,6 +53,11 @@ const ListingsPage = () => {
         const data = res.data;
         setListing(data);
         getProperty(data.propertyID);
+        setInterest({
+          seller: data.owner,
+          listing: data.id
+        });
+        // getInterest(data.listing);
       })
       .catch((err) => {
         //Replace with formal error handling
@@ -72,7 +81,7 @@ const ListingsPage = () => {
 
   const handleDelete = () => {
     if (window.confirm('Are you sure you wish to delete this listing?')){
-      axios.delete('/api/listinglistings/'+ id)
+      authAxios.delete(`/api/listinglistings/${id}`)
         .then(() => {       
           alert("Listing deleted successfully!");
           router.push(`/market`);
@@ -80,10 +89,28 @@ const ListingsPage = () => {
         .catch((err) => console.log(err));
     }
   }
-  function changeButtonText() {
+  function changeButtonText(buttonText) {
+    if (buttonText === "Interested") {
+      authAxios.post('/api/listinginterests/',
+      {
+        ...interest,
+        buyer: userId,
+      }
+      ).then((res) => {
+        const data = res.data;
+        setInterest({
+          ...interest,
+          id: data.id,
+        });
+      })
+      .catch((err) => console.log(err));
+    } else if(buttonText === "Uninterested") {
+        authAxios.delete('/api/listinginterests/'+ interest.id)
+        .catch((err) => console.log(err));
+    }
     setButtonText(prev => prev === "Interested" ? "Uninterested" : "Interested");
   }
-
+ 
   return (
     <>
       <Head>
@@ -122,10 +149,18 @@ const ListingsPage = () => {
                     />
                   </Grid>
                   <Grid item
-                    xs={maxXS - propertyGridSize}>
-                    <ToggleButton
-                      selected={buttonText}
-                      onClick={() => changeButtonText()}>{buttonText}</ToggleButton>   
+                    xs={maxXS - propertyGridSize}
+                  >
+                      {
+                        isAuthenticated ? 
+                          <ToggleButton
+                            selected={buttonText}
+                            onClick={() => changeButtonText(buttonText)}
+                          >
+                            {buttonText}
+                          </ToggleButton> :
+                          null
+                      }
                   </Grid>
                   <Grid item
                     className='utilities-summary'
@@ -144,6 +179,11 @@ const ListingsPage = () => {
                     xs={maxXS - deleteGridSize}>
                     <Button className='delete-button' variant="contained" color="error" onClick={handleDelete}>Delete</Button>
                   </Grid>
+                  <Grid item // TODO: Remove this test button
+                    className='download-image'
+                    xs={maxXS - deleteGridSize}>
+                    <ButtonFileDownload userUploadId={listing.floorplan} text="Download Image" className='download-image-button' variant="contained" color="primary">Download Floorplan</ButtonFileDownload>
+                  </Grid>
                 </Grid> :
                 <CircularProgress className="loading-circle"
                   size="5rem" />
@@ -156,7 +196,7 @@ const ListingsPage = () => {
 }
 
 ListingsPage.getLayout = (page) => (
-  <DashboardLayout>
+  <DashboardLayout noGuard={true}>
     {page}
   </DashboardLayout>
 );

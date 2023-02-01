@@ -44,7 +44,9 @@ const Login = () => {
       // If user info was retrieved successfully, redirect
       setUser(response.data)
       Router
-        .push('/')
+        .replace({
+          pathname: Router.query.continueUrl ? Router.query.continueUrl : '/',
+        })
         .catch(console.error)
     })
     .catch(() => {

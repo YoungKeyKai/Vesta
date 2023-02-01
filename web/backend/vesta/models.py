@@ -199,18 +199,6 @@ class ListingInterest(models.Model):
     buyer = models.ForeignKey(AuthUser, related_name='buyer_fk', on_delete=models.SET_NULL, null=True)
     seller = models.ForeignKey(AuthUser, related_name='seller_fk', on_delete=models.SET_NULL, null=True)
     listing = models.ForeignKey(ListingListing, on_delete=models.CASCADE, null=False)
-    
-    #Enum Class
-    class InterestStatus(models.TextChoices):
-        CLOSED = 'closed'
-        SOLD = 'sold'
-        PENDING = 'pending'
-
-    status = models.CharField(
-        max_length = 15,
-        choices = InterestStatus.choices,
-        default = InterestStatus.PENDING
-    )
 
     class Meta:
         db_table = 'interest'

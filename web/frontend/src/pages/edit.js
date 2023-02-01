@@ -45,8 +45,39 @@ const EditListing = () => {
         })
     };
 
+    const getProperty = (propertyID) => {
+      axios.get(`/api/listingproperties/${propertyID}`)
+      .then((res) => {
+        const data = res.data;
+        setProperty(data);
+      })
+      .catch((err) => {
+        //Replace with formal error handling
+        console.log(err);
+      })
+
+    }
+
+    const getListing = () => {
+      axios.get(`/api/listinglistings/${id}`)
+      .then((res) => {
+        const data = res.data;
+        setListing({
+          ...data,
+          duration: JSON.parse(data.duration),
+          rate: JSON.parse(data.rate),
+        });
+        getProperty(data.propertyID);
+      })
+      .catch((err) => {
+        //Replace with formal error handling
+        console.log(err);
+      })
+    }
+
     // Fetch Properties
     getProperties();
+    getListing();
 
   }, []);
 
@@ -184,7 +215,7 @@ const EditListing = () => {
                 <Autocomplete
                   disablePortal
                   options={properties}
-                  value = {listing.property}
+                  value = {property}
                   getOptionLabel={(option) => option.name}
                   onChange={handleSelectedPropertyChange}
                   sx={{ width: 300 }}
@@ -252,10 +283,12 @@ const EditListing = () => {
                   variant="filled"
                   label="From"
                   InputLabelProps={{ shrink: true }}
+                  value = {listing.duration.lower}
                   onChange={handleListingDurationLowerChange} />
                 <TextField type="date"
                   variant="filled"
                   label="To"
+                  value = {listing.duration.upper}
                   InputLabelProps={{ shrink: true }}
                   onChange={handleListingDurationUpperChange} />
               </Box>
@@ -265,11 +298,13 @@ const EditListing = () => {
                 <TextField type="text"
                   variant="filled"
                   label="Minimum"
+                  value = {listing.rate.lower}
                   InputProps={{ startAdornment: (<InputAdornment position="start"><AttachMoney /></InputAdornment>) }}
                   onChange={handleListingRateLowerChange} />
                 <TextField type="text"
                   variant="filled"
                   label="Maximum"
+                  value = {listing.rate.upper}
                   InputProps={{ startAdornment: (<InputAdornment position="start"><AttachMoney /></InputAdornment>) }}
                   onChange={handleListingRateUpperChange} />
               </Box>

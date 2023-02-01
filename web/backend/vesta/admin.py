@@ -17,7 +17,7 @@ class ListingListingAdmin(admin.ModelAdmin):
     list_display = ('owner', 'propertyID', 'unit', 'duration', 'rate', 'utilities', 'floorplan', 'description', 'proof', 'status')
 
 class ListingInterestAdmin(admin.ModelAdmin):
-    list_display = ('buyer', 'seller', 'listing', 'status')
+    list_display = ('buyer', 'seller', 'listing')
 
 class ListingFlaggedListingAdmin(admin.ModelAdmin):
     list_display = ('listing', 'flagger', 'timestamp', 'type')

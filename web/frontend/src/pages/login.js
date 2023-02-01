@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import NextLink from 'next/link';
-import Router from 'next/router';
+import {useRouter} from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Box, Button, Container, Link, TextField, Typography, Alert } from '@mui/material';
@@ -10,10 +10,11 @@ import { useAuthContext } from '../contexts/auth-context';
 import { useUserContext } from '../contexts/user-context';
 
 const Login = () => {
-  const {login, logout, authAxios} = useAuthContext()
+  const {login, logout} = useAuthContext()
   const {setUser} = useUserContext()
+  const router = useRouter()
 
-  const loginRequest = async (values, actions) => axios
+  const loginRequest = (values, actions) => axios
     .post(
       '/api/auth/login/',
       {
@@ -26,7 +27,7 @@ const Login = () => {
       // If login succeeded, update auth context and get the user info
       actions.setStatus(null)
       login(response.data.access)
-      getUserInfo(actions)
+      getUserInfo(actions, response.data.access)
     })
     .catch((error) => {
       let submissionError = ''
@@ -38,14 +39,16 @@ const Login = () => {
       actions.setStatus({submissionError})
     })
 
-  const getUserInfo = async (actions) => authAxios
-    .get('/api/userinfo/')
+  const getUserInfo = (actions, accessToken) => axios
+    .get('/api/userinfo/', {
+      headers: {'Authorization': `Bearer ${accessToken}`}
+    })
     .then((response) => {
       // If user info was retrieved successfully, redirect
-      setUser(response.data)
-      Router
+      setUser(response.data[0])
+      router
         .replace({
-          pathname: Router.query.continueUrl ? Router.query.continueUrl : '/',
+          pathname: router.query.continueUrl ? router.query.continueUrl : '/',
         })
         .catch(console.error)
     })

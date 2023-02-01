@@ -58,14 +58,12 @@ export const DashboardNavbar = (props) => {
     children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
   })
 
-  const redirectToLogin = () => {
-    router
-      .replace({
-        pathname: '/login',
-        query: router.asPath !== '/' ? { continueUrl: router.asPath } : undefined
-      })
-      .catch(console.error);
-  }
+  const redirectToLogin = () => router
+    .replace({
+      pathname: '/login',
+      query: router.asPath !== '/' ? { continueUrl: router.asPath } : undefined
+    })
+    .catch(console.error);
 
   return (
     <>

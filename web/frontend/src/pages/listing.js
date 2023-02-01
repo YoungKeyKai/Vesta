@@ -15,6 +15,7 @@ import { DashboardLayout } from '../components/dashboard-layout';
 import UtiltiesList from '../components/utilitiesList';
 import ButtonFileDownload from '../components/button-file-download'
 import { googleMapsAPIKey } from '../constants';
+import { useAuthContext } from '../contexts/auth-context';
 
 const ListingsPage = () => {
   const [listing, setListing] = useState({});
@@ -22,6 +23,7 @@ const ListingsPage = () => {
   const [googleMapsAddr, setGoogleMapsAddr] = useState('');
   const [buttonText, setButtonText] = useState("Interested");
   const [interest, setInterest] = useState({});
+  const {authAxios, userId, isAuthenticated} = useAuthContext();
   const router = useRouter();
   const { id } = router.query;
 
@@ -52,7 +54,6 @@ const ListingsPage = () => {
         setListing(data);
         getProperty(data.propertyID);
         setInterest({
-          buyer: 5, // Need to remove hardcoded buyer,
           seller: data.owner,
           listing: data.id
         });
@@ -80,7 +81,7 @@ const ListingsPage = () => {
 
   const handleDelete = () => {
     if (window.confirm('Are you sure you wish to delete this listing?')){
-      axios.delete('/api/listinglistings/'+ id)
+      authAxios.delete(`/api/listinglistings/${id}`)
         .then(() => {       
           alert("Listing deleted successfully!");
           router.push(`/market`);
@@ -90,8 +91,11 @@ const ListingsPage = () => {
   }
   function changeButtonText(buttonText) {
     if (buttonText === "Interested") {
-      axios.post('/api/listinginterests/', 
-      interest
+      authAxios.post('/api/listinginterests/',
+      {
+        ...interest,
+        buyer: userId,
+      }
       ).then((res) => {
         const data = res.data;
         setInterest({
@@ -101,7 +105,7 @@ const ListingsPage = () => {
       })
       .catch((err) => console.log(err));
     } else if(buttonText === "Uninterested") {
-        axios.delete('/api/listinginterests/'+ interest.id)
+        authAxios.delete('/api/listinginterests/'+ interest.id)
         .catch((err) => console.log(err));
     }
     setButtonText(prev => prev === "Interested" ? "Uninterested" : "Interested");
@@ -145,10 +149,18 @@ const ListingsPage = () => {
                     />
                   </Grid>
                   <Grid item
-                    xs={maxXS - propertyGridSize}>
-                    <ToggleButton
-                      selected={buttonText}
-                      onClick={() => changeButtonText(buttonText)}>{buttonText}</ToggleButton>   
+                    xs={maxXS - propertyGridSize}
+                  >
+                      {
+                        isAuthenticated ? 
+                          <ToggleButton
+                            selected={buttonText}
+                            onClick={() => changeButtonText(buttonText)}
+                          >
+                            {buttonText}
+                          </ToggleButton> :
+                          null
+                      }
                   </Grid>
                   <Grid item
                     className='utilities-summary'
@@ -184,7 +196,7 @@ const ListingsPage = () => {
 }
 
 ListingsPage.getLayout = (page) => (
-  <DashboardLayout>
+  <DashboardLayout noGuard={true}>
     {page}
   </DashboardLayout>
 );

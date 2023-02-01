@@ -58,7 +58,7 @@ class ListingListingSerializer(serializers.ModelSerializer):
 class ListingInterestSerializer(serializers.ModelSerializer):
     class Meta:
         model = ListingInterest
-        fields = ('id', 'buyer', 'seller', 'listing', 'status')
+        fields = ('id', 'buyer', 'seller', 'listing')
 
 
 class ListingFlaggedListingSerializer(serializers.ModelSerializer):

@@ -13,6 +13,7 @@ import axios from 'axios';
 
 import { DashboardLayout } from '../components/dashboard-layout';
 import UtiltiesList from '../components/utilitiesList';
+import ButtonFileDownload from '../components/button-file-download'
 import { googleMapsAPIKey } from '../constants';
 
 const ListingsPage = () => {
@@ -165,6 +166,11 @@ const ListingsPage = () => {
                     className='delete'
                     xs={maxXS - deleteGridSize}>
                     <Button className='delete-button' variant="contained" color="error" onClick={handleDelete}>Delete</Button>
+                  </Grid>
+                  <Grid item // TODO: Remove this test button
+                    className='download-image'
+                    xs={maxXS - deleteGridSize}>
+                    <ButtonFileDownload userUploadId={listing.floorplan} text="Download Image" className='download-image-button' variant="contained" color="primary">Download Floorplan</ButtonFileDownload>
                   </Grid>
                 </Grid> :
                 <CircularProgress className="loading-circle"

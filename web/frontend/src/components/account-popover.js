@@ -13,9 +13,9 @@ export const AccountPopover = (props) => {
     onClose?.();
     logout();
 
-    // Redirect to login page
+    // Redirect to home page
     Router
-      .push('/login')
+      .push('/')
       .catch(console.error);
   };
 

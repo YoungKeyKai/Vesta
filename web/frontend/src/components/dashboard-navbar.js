@@ -9,6 +9,7 @@ import { Bell as BellIcon } from '../icons/bell';
 import { AccountPopover } from './account-popover';
 import {useUserContext} from '../contexts/user-context';
 import { useAuthContext } from '../contexts/auth-context';
+import { redirectToLogin } from '../utils/redirect-to-login';
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
@@ -57,13 +58,6 @@ export const DashboardNavbar = (props) => {
     },
     children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
   })
-
-  const redirectToLogin = () => router
-    .replace({
-      pathname: '/login',
-      query: router.asPath !== '/' ? { continueUrl: router.asPath } : undefined
-    })
-    .catch(console.error);
 
   return (
     <>
@@ -129,7 +123,11 @@ export const DashboardNavbar = (props) => {
                 ref={settingsRef}
                 {...stringAvatar(`${firstName} ${lastName}`)}
               /> :
-              <Button onClick={redirectToLogin} variant="contained" sx={avatarSize}>
+              <Button
+                onClick={() => redirectToLogin(router)}
+                variant="contained"
+                sx={avatarSize}
+              >
                 Login
               </Button>
           }

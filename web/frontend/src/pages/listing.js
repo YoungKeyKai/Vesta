@@ -91,21 +91,23 @@ const ListingsPage = () => {
   }
   function changeButtonText(buttonText) {
     if (buttonText === "Interested") {
-      authAxios.post('/api/listinginterests/',
-      {
-        ...interest,
-        buyer: userId,
-      }
-      ).then((res) => {
-        const data = res.data;
-        setInterest({
+      authAxios.post(
+        '/api/listinginterests/',
+        {
           ...interest,
-          id: data.id,
-        });
-      })
-      .catch((err) => console.log(err));
+          buyer: userId,
+        }
+      )
+        .then((res) => {
+          const data = res.data;
+          setInterest({
+            ...interest,
+            id: data.id,
+          });
+        })
+        .catch((err) => console.log(err));
     } else if(buttonText === "Uninterested") {
-        authAxios.delete('/api/listinginterests/'+ interest.id)
+      authAxios.delete(`/api/listinginterests/${interest.id}`)
         .catch((err) => console.log(err));
     }
     setButtonText(prev => prev === "Interested" ? "Uninterested" : "Interested");
@@ -151,16 +153,16 @@ const ListingsPage = () => {
                   <Grid item
                     xs={maxXS - propertyGridSize}
                   >
-                      {
-                        isAuthenticated ? 
-                          <ToggleButton
-                            selected={buttonText}
-                            onClick={() => changeButtonText(buttonText)}
-                          >
-                            {buttonText}
-                          </ToggleButton> :
-                          null
-                      }
+                    {
+                      isAuthenticated ? 
+                        <ToggleButton
+                          selected={buttonText}
+                          onClick={() => changeButtonText(buttonText)}
+                        >
+                          {buttonText}
+                        </ToggleButton> :
+                        null
+                    }
                   </Grid>
                   <Grid item
                     className='utilities-summary'

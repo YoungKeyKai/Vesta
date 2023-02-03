@@ -91,21 +91,23 @@ const ListingsPage = () => {
   }
   function changeButtonText(buttonText) {
     if (buttonText === "Interested") {
-      authAxios.post('/api/listinginterests/',
-      {
-        ...interest,
-        buyer: userId,
-      }
-      ).then((res) => {
-        const data = res.data;
-        setInterest({
+      authAxios.post(
+        '/api/listinginterests/',
+        {
           ...interest,
-          id: data.id,
-        });
-      })
-      .catch((err) => console.log(err));
+          buyer: userId,
+        }
+      )
+        .then((res) => {
+          const data = res.data;
+          setInterest({
+            ...interest,
+            id: data.id,
+          });
+        })
+        .catch((err) => console.log(err));
     } else if(buttonText === "Uninterested") {
-        authAxios.delete('/api/listinginterests/'+ interest.id)
+      authAxios.delete(`/api/listinginterests/${interest.id}`)
         .catch((err) => console.log(err));
     }
     setButtonText(prev => prev === "Interested" ? "Uninterested" : "Interested");
@@ -148,40 +150,53 @@ const ListingsPage = () => {
                       src={`https://www.google.com/maps/embed/v1/place?key=${googleMapsAPIKey}&q=${googleMapsAddr}`}
                     />
                   </Grid>
-                  <Grid item
-                    xs={maxXS - propertyGridSize}
-                  >
-                      {
-                        isAuthenticated ? 
-                          <ToggleButton
-                            selected={buttonText}
-                            onClick={() => changeButtonText(buttonText)}
-                          >
-                            {buttonText}
-                          </ToggleButton> :
-                          null
-                      }
-                  </Grid>
+                  {
+                    isAuthenticated &&
+                      <Grid item
+                        xs={maxXS - propertyGridSize}
+                      >
+                        <ToggleButton
+                          selected={buttonText}
+                          onClick={() => changeButtonText(buttonText)}
+                        >
+                          {buttonText}
+                        </ToggleButton>
+                      </Grid>
+                  }
                   <Grid item
                     className='utilities-summary'
-                    xs={utilityGridSize}>
+                    xs={utilityGridSize}
+                  >
                     <h2>Utilities and Amenities</h2>
                     <UtiltiesList utilities={listing.utilities} />
                   </Grid>
                   <Grid item
                     className='user-description'
-                    xs={descriptionGridSize}>
+                    xs={descriptionGridSize}
+                  >
                     <h2>Description</h2>
                     <h3>{listing.description}</h3>
                   </Grid>
-                  <Grid item
-                    className='delete'
-                    xs={maxXS - deleteGridSize}>
-                    <Button className='delete-button' variant="contained" color="error" onClick={handleDelete}>Delete</Button>
-                  </Grid>
+                  {
+                    listing.owner == userId &&
+                      <Grid item
+                        className='delete'
+                        xs={maxXS - deleteGridSize}
+                      >
+                        <Button
+                          className='delete-button'
+                          variant="contained"
+                          color="error"
+                          onClick={handleDelete}
+                        >
+                          Delete
+                        </Button>
+                      </Grid>
+                  }
                   <Grid item // TODO: Remove this test button
                     className='download-image'
-                    xs={maxXS - deleteGridSize}>
+                    xs={maxXS - deleteGridSize}
+                  >
                     <ButtonFileDownload userUploadId={listing.floorplan} text="Download Image" className='download-image-button' variant="contained" color="primary">Download Floorplan</ButtonFileDownload>
                   </Grid>
                 </Grid> :

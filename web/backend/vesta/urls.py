@@ -3,6 +3,7 @@ from django.urls import path, include
 from . import views
 
 router = routers.DefaultRouter()
+router.register(r'userinfo', views.UserInfoView, 'userinfo')
 router.register(r'useruploads', views.UserUploadView, 'userupload')
 router.register(r'usersettings', views.UserSettingsView, 'usersettings')
 router.register(r'userpreferences', views.UserPreferencesView, 'userpreferences')

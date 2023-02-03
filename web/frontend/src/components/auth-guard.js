@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { useAuthContext } from '../contexts/auth-context';
+import { redirectToLogin } from '../utils/redirect-to-login';
 
 export const AuthGuard = (props) => {
   const { children } = props;
@@ -29,12 +30,7 @@ export const AuthGuard = (props) => {
 
       if (!isAuthenticated) {
         console.log('Not authenticated, redirecting');
-        router
-          .replace({
-            pathname: '/login',
-            query: router.asPath !== '/' ? { continueUrl: router.asPath } : undefined
-          })
-          .catch(console.error);
+        redirectToLogin(router)
       } else {
         setChecked(true);
       }

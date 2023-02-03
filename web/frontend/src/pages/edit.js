@@ -20,6 +20,7 @@ const EditListing = () => {
 
   const [property, setProperty] = useState(null);
   const [properties, setProperties] = useState([]);
+  const [utilities, setUtilities] = useState([]);
   //const [owner, setOwner] = useState(null);  
   const [listing, setListing] = useState({
     duration: { bounds: "[)" },
@@ -68,6 +69,7 @@ const EditListing = () => {
           rate: JSON.parse(data.rate),
         });
         getProperty(data.propertyID);
+        setUtilities(data.utilities);
       })
       .catch((err) => {
         //Replace with formal error handling
@@ -146,7 +148,8 @@ const EditListing = () => {
     setListing({
       ...listing,
       utilities: newUtilities,
-    })
+    });
+    setUtilities(newUtilities);
   }
 
   const handleStatusChange = (event, newStatus) => {
@@ -313,8 +316,8 @@ const EditListing = () => {
               <Box sx={{'& > :not(style)': { m: 1 }}}>
                 <Autocomplete
                   multiple
-                  value={listing.utilities}
-                  options={["Wifi", "Electricity", "Kitchen", "Laundry", "Food"]}
+                  value={utilities}
+                  options={['Wifi', 'Electricity', 'Kitchen', 'Laundry', 'Food']}
                   onChange={handleListingUtilitiesChange}
                   freeSolo
                   renderInput={ (params) => (

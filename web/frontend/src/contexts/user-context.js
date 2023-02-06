@@ -36,7 +36,7 @@ const handlers = {
     };
   },
   [HANDLERS.REMOVE_USER]: () => {
-    return defaultContext;
+    return {...defaultContext};
   }
 };
 

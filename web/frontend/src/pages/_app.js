@@ -6,6 +6,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
 import { AuthConsumer, AuthProvider } from '../contexts/auth-context';
+import { UserConsumer, UserProvider } from '../contexts/user-context';
 import { createEmotionCache } from '../utils/create-emotion-cache';
 import { registerChartJs } from '../utils/register-chart-js';
 import { theme } from '../theme';
@@ -42,13 +43,21 @@ const App = (props) => {
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <AuthProvider>
-            <AuthConsumer>
-              {
-                (auth) => auth.isLoading
-                  ? <Fragment />
-                  : getLayout(<Component {...pageProps} />)
-              }
-            </AuthConsumer>
+            <UserProvider>
+              <AuthConsumer>
+                {
+                  (auth) => (
+                    <UserConsumer>
+                      {
+                        () => auth.isLoading
+                          ? <Fragment />
+                          : getLayout(<Component {...pageProps} />)
+                      }
+                    </UserConsumer>
+                  )
+                }
+              </AuthConsumer>
+            </UserProvider>
           </AuthProvider>
         </ThemeProvider>
       </LocalizationProvider>

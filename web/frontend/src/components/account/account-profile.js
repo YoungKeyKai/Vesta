@@ -1,71 +1,65 @@
 import {
-  Avatar,
   Box,
-  Button,
   Card,
-  CardActions,
   CardContent,
   Divider,
   Typography
 } from '@mui/material';
+import { useUserContext } from '../../contexts/user-context';
 
-const user = {
-  avatar: '/static/images/avatars/avatar_6.png',
-  city: 'Los Angeles',
-  country: 'USA',
-  jobTitle: 'Senior Developer',
-  name: 'Katarina Smith',
-  timezone: 'GTM-7'
-};
+const dateFormat = {year: 'numeric', month: 'short', day: 'numeric'}
 
-export const AccountProfile = (props) => (
-  <Card {...props}>
-    <CardContent>
-      <Box
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          flexDirection: 'column'
-        }}
-      >
-        <Avatar
-          src={user.avatar}
+export const AccountProfile = (props) => {
+  const user = useUserContext();
+
+  return (
+    <Card {...props}>
+      <CardContent>
+        <Box
           sx={{
-            height: 64,
-            mb: 2,
-            width: 64
+            alignItems: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            margin: 2,
           }}
-        />
-        <Typography
-          color="textPrimary"
-          gutterBottom
-          variant="h5"
         >
-          {user.name}
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body2"
+          <Typography
+            color="textPrimary"
+            variant="h5"
+          >
+            {`${user.firstName} ${user.lastName}`}
+          </Typography>
+          <Typography
+            color="textSecondary"
+            variant="body1"
+          >
+            {`${user.username}`}
+          </Typography>
+        </Box>
+        <Divider />
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            margin: 2,
+          }}
         >
-          {`${user.city} ${user.country}`}
-        </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body2"
-        >
-          {user.timezone}
-        </Typography>
-      </Box>
-    </CardContent>
-    <Divider />
-    <CardActions>
-      <Button
-        color="primary"
-        fullWidth
-        variant="text"
-      >
-        Upload picture
-      </Button>
-    </CardActions>
-  </Card>
-);
+          <Typography
+            color="textSecondary"
+            variant="body2"
+            gutterBottom
+          >
+            {`Last logged in on ${new Date(user.lastLoginTime).toLocaleDateString('en', dateFormat)}`}
+          </Typography>
+          <Typography
+            color="textSecondary"
+            variant="body2"
+          >
+            {`Joined on ${new Date(user.dateJoined).toLocaleDateString('en', dateFormat)}`}
+          </Typography>
+        </Box>
+      </CardContent>
+    </Card>
+  )
+};

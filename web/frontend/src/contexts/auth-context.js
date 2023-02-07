@@ -1,23 +1,30 @@
+import axios from 'axios';
 import { createContext, useContext, useReducer } from 'react';
+import jwtDecode from 'jwt-decode';
 import PropTypes from 'prop-types';
 
 const HANDLERS = {
   LOGIN: 'LOGIN',
-  LOGOUT: 'LOGOUT'
+  LOGOUT: 'LOGOUT',
+  REFRESH: 'REFRESH',
 };
 
 const defaultContext = {
   isAuthenticated: false,
   accessToken: null,
+  userId: null,
 };
 
 const handlers = {
   [HANDLERS.LOGIN]: (state, action) => {
     const accessToken = action.payload;
+    const {user_id: userId} = jwtDecode(accessToken)
+
     return {
       ...state,
       isAuthenticated: true,
       accessToken,
+      userId,
     };
   },
   [HANDLERS.LOGOUT]: (state) => {
@@ -25,8 +32,22 @@ const handlers = {
       ...state,
       isAuthenticated: false,
       accessToken: null,
+      userId: null,
     };
-  }
+  },
+  [HANDLERS.REFRESH]: (state, action) => {
+    if (!state.isAuthenticated) {
+      console.error("Trying to refresh when not logged in.")
+      return state
+    }
+
+    const accessToken = action.payload;
+
+    return {
+      ...state,
+      accessToken,
+    };
+  },
 };
 
 const reducer = (state, action) => (
@@ -44,22 +65,60 @@ export const AuthProvider = (props) => {
   const login = (accessToken) => {
     dispatch({
       type: HANDLERS.LOGIN,
-      payload: accessToken
+      payload: accessToken,
     });
   };
 
   const logout = () => {
     dispatch({
-      type: HANDLERS.LOGOUT
+      type: HANDLERS.LOGOUT,
     });
   };
+
+  const refresh = (accessToken) => {
+    dispatch({
+      type: HANDLERS.REFRESH,
+      payload: accessToken,
+    })
+  }
+
+  const authAxios = axios.create();
+  authAxios.interceptors.request.use(
+    config => {
+      config.headers['Authorization'] = `Bearer ${state.accessToken}`
+      return config
+    }
+  )
+  authAxios.interceptors.response.use(
+    response => response,
+    async error => {
+      if (error.response.status == 401 && error.response.data?.code == 'token_not_valid') {
+        return axios.post('/api/auth/token/refresh/', {}, {withCredentials: true})
+          .then((response) => {
+            refresh(response.data.access)
+
+            error.config.headers.Authorization = `Bearer ${response.data.access}`
+
+            // Use normal axios for the retry to avoid infinite loops
+            return axios(error.config);
+          })
+          .catch((error) => {
+            logout()
+            return Promise.reject(error)
+          })
+      }
+
+      return Promise.reject(error)
+    }
+  );
 
   return (
     <AuthContext.Provider
       value={{
         ...state,
         login,
-        logout
+        logout,
+        authAxios,
       }}
     >
       {children}

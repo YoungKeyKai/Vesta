@@ -67,9 +67,9 @@ REST_FRAMEWORK = {
     )
 }
 
-JWT_AUTH = {
-    'JWT_EXPIRATION_DELTA': timedelta(minutes=3),
-    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(hours=3),
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=3),
+    'REFRESH_TOKEN_LIFETIME': timedelta(hours=3),
 
     # Custom
     'JWT_REFRESH_TOKEN_COOKIE_NAME': 'vesta_refresh_token',

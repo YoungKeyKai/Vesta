@@ -1,15 +1,63 @@
 import Head from 'next/head';
 import NextLink from 'next/link';
-import Router from 'next/router';
+import {useRouter} from 'next/router';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Box, Button, Container, Link, TextField, Typography, Alert } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import axios from 'axios';
 import { useAuthContext } from '../contexts/auth-context';
+import { useUserContext } from '../contexts/user-context';
 
 const Login = () => {
-  const {login} = useAuthContext()
+  const {login, logout} = useAuthContext()
+  const {setUser} = useUserContext()
+  const router = useRouter()
+
+  const loginRequest = (values, actions) => axios
+    .post(
+      '/api/auth/login/',
+      {
+        username: values.email,
+        password: values.password,
+      },
+      {withCredentials: true}
+    )
+    .then((response) => {
+      // If login succeeded, update auth context and get the user info
+      actions.setStatus(null)
+      login(response.data.access)
+      getUserInfo(actions, response.data.access)
+    })
+    .catch((error) => {
+      let submissionError = ''
+      if (error.response.status == 401) {
+        submissionError = "No user found with this credential. Please check the email and password, then try again."
+      } else {
+        submissionError = "Something unexpected has happened, please try again."
+      }
+      actions.setStatus({submissionError})
+    })
+
+  const getUserInfo = (actions, accessToken) => axios
+    .get('/api/userinfo/', {
+      headers: {'Authorization': `Bearer ${accessToken}`}
+    })
+    .then((response) => {
+      // If user info was retrieved successfully, redirect
+      setUser(response.data[0])
+      router
+        .replace({
+          pathname: router.query.continueUrl ? router.query.continueUrl : '/',
+        })
+        .catch(console.error)
+    })
+    .catch(() => {
+      // If user info failed to be retrieved, remove the auth context info
+      logout()
+      let submissionError = "Unable to retrieve your user information, please try again."
+      actions.setStatus({submissionError})
+    })
 
   const formik = useFormik({
     initialValues: {
@@ -27,30 +75,7 @@ const Login = () => {
         .max(255)
         .required('Password is required')
     }),
-    onSubmit: async (values, actions) =>
-      axios.post('/api/auth/login/',
-        {
-          username: values.email,
-          password: values.password,
-        },
-        {withCredentials: true}
-      )
-        .then((response) => {
-          actions.setStatus(null)
-          login(response.data.access)
-          Router
-            .push('/')
-            .catch(console.error)
-        })
-        .catch((error) => {
-          let submissionError = ''
-          if (error.response.status == 401) {
-            submissionError = "No user found with this credential. Please check the email and password, then try again."
-          } else {
-            submissionError = "Something unexpected has happened, please try again."
-          }
-          actions.setStatus({submissionError})
-        })
+    onSubmit: loginRequest
   });
 
   return (

@@ -4,13 +4,17 @@ import { Box, Container } from '@mui/material';
 import { DashboardLayout } from '../components/dashboard-layout';
 import { pages } from '../constants';
 import LinkButton from '../components/linkButton';
+import { useAuthContext } from '../contexts/auth-context';
 
 const linkButtonSize = {
   width: 1 / 4,
   fontSize: 30,
 };
 
-const Page = () => (
+const Page = () => {
+  const {authAxios, userId, isAuthenticated} = useAuthContext();
+
+  return (
   <>
     <Head>
       <title>
@@ -48,21 +52,21 @@ const Page = () => (
             >
                     Create Listings
             </LinkButton>
-            <LinkButton
-              href={pages.loginPage.url}
+            {isAuthenticated && <LinkButton
+              href={pages.market.url + `?owner=${userId}`}
               sx={{
                 backgroundColor: "#8860D0",
                 ...linkButtonSize,
               }}
             >
                     Your Listings
-            </LinkButton>
+            </LinkButton>}
           </div>
         </div>
       </Container>
     </Box>
   </>
-);
+)};
 
 Page.getLayout = (page) => (
   <DashboardLayout noGuard={true}>

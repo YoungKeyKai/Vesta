@@ -9,7 +9,7 @@ class CookieTokenRefreshSerializer(TokenRefreshSerializer):
     refresh = None
 
     def validate(self, attrs):
-        attrs['refresh'] = self.context['request'].COOKIES.get(settings.JWT_AUTH['JWT_REFRESH_TOKEN_COOKIE_NAME'])
+        attrs['refresh'] = self.context['request'].COOKIES.get(settings.SIMPLE_JWT['JWT_REFRESH_TOKEN_COOKIE_NAME'])
         if attrs['refresh']:
             return super().validate(attrs)
         else:
@@ -18,11 +18,17 @@ class CookieTokenRefreshSerializer(TokenRefreshSerializer):
 
 class CookieTokenRemoveSerializer(serializers.Serializer):
     def validate(self, attrs):
-        attrs['refresh'] = self.context['request'].COOKIES.get(settings.JWT_AUTH['JWT_REFRESH_TOKEN_COOKIE_NAME'])
+        attrs['refresh'] = self.context['request'].COOKIES.get(settings.SIMPLE_JWT['JWT_REFRESH_TOKEN_COOKIE_NAME'])
         if attrs['refresh']:
             return {}
         else:
             raise InvalidToken("No valid refresh token found")
+
+
+class UserInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AuthUser
+        fields = ('id', 'username', 'first_name', 'last_name', 'last_login', 'date_joined')
 
 
 class UserUploadSerializer(serializers.ModelSerializer):
@@ -58,7 +64,7 @@ class ListingListingSerializer(serializers.ModelSerializer):
 class ListingInterestSerializer(serializers.ModelSerializer):
     class Meta:
         model = ListingInterest
-        fields = ('id', 'buyer', 'seller', 'listing', 'status')
+        fields = ('id', 'buyer', 'seller', 'listing')
 
 
 class ListingFlaggedListingSerializer(serializers.ModelSerializer):

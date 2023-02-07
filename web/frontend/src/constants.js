@@ -39,3 +39,5 @@ export const colors = [
 ]
 
 export const googleMapsAPIKey = 'AIzaSyClRBH_pT4waqp3BxnTtJw_7z-6clxz_HU';
+
+export const provinces = ['ON', 'QC', 'BC', 'AB', 'MB', 'NB', 'NL', 'NT', 'NS', 'NU', 'PE', 'SK', 'YT']

@@ -13,13 +13,17 @@ import axios from 'axios';
 
 import { DashboardLayout } from '../components/dashboard-layout';
 import UtiltiesList from '../components/utilitiesList';
+import ButtonFileDownload from '../components/button-file-download'
 import { googleMapsAPIKey } from '../constants';
+import { useAuthContext } from '../contexts/auth-context';
 
 const ListingsPage = () => {
   const [listing, setListing] = useState({});
   const [property, setProperty] = useState({});
   const [googleMapsAddr, setGoogleMapsAddr] = useState('');
   const [buttonText, setButtonText] = useState("Interested");
+  const [interest, setInterest] = useState({});
+  const {authAxios, userId, isAuthenticated} = useAuthContext();
   const router = useRouter();
   const { id } = router.query;
 
@@ -28,6 +32,7 @@ const ListingsPage = () => {
   const utilityGridSize = 7;
   const descriptionGridSize = 10;
   const deleteGridSize = 4;
+  const editGridSize = 5;
 
   const formatAddr = (addr, city, province) => `${addr.replaceAll(/ +/g, '+')},${city}+${province}`;
   useEffect(() => {
@@ -49,6 +54,11 @@ const ListingsPage = () => {
         const data = res.data;
         setListing(data);
         getProperty(data.propertyID);
+        setInterest({
+          seller: data.owner,
+          listing: data.id
+        });
+        // getInterest(data.listing);
       })
       .catch((err) => {
         //Replace with formal error handling
@@ -72,7 +82,7 @@ const ListingsPage = () => {
 
   const handleDelete = () => {
     if (window.confirm('Are you sure you wish to delete this listing?')){
-      axios.delete('/api/listinglistings/'+ id)
+      authAxios.delete(`/api/listinglistings/${id}`)
         .then(() => {       
           alert("Listing deleted successfully!");
           router.push(`/market`);
@@ -82,13 +92,32 @@ const ListingsPage = () => {
   }
 
   const handleEdit = () => {
-     router.push(`/edit?id=${id}`);
+    router.push(`/edit?id=${id}`);
   }
 
-  function changeButtonText() {
-    setButtonText(prev => prev === "Interested" ? "Uninterested" : "Interested");
+  function changeButtonText(buttonText) {
+    if (buttonText === "Interested") {
+      authAxios.post(
+        '/api/listinginterests/',
+        {
+          ...interest,
+          buyer: userId,
+        }
+      )
+        .then((res) => {
+          const data = res.data;
+          setInterest({
+            ...interest,
+            id: data.id,
+          });
+        })
+        .catch((err) => console.log(err));
+    } else if(buttonText === "Uninterested") {
+      authAxios.delete(`/api/listinginterests/${interest.id}`)
+        .catch((err) => console.log(err));
+    }
   }
-
+ 
   return (
     <>
       <Head>
@@ -126,30 +155,62 @@ const ListingsPage = () => {
                       src={`https://www.google.com/maps/embed/v1/place?key=${googleMapsAPIKey}&q=${googleMapsAddr}`}
                     />
                   </Grid>
-                  <Grid item
-                    xs={maxXS - propertyGridSize}>
-                    <ToggleButton
-                      selected={buttonText}
-                      onClick={() => changeButtonText()}>{buttonText}</ToggleButton>   
-                  </Grid>
+                  {
+                    isAuthenticated &&
+                      <Grid item
+                        xs={maxXS - propertyGridSize}
+                      >
+                        <ToggleButton
+                          selected={buttonText}
+                          onClick={() => changeButtonText(buttonText)}
+                        >
+                          {buttonText}
+                        </ToggleButton>
+                      </Grid>
+                  }
                   <Grid item
                     className='utilities-summary'
-                    xs={utilityGridSize}>
+                    xs={utilityGridSize}
+                  >
                     <h2>Utilities and Amenities</h2>
                     <UtiltiesList utilities={listing.utilities} />
                   </Grid>
                   <Grid item
                     className='user-description'
-                    xs={descriptionGridSize}>
+                    xs={descriptionGridSize}
+                  >
                     <h2>Description</h2>
                     <h3>{listing.description}</h3>
                   </Grid>
-                  <Grid item
+                  {
+                    listing.owner == userId &&
+                      <Grid item
+                        className='delete'
+                        xs={maxXS - deleteGridSize}
+                      >
+                        <Button
+                          className='delete-button'
+                          variant="contained"
+                          color="error"
+                          onClick={handleDelete}
+                        >
+                          Delete
+                        </Button>
+                      </Grid>
+                  }
+                  {
+                    listing.owner == userId &&
+                    <Grid item
                     className='modify-buttons'
-                    xs={maxXS - deleteGridSize}>
+                    xs={maxXS - editGridSize}>
                     <Button className='edit-button' variant="contained" color="success" onClick={handleEdit}>Edit</Button>
-                    <Button className='delete-button' variant="contained" color="error" onClick={handleDelete}>Delete</Button>
-                    
+                    </Grid> 
+                  }
+                  <Grid item // TODO: Remove this test button
+                    className='download-image'
+                    xs={maxXS - deleteGridSize}
+                  >
+                    <ButtonFileDownload userUploadId={listing.floorplan} text="Download Image" className='download-image-button' variant="contained" color="primary">Download Floorplan</ButtonFileDownload>
                   </Grid>
                 </Grid> :
                 <CircularProgress className="loading-circle"
@@ -163,7 +224,7 @@ const ListingsPage = () => {
 }
 
 ListingsPage.getLayout = (page) => (
-  <DashboardLayout>
+  <DashboardLayout noGuard={true}>
     {page}
   </DashboardLayout>
 );

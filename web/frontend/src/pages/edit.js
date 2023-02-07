@@ -15,13 +15,14 @@ import {
 } from '@mui/material/';
 import { AttachMoney } from '@mui/icons-material';
 import { DashboardLayout } from '../components/dashboard-layout';
+import { useAuthContext } from '../contexts/auth-context';
 
 const EditListing = () => {
 
   const [property, setProperty] = useState(null);
   const [properties, setProperties] = useState([]);
   const [utilities, setUtilities] = useState([]);
-  //const [owner, setOwner] = useState(null);  
+  const {authAxios, userId} = useAuthContext();  
   const [listing, setListing] = useState({
     duration: { bounds: "[)" },
     rate: { bounds: "[)" }
@@ -166,7 +167,7 @@ const EditListing = () => {
   const handleSubmit = () => {
     if (property?.id == null) {
       // first create the new property to use with new listing
-      axios.post('/api/listingproperties/', property)
+      authAxios.post('/api/listingproperties/', property)
         .then((response) => {
           setProperty(response.data); 
           postListing(response.data.id);
@@ -182,10 +183,10 @@ const EditListing = () => {
   const postListing = (newPropertyID = null) => {
     
     // Update the new listing, using new (or existing) propertyID
-    axios.put('/api/listinglistings/'+ id, {
+    authAxios.put('/api/listinglistings/'+ id, {
         ...listing,
         propertyID: property?.id || newPropertyID,   // use newPropertyID if property.id is null
-        owner: 3,   // Need to remove hardcoded user, and use current user
+        owner: userId,   // Need to remove hardcoded user, and use current user
         duration: JSON.stringify(listing.duration),
         rate: JSON.stringify(listing.rate),
       })

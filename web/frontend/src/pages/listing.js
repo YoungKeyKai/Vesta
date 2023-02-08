@@ -32,6 +32,7 @@ const ListingsPage = () => {
   const utilityGridSize = 7;
   const descriptionGridSize = 10;
   const deleteGridSize = 4;
+  const editGridSize = 5;
 
   const formatAddr = (addr, city, province) => `${addr.replaceAll(/ +/g, '+')},${city}+${province}`;
   useEffect(() => {
@@ -89,6 +90,11 @@ const ListingsPage = () => {
         .catch((err) => console.log(err));
     }
   }
+
+  const handleEdit = () => {
+    router.push(`/edit?id=${id}`);
+  }
+
   function changeButtonText(buttonText) {
     if (buttonText === "Interested") {
       authAxios.post(
@@ -110,7 +116,6 @@ const ListingsPage = () => {
       authAxios.delete(`/api/listinginterests/${interest.id}`)
         .catch((err) => console.log(err));
     }
-    setButtonText(prev => prev === "Interested" ? "Uninterested" : "Interested");
   }
  
   return (
@@ -192,6 +197,14 @@ const ListingsPage = () => {
                           Delete
                         </Button>
                       </Grid>
+                  }
+                  {
+                    listing.owner == userId &&
+                    <Grid item
+                    className='modify-buttons'
+                    xs={maxXS - editGridSize}>
+                    <Button className='edit-button' variant="contained" color="success" onClick={handleEdit}>Edit</Button>
+                    </Grid> 
                   }
                   <Grid item // TODO: Remove this test button
                     className='download-image'

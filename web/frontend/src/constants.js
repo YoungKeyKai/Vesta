@@ -24,6 +24,10 @@ export const pages = {
   createListingPage: {
     url: '/create',
     name: 'Create'
+  },
+  editListingPage: {
+    url: '/market/listing/edit',
+    name: 'Edit'
   }
 };
 

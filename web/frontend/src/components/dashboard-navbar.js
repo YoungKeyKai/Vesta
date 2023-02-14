@@ -22,6 +22,8 @@ export const DashboardNavbar = (props) => {
   const [openAccountPopover, setOpenAccountPopover] = useState(false);
   const {isAuthenticated} = useAuthContext();
   const {firstName, lastName} = useUserContext();
+  const [search, setSearch] = useState('');
+
   const router = useRouter();
 
   const avatarSize = {
@@ -59,6 +61,10 @@ export const DashboardNavbar = (props) => {
     children: `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`,
   })
 
+  const applySearch = () => {
+    router.push(`/market/?search=${search}`);
+  }
+
   return (
     <>
       <DashboardNavbarRoot
@@ -90,7 +96,9 @@ export const DashboardNavbar = (props) => {
           >
             <MenuIcon fontSize="small" />
           </IconButton>
-          <TextField 
+          <TextField
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
             label="Find your Next Home"
             variant="outlined"
             InputProps={{
@@ -104,6 +112,12 @@ export const DashboardNavbar = (props) => {
             sx={{width: '40rem'}}
           >
           </TextField>
+          <Button 
+            sx={{mx: 1}} 
+            variant="contained"
+            onClick={applySearch}>
+            Find
+          </Button>
           <Box sx={{ flexGrow: 1 }} />
           <Tooltip title="Notifications">
             <IconButton sx={{ ml: 1 }}>

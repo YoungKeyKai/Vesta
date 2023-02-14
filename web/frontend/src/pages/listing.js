@@ -201,9 +201,9 @@ const ListingsPage = () => {
                   {
                     listing.owner == userId &&
                     <Grid item
-                    className='modify-buttons'
-                    xs={maxXS - editGridSize}>
-                    <Button className='edit-button' variant="contained" color="success" onClick={handleEdit}>Edit</Button>
+                      className='modify-buttons'
+                      xs={maxXS - editGridSize}>
+                      <Button className='edit-button' variant="contained" color="success" onClick={handleEdit}>Edit</Button>
                     </Grid> 
                   }
                   <Grid item // TODO: Remove this test button

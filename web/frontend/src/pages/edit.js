@@ -49,33 +49,33 @@ const EditListing = () => {
 
     const getProperty = (propertyID) => {
       axios.get(`/api/listingproperties/${propertyID}`)
-      .then((res) => {
-        const data = res.data;
-        setProperty(data);
-      })
-      .catch((err) => {
+        .then((res) => {
+          const data = res.data;
+          setProperty(data);
+        })
+        .catch((err) => {
         //Replace with formal error handling
-        console.log(err);
-      })
+          console.log(err);
+        })
 
     }
 
     const getListing = () => {
       axios.get(`/api/listinglistings/${id}`)
-      .then((res) => {
-        const data = res.data;
-        setListing({
-          ...data,
-          duration: JSON.parse(data.duration),
-          rate: JSON.parse(data.rate),
-        });
-        getProperty(data.propertyID);
-        setUtilities(data.utilities);
-      })
-      .catch((err) => {
+        .then((res) => {
+          const data = res.data;
+          setListing({
+            ...data,
+            duration: JSON.parse(data.duration),
+            rate: JSON.parse(data.rate),
+          });
+          getProperty(data.propertyID);
+          setUtilities(data.utilities);
+        })
+        .catch((err) => {
         //Replace with formal error handling
-        console.log(err);
-      })
+          console.log(err);
+        })
     }
 
     // Fetch Properties
@@ -184,12 +184,12 @@ const EditListing = () => {
     
     // Update the new listing, using new (or existing) propertyID
     authAxios.put('/api/listinglistings/'+ id, {
-        ...listing,
-        propertyID: property?.id || newPropertyID,   // use newPropertyID if property.id is null
-        owner: userId,   // Need to remove hardcoded user, and use current user
-        duration: JSON.stringify(listing.duration),
-        rate: JSON.stringify(listing.rate),
-      })
+      ...listing,
+      propertyID: property?.id || newPropertyID,   // use newPropertyID if property.id is null
+      owner: userId,   // Need to remove hardcoded user, and use current user
+      duration: JSON.stringify(listing.duration),
+      rate: JSON.stringify(listing.rate),
+    })
       .then((res) => {
         router.push(`/listing?id=${res.data.id}`);
       })

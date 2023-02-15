@@ -41,14 +41,15 @@ const Market = () => {
   const router = useRouter();
 
   // Parse URL Parameters
-  const params = router.query;
   const [filters, setFilters] = useState({});
 
   // useEffect Hook on Page Load
   useEffect(() => {
+    const params = router.query;
+
     const getListings = () => {
       const reqFilters = new URLSearchParams(params).toString();
-      axios.get(`/api/listinglistings?${reqFilters}`)
+      axios.get(`/api/listinglistings/?${reqFilters}`)
         .then((res) => {
           setListings(res.data);
           setPage(res.data.slice(0, 6));
@@ -61,10 +62,11 @@ const Market = () => {
         })
     }
 
-    // Fetch Listings
+    // Set Filters
     setFilters(params);
+    // Fetch Listings
     getListings();
-  }, []);
+  }, [router]);
 
   const getProperties = (listings) => {
     // Store a Set of Properties to fetch to avoid repeating API Calls
@@ -177,11 +179,15 @@ const Market = () => {
                   Price ($)
                 </Typography>
                 <Slider
-                  value={filters.price ?? [0, 4000]}
+                  value={[filters.minprice ?? 0, filters.maxprice ?? 4000]}
                   step={100}
                   min={0}
                   max={4000}
-                  onChange={(event, newValue) => { setFilters({ ...filters, price: newValue }) }}
+                  onChange={(event, newValue) => { setFilters({ 
+                    ...filters, 
+                    minprice: newValue[0],
+                    maxprice: newValue[1] 
+                  }) }}
                   valueLabelDisplay="auto"
                 ></Slider>
               </Box>
@@ -192,6 +198,7 @@ const Market = () => {
                   </Typography>
                   <TextField 
                     type="date"
+                    value={filters.startDate}
                     onChange={(e) => { setFilters({ ...filters, startDate: e.target.value }) }}
                   >
                   </TextField>
@@ -202,6 +209,7 @@ const Market = () => {
                   </Typography>
                   <TextField 
                     type="date"
+                    value={filters.endDate}
                     onChange={(e) => { setFilters({ ...filters, endDate: e.target.value }) }}
                   >
                   </TextField>
@@ -219,32 +227,47 @@ const Market = () => {
               <Box sx={{ width: 600, mx: 3, display: 'flex', justifyContent: 'center' }}>
                 <Box>
                   <WifiTooltip />
-                  <Checkbox color="primary" 
-                    onChange={(e, newValue) => { setFilters({ ...filters, wifi: newValue }) }}
+                  <Checkbox color="primary"
+                    checked={filters['Wifi'] === 'false'? false : true}
+                    onChange={(e, newValue) => {
+                      setFilters({ ...filters, Wifi: newValue.toString() });
+                    }}
                   />
                 </Box>
                 <Box>
                   <ElectricToolTip />
-                  <Checkbox color="primary" 
-                    onChange={(e, newValue) => { setFilters({ ...filters, electricity: newValue }) }}
+                  <Checkbox color="primary"
+                    checked={filters['Electricity'] == 'false'? false : true}
+                    onChange={(e, newValue) => {
+                      setFilters({ ...filters, Electricity: newValue.toString() });
+                    }}
                   />
                 </Box>
                 <Box>
                   <KitchenTooltip />
-                  <Checkbox color="primary" 
-                    onChange={(e, newValue) => { setFilters({ ...filters, kitchen: newValue }) }}
+                  <Checkbox color="primary"
+                    checked={filters['Kitchen'] == 'false'? false : true}
+                    onChange={(e, newValue) => { 
+                      setFilters({ ...filters, Kitchen: newValue.toString() }); 
+                    }}
                   />
                 </Box>
                 <Box>
                   <LaundryTooltip />
-                  <Checkbox color="primary" 
-                    onChange={(e, newValue) => { setFilters({ ...filters, laundry: newValue }) }}
+                  <Checkbox color="primary"
+                    checked={filters['Laundry'] == 'false'? false : true}
+                    onChange={(e, newValue) => { 
+                      setFilters({ ...filters, Laundry: newValue.toString() });
+                    }}
                   />
                 </Box>
                 <Box>
                   <LocalDiningTooltip />
-                  <Checkbox color="primary" 
-                    onChange={(e, newValue) => { setFilters({ ...filters, dining: newValue }) }}
+                  <Checkbox color="primary"
+                    checked={filters['Food'] == 'false'? false : true}
+                    onChange={(e, newValue) => { 
+                      setFilters({ ...filters, Food: newValue.toString() }); 
+                    }}
                   />
                 </Box>
               </Box>

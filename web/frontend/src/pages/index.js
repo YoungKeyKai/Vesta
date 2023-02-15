@@ -15,58 +15,58 @@ const Page = () => {
   const {authAxios, userId, isAuthenticated} = useAuthContext();
 
   return (
-  <>
-    <Head>
-      <title>
+    <>
+      <Head>
+        <title>
         Home | Vesta
-      </title>
-    </Head>
-    <Box
-      component="main"
-      sx={{
-        flexGrow: 1,
-        py: 8
-      }}
-    >
-      <Container maxWidth={false}>
-        <div className='homepage'>
-          <h1 className='vesta-main-title'>
+        </title>
+      </Head>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          py: 8
+        }}
+      >
+        <Container maxWidth={false}>
+          <div className='homepage'>
+            <h1 className='vesta-main-title'>
                 Vesta
-          </h1>
-          <div className='button-box'>
-            <LinkButton
-              href={pages.market.url}
-              sx={{
-                backgroundColor: "#84CEEB",
-                ...linkButtonSize,
-              }}
-            >
+            </h1>
+            <div className='button-box'>
+              <LinkButton
+                href={pages.market.url}
+                sx={{
+                  backgroundColor: "#84CEEB",
+                  ...linkButtonSize,
+                }}
+              >
                     Find Listings
-            </LinkButton>
-            <LinkButton
-              href={pages.createListingPage.url}
-              sx={{
-                backgroundColor: "#5AB9EA",
-                ...linkButtonSize,
-              }}
-            >
+              </LinkButton>
+              <LinkButton
+                href={pages.createListingPage.url}
+                sx={{
+                  backgroundColor: "#5AB9EA",
+                  ...linkButtonSize,
+                }}
+              >
                     Create Listings
-            </LinkButton>
-            {isAuthenticated && <LinkButton
-              href={pages.market.url + `?owner=${userId}`}
-              sx={{
-                backgroundColor: "#8860D0",
-                ...linkButtonSize,
-              }}
-            >
+              </LinkButton>
+              {isAuthenticated && <LinkButton
+                href={pages.market.url + `?owner=${userId}`}
+                sx={{
+                  backgroundColor: "#8860D0",
+                  ...linkButtonSize,
+                }}
+              >
                     Your Listings
-            </LinkButton>}
+              </LinkButton>}
+            </div>
           </div>
-        </div>
-      </Container>
-    </Box>
-  </>
-)};
+        </Container>
+      </Box>
+    </>
+  )};
 
 Page.getLayout = (page) => (
   <DashboardLayout noGuard={true}>

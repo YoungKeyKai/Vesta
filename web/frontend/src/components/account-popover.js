@@ -12,11 +12,18 @@ export const AccountPopover = (props) => {
   const handleLogout = async () => {
     onClose?.();
 
-    // Expire the JWT refresh token
-    authAxios.get('/api/auth/token/remove/').catch(console.error)
+    const expireContexts = () => {
+      logout()
+      removeUser()
+    }
 
-    logout()
-    removeUser()
+    // Expire the JWT refresh token
+    authAxios.get('/api/auth/token/remove/')
+      .then(() => expireContexts())
+      .catch((err) => {
+        console.error(err)
+        expireContexts()
+      })
 
     // Redirect to home page
     Router

@@ -6,12 +6,24 @@ import { useUserContext } from '../contexts/user-context';
 
 export const AccountPopover = (props) => {
   const { anchorEl, onClose, open, ...other } = props;
-  const {logout} = useAuthContext();
-  const {firstName, lastName} = useUserContext();
+  const { logout, authAxios } = useAuthContext();
+  const { firstName, lastName, removeUser } = useUserContext();
 
   const handleLogout = async () => {
     onClose?.();
-    logout();
+
+    const expireContexts = () => {
+      logout()
+      removeUser()
+    }
+
+    // Expire the JWT refresh token
+    authAxios.get('/api/auth/token/remove/')
+      .then(() => expireContexts())
+      .catch((err) => {
+        console.error(err)
+        expireContexts()
+      })
 
     // Redirect to home page
     Router

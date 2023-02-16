@@ -45,7 +45,7 @@ export const AccountPopover = (props) => {
         }}
       >
         <Typography variant="overline">
-                    Account
+          Account
         </Typography>
         <Typography
           color="text.secondary"
@@ -68,7 +68,7 @@ export const AccountPopover = (props) => {
         }}
       >
         <MenuItem onClick={handleLogout}>
-                    Logout
+          Logout
         </MenuItem>
       </MenuList>
     </Popover>

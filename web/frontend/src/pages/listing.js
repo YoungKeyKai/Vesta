@@ -116,6 +116,7 @@ const ListingsPage = () => {
       authAxios.delete(`/api/listinginterests/${interest.id}`)
         .catch((err) => console.log(err));
     }
+    setButtonText(prev => prev === "Interested" ? "Uninterested" : "Interested");
   }
  
   return (

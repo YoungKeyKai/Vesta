@@ -25,9 +25,9 @@ SECRET_KEY = config("SECRET_KEY")
 DB_PASSWORD = config("DB_PASSWORD")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG") == 'True'
 
-ALLOWED_HOSTS = ['vestabackend-env.eba-3n8qb2pp.ca-central-1.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['d2s6k4tq0sxi9k.cloudfront.net']
 if DEBUG:
     ALLOWED_HOSTS += ['localhost', '127.0.0.1']
 

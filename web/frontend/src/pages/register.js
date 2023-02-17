@@ -42,7 +42,7 @@ const Register = () => {
       if (error.response.status == 400) {
         // Only email field must be unique
         if (error.response.data?.username?.includes('This field must be unique.')) {
-            formik.errors.email = "Account already exists."
+          formik.errors.email = "Account already exists."
         }
         submissionError = "Please ensure all provided information are valid and retry."
       } else {

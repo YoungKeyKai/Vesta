@@ -230,12 +230,11 @@ const Register = () => {
               >
                 Sign Up Now
               </Button>
-              {formik.status?.submissionError &&
-                (
+              {
+                formik.status?.submissionError ?
                   <Alert className='RegistrationError' severity='error'>
                     {formik.status?.submissionError}
-                  </Alert>
-                )
+                  </Alert> : null
               }
             </Box>
             <Typography

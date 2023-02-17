@@ -116,6 +116,7 @@ const ListingsPage = () => {
       authAxios.delete(`/api/listinginterests/${interest.id}`)
         .catch((err) => console.log(err));
     }
+    setButtonText(prev => prev === "Interested" ? "Uninterested" : "Interested");
   }
  
   return (
@@ -206,12 +207,15 @@ const ListingsPage = () => {
                       <Button className='edit-button' variant="contained" color="success" onClick={handleEdit}>Edit</Button>
                     </Grid> 
                   }
-                  <Grid item // TODO: Remove this test button
-                    className='download-image'
-                    xs={maxXS - deleteGridSize}
-                  >
-                    <ButtonFileDownload userUploadId={listing.floorplan} text="Download Image" className='download-image-button' variant="contained" color="primary">Download Floorplan</ButtonFileDownload>
-                  </Grid>
+                  {
+                    listing.floorplan ?
+                      <Grid item // TODO: Remove this test button
+                        className='download-image'
+                        xs={maxXS - deleteGridSize}
+                      >
+                        <ButtonFileDownload userUploadId={listing.floorplan} text="Download Image" className='download-image-button' variant="contained" color="primary">Download Floorplan</ButtonFileDownload>
+                      </Grid> : null
+                  }
                 </Grid> :
                 <CircularProgress className="loading-circle"
                   size="5rem" />

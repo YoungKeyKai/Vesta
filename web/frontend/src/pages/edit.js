@@ -17,8 +17,9 @@ import { AttachMoney } from '@mui/icons-material';
 import { DashboardLayout } from '../components/dashboard-layout';
 import { useAuthContext } from '../contexts/auth-context';
 
-const EditListing = () => {
+import { provinces } from '../constants';
 
+const EditListing = () => {
   const [property, setProperty] = useState(null);
   const [properties, setProperties] = useState([]);
   const [utilities, setUtilities] = useState([]);
@@ -34,7 +35,6 @@ const EditListing = () => {
 
   // useEffect Hook on Page Load
   useEffect(() => {
-    
     // Load all property options 
     const getProperties = () => {
       axios.get('/api/listingproperties/')
@@ -160,10 +160,6 @@ const EditListing = () => {
     });
   }
 
-  const handleFileChange = (newFile) => {
-    setFile(newFile);
-  }
-
   const handleSubmit = () => {
     if (property?.id == null) {
       // first create the new property to use with new listing
@@ -177,11 +173,9 @@ const EditListing = () => {
       // jsut create the listing using existing property
       postListing();
     }
-        
   }
 
   const postListing = (newPropertyID = null) => {
-    
     // Update the new listing, using new (or existing) propertyID
     authAxios.put('/api/listinglistings/'+ id, {
       ...listing,
@@ -200,7 +194,7 @@ const EditListing = () => {
     <>
       <Head>
         <title>
-                Edit Listing | Vesta
+          Edit Listing | Vesta
         </title>
       </Head>
       <Box 
@@ -214,7 +208,7 @@ const EditListing = () => {
           <div className='edit-listing'>
             <h1>Edit Listing</h1>
             <div>
-                        Property
+              Property
               <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>
                 <Autocomplete
                   disablePortal
@@ -229,7 +223,7 @@ const EditListing = () => {
                 />
               </Box>
               <br/>
-                        Info
+              Info
               <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>
                 <TextField type="text"
                   variant="filled"
@@ -257,19 +251,11 @@ const EditListing = () => {
                   select
                   onChange={handlePropertyChange}
                 >
-                  <MenuItem value={'AB'}>AB</MenuItem>
-                  <MenuItem value={'BC'}>BC</MenuItem>
-                  <MenuItem value={'MB'}>MB</MenuItem>
-                  <MenuItem value={'NB'}>NB</MenuItem>
-                  <MenuItem value={'NL'}>NL</MenuItem>
-                  <MenuItem value={'NT'}>NT</MenuItem>
-                  <MenuItem value={'NS'}>NS</MenuItem>
-                  <MenuItem value={'NU'}>NU</MenuItem>
-                  <MenuItem value={'ON'}>ON</MenuItem>
-                  <MenuItem value={'PE'}>PE</MenuItem>
-                  <MenuItem value={'QC'}>QC</MenuItem>
-                  <MenuItem value={'SK'}>SK</MenuItem>
-                  <MenuItem value={'YT'}>YT</MenuItem>
+                  {
+                    provinces.map((provinceCode) => (
+                      <MenuItem value={provinceCode} key={provinceCode}>{provinceCode}</MenuItem>
+                    ))
+                  }
                 </TextField>
               </Box>
               <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>
@@ -281,7 +267,7 @@ const EditListing = () => {
                   onChange={handleListingChange} />
               </Box>
               <br/>
-                        Duration
+              Duration
               <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>
                 <TextField type="date"
                   variant="filled"
@@ -297,7 +283,7 @@ const EditListing = () => {
                   onChange={handleListingDurationUpperChange} />
               </Box>
               <br/>
-                        Rate
+              Rate
               <Box sx={{'& > :not(style)': { m: 1, width: '25ch' }}}>
                 <TextField type="text"
                   variant="filled"
@@ -313,7 +299,7 @@ const EditListing = () => {
                   onChange={handleListingRateUpperChange} />
               </Box>
               <br/>
-                        Utilities:
+              Utilities:
               <Box sx={{'& > :not(style)': { m: 1 }}}>
                 <Autocomplete
                   multiple
@@ -329,7 +315,7 @@ const EditListing = () => {
                 />
               </Box>
               <br/>
-                        Status:
+              Status:
               <Box sx={{'& > :not(style)': { m: 1 }}}>
                 <ToggleButtonGroup
                   exclusive
@@ -337,13 +323,13 @@ const EditListing = () => {
                   onChange={handleStatusChange}
                 >
                   <ToggleButton value="available">
-                                    Available
+                    Available
                   </ToggleButton>
                   <ToggleButton value="sold">
-                                    Sold
+                    Sold
                   </ToggleButton>
                   <ToggleButton value="unavailable">
-                                    Unavailable
+                    Unavailable
                   </ToggleButton>
                 </ToggleButtonGroup>
               </Box>           

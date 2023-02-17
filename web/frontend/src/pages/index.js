@@ -12,7 +12,7 @@ const linkButtonSize = {
 };
 
 const Page = () => {
-  const {authAxios, userId, isAuthenticated} = useAuthContext();
+  const {userId, isAuthenticated} = useAuthContext();
 
   return (
     <>

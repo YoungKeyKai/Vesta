@@ -38,9 +38,14 @@ const Login = () => {
       actions.setStatus({submissionError})
     })
 
-  const uponGetUserInfoFailure = (actions) => {
-    logout()
+  const uponGetUserInfoFailure = (actions, accessToken) => {
     let submissionError = "Unable to retrieve your user information, please try again."
+    axios
+      .get('/api/auth/token/remove/', {
+        headers: {'Authorization': `Bearer ${accessToken}`}
+      })
+      .catch(console.error)
+    logout()
     actions.setStatus({submissionError})
   }
 
@@ -60,12 +65,12 @@ const Login = () => {
       }
       else {
         // If user info failed to be retrieved, remove the auth context info
-        uponGetUserInfoFailure(actions)
+        uponGetUserInfoFailure(actions, accessToken)
       }
     })
     .catch(() => {
       // If user info failed to be retrieved, remove the auth context info
-      uponGetUserInfoFailure(actions)
+      uponGetUserInfoFailure(actions, accessToken)
     })
 
   const formik = useFormik({

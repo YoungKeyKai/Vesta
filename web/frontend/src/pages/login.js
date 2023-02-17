@@ -20,8 +20,7 @@ const Login = () => {
       {
         username: values.email,
         password: values.password,
-      },
-      {withCredentials: true}
+      }
     )
     .then((response) => {
       // If login succeeded, update auth context and get the user info

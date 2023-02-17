@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import NextLink from 'next/link';
-import Router from 'next/router';
+import {useRouter} from 'next/router';
+import axios from 'axios';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
@@ -11,11 +12,45 @@ import {
   FormHelperText,
   Link,
   TextField,
-  Typography
+  Typography,
+  Alert
 } from '@mui/material';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const Register = () => {
+  const router = useRouter()
+
+  const registrationRequest = (values, actions) => axios
+    .post(
+      '/api/userinfo/',
+      {
+        username: values.email,
+        password: values.password,
+        first_name: values.firstName,
+        last_name: values.lastName,
+      }
+    )
+    .then(() => {
+      // If registration succeeded, redirect them to the login page
+      actions.setStatus(null)
+      router
+        .replace('/login')
+        .catch(console.error);
+    })
+    .catch((error) => {
+      let submissionError = ''
+      if (error.response.status == 400) {
+        // Only email field must be unique
+        if (error.response.data?.username?.includes('This field must be unique.')) {
+          formik.errors.email = "Account already exists."
+        }
+        submissionError = "Please ensure all provided information are valid and retry."
+      } else {
+        submissionError = "Something unexpected has happened, please try again."
+      }
+      actions.setStatus({submissionError})
+    })
+
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -50,11 +85,7 @@ const Register = () => {
           'This field must be checked'
         )
     }),
-    onSubmit: () => {
-      Router
-        .push('/')
-        .catch(console.error);
-    }
+    onSubmit: registrationRequest
   });
 
   return (
@@ -199,6 +230,12 @@ const Register = () => {
               >
                 Sign Up Now
               </Button>
+              {
+                formik.status?.submissionError ?
+                  <Alert className='RegistrationError' severity='error'>
+                    {formik.status?.submissionError}
+                  </Alert> : null
+              }
             </Box>
             <Typography
               color="textSecondary"

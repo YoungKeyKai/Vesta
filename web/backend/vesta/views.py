@@ -1,7 +1,6 @@
 from math import floor
 from django.conf import settings
 from rest_framework import viewsets, status
-from rest_framework.decorators import action
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
@@ -59,6 +58,7 @@ class CookieTokenRemoveView(GenericAPIView):
             return response
 
 class UserInfoView(viewsets.ModelViewSet):
+    permission_classes = [AllowAny]
     serializer_class = UserInfoSerializer
 
     def get_queryset(self):

@@ -39,24 +39,34 @@ const Login = () => {
       actions.setStatus({submissionError})
     })
 
+  const uponGetUserInfoFailure = (actions) => {
+    logout()
+    let submissionError = "Unable to retrieve your user information, please try again."
+    actions.setStatus({submissionError})
+  }
+
   const getUserInfo = (actions, accessToken) => axios
     .get('/api/userinfo/', {
       headers: {'Authorization': `Bearer ${accessToken}`}
     })
     .then((response) => {
-      // If user info was retrieved successfully, redirect
-      setUser(response.data[0])
-      router
-        .replace({
-          pathname: router.query.continueUrl ? router.query.continueUrl : '/',
-        })
-        .catch(console.error)
+      if (response.data[0]) {
+        // If user info was retrieved successfully, redirect
+        setUser(response.data[0])
+        router
+          .replace({
+            pathname: router.query.continueUrl ? router.query.continueUrl : '/',
+          })
+          .catch(console.error)
+      }
+      else {
+        // If user info failed to be retrieved, remove the auth context info
+        uponGetUserInfoFailure(actions)
+      }
     })
     .catch(() => {
       // If user info failed to be retrieved, remove the auth context info
-      logout()
-      let submissionError = "Unable to retrieve your user information, please try again."
-      actions.setStatus({submissionError})
+      uponGetUserInfoFailure(actions)
     })
 
   const formik = useFormik({

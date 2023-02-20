@@ -66,7 +66,7 @@ const Market = () => {
     setFilters(params);
     // Fetch Listings
     getListings();
-  }, [router]);
+  }, [router.query]);
 
   const getProperties = (listings) => {
     // Store a Set of Properties to fetch to avoid repeating API Calls

@@ -99,8 +99,10 @@ class ListingListingView(viewsets.ModelViewSet):
         """
 
         queryset = self.filter_queryset(self.queryset)
+
         # Parameters
         params = request.GET
+
         try:
             # Price Filter
             if params.get('minprice'):
@@ -109,6 +111,7 @@ class ListingListingView(viewsets.ModelViewSet):
                     int(params.get('maxprice', 10000)),
                 )
                 queryset = queryset.filter(rate__overlap=price_range)
+
             # DateRange Filter
             if params.get('startDate') or params.get('endDate'):
                 # Decrease intervals by one in either direction for inclusivity.
@@ -122,9 +125,11 @@ class ListingListingView(viewsets.ModelViewSet):
                 end_date += timedelta(days=-1)
                 date_range = DateRange(start_date.strftime('%Y-%m-%d'), end_date.strftime('%Y-%m-%d'))
                 queryset = queryset.filter(duration__contains=date_range)
+
             # Filter By Location
             if params.get('location'):
                 queryset = queryset.filter(propertyID__city__icontains=params.get('location'))
+
             # Filter By Utilities
             utilities = list()
             for utility in ['Wifi', 'Electricity', 'Kitchen', 'Laundry', 'Food']:
@@ -132,9 +137,14 @@ class ListingListingView(viewsets.ModelViewSet):
                     utilities.append(utility)
             if len(utilities):
                 queryset = queryset.filter(utilities__contains=utilities)
-            # Show User Owned Listings
-            if params.get('owner') == 'true':
-                queryset = queryset.filter(owner=request.user)
+
+            # Filter by owner
+            if params.get('ownerId'):
+                queryset = queryset.filter(owner=int(params.get('ownerId')))
+            else:
+                # Show only available listings if not showing only owned listings
+                queryset = queryset.filter(status='available')
+            
             # Use search term to filter by property name, location or description
             if params.get('search'):
                 q1 = queryset.filter(propertyID__name__icontains=params.get('search'))
@@ -145,8 +155,7 @@ class ListingListingView(viewsets.ModelViewSet):
         except:
             # Parameters not well formed
             raise ValueError
-        # Show only available listings
-        queryset = queryset.filter(status='available')
+
         # Sort Queryset by newest first
         queryset = queryset.order_by('-id')
 

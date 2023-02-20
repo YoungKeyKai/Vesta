@@ -52,15 +52,18 @@ const Page = () => {
               >
                     Create Listings
               </LinkButton>
-              {isAuthenticated && <LinkButton
-                href={pages.market.url + `?owner=${userId}`}
-                sx={{
-                  backgroundColor: "#8860D0",
-                  ...linkButtonSize,
-                }}
-              >
+              {
+                isAuthenticated ?
+                  <LinkButton
+                    href={pages.market.url + `?ownerId=${userId}`}
+                    sx={{
+                      backgroundColor: "#8860D0",
+                      ...linkButtonSize,
+                    }}
+                  >
                     Your Listings
-              </LinkButton>}
+                  </LinkButton> : null
+              }
             </div>
           </div>
         </Container>

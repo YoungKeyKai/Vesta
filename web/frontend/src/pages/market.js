@@ -45,6 +45,10 @@ const Market = () => {
 
   // useEffect Hook on Page Load
   useEffect(() => {
+    if (!router.isReady) {
+      return
+    }
+
     const params = router.query;
 
     const getListings = () => {
@@ -64,9 +68,10 @@ const Market = () => {
 
     // Set Filters
     setFilters(params);
+    
     // Fetch Listings
     getListings();
-  }, [router.query]);
+  }, [router.isReady, router.query]);
 
   const getProperties = (listings) => {
     // Store a Set of Properties to fetch to avoid repeating API Calls

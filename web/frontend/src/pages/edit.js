@@ -35,6 +35,10 @@ const EditListing = () => {
 
   // useEffect Hook on Page Load
   useEffect(() => {
+    if (!router.isReady) {
+      return
+    }
+
     // Load all property options 
     const getProperties = () => {
       axios.get('/api/listingproperties/')
@@ -82,7 +86,7 @@ const EditListing = () => {
     getProperties();
     getListing();
 
-  }, []);
+  }, [router.isReady, id]);
 
   // for creating new property
   const handlePropertyChange = (event) => {
@@ -177,7 +181,7 @@ const EditListing = () => {
 
   const postListing = (newPropertyID = null) => {
     // Update the new listing, using new (or existing) propertyID
-    authAxios.put('/api/listinglistings/'+ id, {
+    authAxios.put(`/api/listinglistings/${id}`, {
       ...listing,
       propertyID: property?.id || newPropertyID,   // use newPropertyID if property.id is null
       owner: userId,   // Need to remove hardcoded user, and use current user

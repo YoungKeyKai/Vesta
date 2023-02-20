@@ -12,6 +12,7 @@ import {
   Pagination, 
   Slider,
   Typography,
+  CircularProgress,
   TextField,
 } from '@mui/material';
 
@@ -36,6 +37,8 @@ const Market = () => {
   const [pageNum, setPageNum] = useState(1);
   // Current Page of Listings
   const [page, setPage] = useState([]);
+  // Is loading marker
+  const [isLoading, setIsLoading] = useState(true);
 
   // History
   const router = useRouter();
@@ -53,22 +56,25 @@ const Market = () => {
 
     const getListings = () => {
       const reqFilters = new URLSearchParams(params).toString();
+      
+      setIsLoading(true)
       axios.get(`/api/listinglistings/?${reqFilters}`)
         .then((res) => {
           setListings(res.data);
           setPage(res.data.slice(0, 6));
-          //Get corresponding properties
+
+          // Get corresponding properties
           getProperties(res.data);
         })
         .catch((err) => {
-          //Replace with formal error handling
           console.log(err);
+          setIsLoading(false)
         })
     }
 
     // Set Filters
     setFilters(params);
-    
+
     // Fetch Listings
     getListings();
   }, [router.isReady, router.query]);
@@ -90,8 +96,10 @@ const Market = () => {
         PMap.set(res.data.id, res.data);
       }
       setProperties(PMap);
+      setIsLoading(false)
     })).catch(err => {
       console.log(err);
+      setIsLoading(false)
     })
   }
 
@@ -159,6 +167,32 @@ const Market = () => {
         </Card>
       )
     }
+  )
+
+  const renderList = () => (
+    <div className='market-listings-list'>
+      {page.length ? (
+        <div>
+          <div className='market-results-info'>
+                    Showing {6 * (pageNum - 1) + 1}-{6 * (pageNum - 1) + 6} of {listings.length} Results
+          </div>
+          <div className='market-listings'>
+            {renderTiles()}
+          </div>
+        </div>
+      ) : (
+        <div>No Results Found</div>
+      )}
+      <div className="pagination-wrapper">
+        <Pagination
+          count={Math.ceil(listings.length / 6)}
+          page={pageNum}
+          onChange={handlePageUpdate}
+          color="secondary"
+          shape="rounded"
+        />
+      </div>
+    </div>
   )
 
   return (
@@ -282,28 +316,12 @@ const Market = () => {
                 </Button>
               </Box>
             </Box>
-            {page.length ? (
-              <div>
-                <div className='market-results-info'>
-                                Showing {6 * (pageNum - 1) + 1}-{6 * (pageNum - 1) + 6} of {listings.length} Results
-                </div>
-                <div className='market-listings'>
-                  {renderTiles()}
-                </div>
-              </div>
-            ) : (
-              <div>No Results Found</div>
-            )}
-
-            <div className="pagination-wrapper">
-              <Pagination
-                count={Math.ceil(listings.length / 6)}
-                page={pageNum}
-                onChange={handlePageUpdate}
-                color="secondary"
-                shape="rounded"
-              />
-            </div>
+            <Box display="flex" alignItems="center" justifyContent="center" minHeight="20rem">
+              {
+                !isLoading ? renderList() :
+                  <CircularProgress className="loading-circle" size="5rem" />
+              }
+            </Box>
           </div>
         </Container>
       </Box>

@@ -161,7 +161,7 @@ const ListingsPage = () => {
                     />
                   </Grid>
                   {
-                    isAuthenticated &&
+                    isAuthenticated && listing.owner != userId ?
                       <Grid item
                         xs={maxXS - propertyGridSize}
                       >
@@ -171,7 +171,7 @@ const ListingsPage = () => {
                         >
                           {buttonText}
                         </ToggleButton>
-                      </Grid>
+                      </Grid> : null
                   }
                   <Grid item
                     className='utilities-summary'

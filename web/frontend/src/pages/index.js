@@ -55,13 +55,25 @@ const Page = () => {
               {
                 isAuthenticated ?
                   <LinkButton
-                    href={pages.market.url + `?ownerId=${userId}`}
+                    href={`${pages.market.url}?ownerId=${userId}`}
                     sx={{
                       backgroundColor: "#8860D0",
                       ...linkButtonSize,
                     }}
                   >
                     Your Listings
+                  </LinkButton> : null
+              }
+              {
+                isAuthenticated ?
+                  <LinkButton
+                    href={`${pages.market.url}?interested=true`}
+                    sx={{
+                      backgroundColor: "#8860D0",
+                      ...linkButtonSize,
+                    }}
+                  >
+                    Bookmarked Listings
                   </LinkButton> : null
               }
             </div>

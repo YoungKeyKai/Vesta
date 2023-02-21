@@ -1,5 +1,6 @@
 from math import floor
 from django.conf import settings
+from django.db.models import Q
 from rest_framework import viewsets, status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
@@ -102,6 +103,7 @@ class ListingListingView(viewsets.ModelViewSet):
 
         # Parameters
         params = request.GET
+        auth_user_id = request.user.id
 
         try:
             # Price Filter
@@ -138,13 +140,24 @@ class ListingListingView(viewsets.ModelViewSet):
             if len(utilities):
                 queryset = queryset.filter(utilities__contains=utilities)
 
-            # Filter by owner
-            if params.get('ownerId'):
-                queryset = queryset.filter(owner=int(params.get('ownerId')))
+            # Filter by owner OR interested listings, otherwise, only return available listings
+            owner_id_query = params.get('ownerId')
+            if owner_id_query:
+                owner_id_query = int(int(owner_id_query))
+                queryset = queryset.filter(owner=owner_id_query)
+                if owner_id_query != auth_user_id:
+                    queryset = queryset.filter(status='available')
+            elif params.get('interested') == 'true':
+                # If request is not authenticated, this query is malformed
+                if auth_user_id is None:
+                    raise ValueError
+                queryset = queryset.filter(listinginterest__buyer=auth_user_id)
             else:
                 # Show only available listings if not showing only owned listings
                 queryset = queryset.filter(status='available')
-            
+                if auth_user_id:
+                    queryset = queryset.filter(~Q(owner=auth_user_id))
+
             # Use search term to filter by property name, location or description
             if params.get('search'):
                 q1 = queryset.filter(propertyID__name__icontains=params.get('search'))
@@ -154,7 +167,10 @@ class ListingListingView(viewsets.ModelViewSet):
                 queryset = (q1 | q2 | q3 | q4).distinct()
         except:
             # Parameters not well formed
-            raise ValueError
+            raise ValueError('Illegal query')
+
+        # Return only distinct listings
+        queryset = queryset.distinct()
 
         # Sort Queryset by newest first
         queryset = queryset.order_by('-id')

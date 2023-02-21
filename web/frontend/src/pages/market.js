@@ -26,19 +26,25 @@ import {
   LaundryTooltip,
   LocalDiningTooltip 
 } from '../icons/utilities';
+import { useAuthContext } from '../contexts/auth-context';
 
 const Market = () => {
-
   // Listings: array
   const [listings, setListings] = useState([]);
+
   // Properties: Map
   const [properties, setProperties] = useState(new Map());
+
   // Page Number : number
   const [pageNum, setPageNum] = useState(1);
+
   // Current Page of Listings
   const [page, setPage] = useState([]);
+
   // Is loading marker
   const [isLoading, setIsLoading] = useState(true);
+
+  const {authAxios, isAuthenticated} = useAuthContext();
 
   // History
   const router = useRouter();
@@ -58,7 +64,9 @@ const Market = () => {
       const reqFilters = new URLSearchParams(params).toString();
       
       setIsLoading(true)
-      axios.get(`/api/listinglistings/?${reqFilters}`)
+
+      const axiosInstance = isAuthenticated ? authAxios : axios
+      axiosInstance.get(`/api/listinglistings/?${reqFilters}`)
         .then((res) => {
           setListings(res.data);
           setPage(res.data.slice(0, 6));
@@ -77,7 +85,7 @@ const Market = () => {
 
     // Fetch Listings
     getListings();
-  }, [router.isReady, router.query]);
+  }, [router.isReady, router.query, isAuthenticated]);
 
   const getProperties = (listings) => {
     // Store a Set of Properties to fetch to avoid repeating API Calls
@@ -121,6 +129,113 @@ const Market = () => {
   }
 
   const convertDate = (date) => new Date(date).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
+
+  const renderFilters = () => (
+    <Box className='advanced-filters' sx={{ display: 'flex', my: 3 }}>
+      <Box sx={{ width: 200, mx: 2 }}>
+        <Typography>
+          Price ($)
+        </Typography>
+        <Slider
+          value={[filters.minprice ?? 0, filters.maxprice ?? 4000]}
+          step={100}
+          min={0}
+          max={4000}
+          onChange={(event, newValue) => { setFilters({ 
+            ...filters, 
+            minprice: newValue[0],
+            maxprice: newValue[1] 
+          }) }}
+          valueLabelDisplay="auto"
+        ></Slider>
+      </Box>
+      <Box sx={{ mx: 3, display: 'flex' }}>
+        <Box sx={{ width: 200, mx: 1 }}>
+          <Typography>
+            Start Date
+          </Typography>
+          <TextField 
+            type="date"
+            value={filters.startDate}
+            onChange={(e) => { setFilters({ ...filters, startDate: e.target.value }) }}
+          >
+          </TextField>
+        </Box>
+        <Box sx={{ width: 200, mx: 1 }}>
+          <Typography>
+            End Date
+          </Typography>
+          <TextField 
+            type="date"
+            value={filters.endDate}
+            onChange={(e) => { setFilters({ ...filters, endDate: e.target.value }) }}
+          >
+          </TextField>
+        </Box>
+      </Box>
+      <Box sx={{ width: 300, mx: 1 }}>
+        <Typography>
+          Location (city)
+        </Typography>
+        <TextField
+          onChange={(e) => { setFilters({ ...filters, location: e.target.value })}}
+        >  
+        </TextField>
+      </Box>
+      <Box sx={{ width: 600, mx: 3, display: 'flex', justifyContent: 'center' }}>
+        <Box>
+          <WifiTooltip />
+          <Checkbox color="primary"
+            checked={filters['Wifi'] === 'false'? false : true}
+            onChange={(e, newValue) => {
+              setFilters({ ...filters, Wifi: newValue.toString() });
+            }}
+          />
+        </Box>
+        <Box>
+          <ElectricToolTip />
+          <Checkbox color="primary"
+            checked={filters['Electricity'] == 'false'? false : true}
+            onChange={(e, newValue) => {
+              setFilters({ ...filters, Electricity: newValue.toString() });
+            }}
+          />
+        </Box>
+        <Box>
+          <KitchenTooltip />
+          <Checkbox color="primary"
+            checked={filters['Kitchen'] == 'false'? false : true}
+            onChange={(e, newValue) => { 
+              setFilters({ ...filters, Kitchen: newValue.toString() }); 
+            }}
+          />
+        </Box>
+        <Box>
+          <LaundryTooltip />
+          <Checkbox color="primary"
+            checked={filters['Laundry'] == 'false'? false : true}
+            onChange={(e, newValue) => { 
+              setFilters({ ...filters, Laundry: newValue.toString() });
+            }}
+          />
+        </Box>
+        <Box>
+          <LocalDiningTooltip />
+          <Checkbox color="primary"
+            checked={filters['Food'] == 'false'? false : true}
+            onChange={(e, newValue) => { 
+              setFilters({ ...filters, Food: newValue.toString() }); 
+            }}
+          />
+        </Box>
+      </Box>
+      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+        <Button onClick={applyFilter} variant="outlined">
+          Apply
+        </Button>
+      </Box>
+    </Box>
+  )
 
   const renderTiles = () => page.map(
     (listing, index) => {
@@ -199,7 +314,7 @@ const Market = () => {
     <>
       <Head>
         <title>
-                Market | Vesta
+          Market | Vesta
         </title>
       </Head>
       <Box
@@ -212,110 +327,7 @@ const Market = () => {
         <Container maxWidth={false}>
           <div className='Market'>
             <h1>Market</h1>
-            <Box className='advanced-filters' sx={{ display: 'flex', my: 3 }}>
-              <Box sx={{ width: 200, mx: 2 }}>
-                <Typography>
-                  Price ($)
-                </Typography>
-                <Slider
-                  value={[filters.minprice ?? 0, filters.maxprice ?? 4000]}
-                  step={100}
-                  min={0}
-                  max={4000}
-                  onChange={(event, newValue) => { setFilters({ 
-                    ...filters, 
-                    minprice: newValue[0],
-                    maxprice: newValue[1] 
-                  }) }}
-                  valueLabelDisplay="auto"
-                ></Slider>
-              </Box>
-              <Box sx={{ mx: 3, display: 'flex' }}>
-                <Box sx={{ width: 200, mx: 1 }}>
-                  <Typography>
-                    Start Date
-                  </Typography>
-                  <TextField 
-                    type="date"
-                    value={filters.startDate}
-                    onChange={(e) => { setFilters({ ...filters, startDate: e.target.value }) }}
-                  >
-                  </TextField>
-                </Box>
-                <Box sx={{ width: 200, mx: 1 }}>
-                  <Typography>
-                    End Date
-                  </Typography>
-                  <TextField 
-                    type="date"
-                    value={filters.endDate}
-                    onChange={(e) => { setFilters({ ...filters, endDate: e.target.value }) }}
-                  >
-                  </TextField>
-                </Box>
-              </Box>
-              <Box sx={{ width: 300, mx: 1 }}>
-                <Typography>
-                  Location (city)
-                </Typography>
-                <TextField
-                  onChange={(e) => { setFilters({ ...filters, location: e.target.value })}}
-                >  
-                </TextField>
-              </Box>
-              <Box sx={{ width: 600, mx: 3, display: 'flex', justifyContent: 'center' }}>
-                <Box>
-                  <WifiTooltip />
-                  <Checkbox color="primary"
-                    checked={filters['Wifi'] === 'false'? false : true}
-                    onChange={(e, newValue) => {
-                      setFilters({ ...filters, Wifi: newValue.toString() });
-                    }}
-                  />
-                </Box>
-                <Box>
-                  <ElectricToolTip />
-                  <Checkbox color="primary"
-                    checked={filters['Electricity'] == 'false'? false : true}
-                    onChange={(e, newValue) => {
-                      setFilters({ ...filters, Electricity: newValue.toString() });
-                    }}
-                  />
-                </Box>
-                <Box>
-                  <KitchenTooltip />
-                  <Checkbox color="primary"
-                    checked={filters['Kitchen'] == 'false'? false : true}
-                    onChange={(e, newValue) => { 
-                      setFilters({ ...filters, Kitchen: newValue.toString() }); 
-                    }}
-                  />
-                </Box>
-                <Box>
-                  <LaundryTooltip />
-                  <Checkbox color="primary"
-                    checked={filters['Laundry'] == 'false'? false : true}
-                    onChange={(e, newValue) => { 
-                      setFilters({ ...filters, Laundry: newValue.toString() });
-                    }}
-                  />
-                </Box>
-                <Box>
-                  <LocalDiningTooltip />
-                  <Checkbox color="primary"
-                    checked={filters['Food'] == 'false'? false : true}
-                    onChange={(e, newValue) => { 
-                      setFilters({ ...filters, Food: newValue.toString() }); 
-                    }}
-                  />
-                </Box>
-              </Box>
-              <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                <Button onClick={applyFilter} variant="outlined">
-                  Apply
-                </Button>
-              </Box>
-            </Box>
+            {renderFilters()}
             <Box display="flex" alignItems="center" justifyContent="center" minHeight="20rem">
               {
                 !isLoading ? renderList() :

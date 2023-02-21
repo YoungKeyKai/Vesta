@@ -6,10 +6,7 @@ import {
   Box,
   Button,
   Container,
-  Card,
-  CardContent,
   Checkbox,
-  Pagination, 
   Slider,
   Typography,
   CircularProgress,
@@ -17,8 +14,6 @@ import {
 } from '@mui/material';
 
 import { DashboardLayout } from '../components/dashboard-layout';
-import UtiltiesList from '../components/utilitiesList';
-import { colors, terms } from '../constants';
 import { 
   WifiTooltip,
   ElectricToolTip,
@@ -27,6 +22,7 @@ import {
   LocalDiningTooltip 
 } from '../icons/utilities';
 import { useAuthContext } from '../contexts/auth-context';
+import MarketListingsTable from '../components/market/market-listings-table';
 
 const Market = () => {
   // Listings: array
@@ -34,12 +30,6 @@ const Market = () => {
 
   // Properties: Map
   const [properties, setProperties] = useState(new Map());
-
-  // Page Number : number
-  const [pageNum, setPageNum] = useState(1);
-
-  // Current Page of Listings
-  const [page, setPage] = useState([]);
 
   // Is loading marker
   const [isLoading, setIsLoading] = useState(true);
@@ -69,7 +59,6 @@ const Market = () => {
       axiosInstance.get(`/api/listinglistings/?${reqFilters}`)
         .then((res) => {
           setListings(res.data);
-          setPage(res.data.slice(0, 6));
 
           // Get corresponding properties
           getProperties(res.data);
@@ -111,24 +100,9 @@ const Market = () => {
     })
   }
 
-  const handlePageUpdate = (event, value) => {
-    setPageNum(value);
-    if (listings.length < 6 * value) {
-      setPage(listings.slice(6 * (value - 1)));
-    } else {
-      setPage(listings.slice(6 * (value - 1), 6 * value));
-    }
-  }
-
-  const routeChange = (id) => {
-    router.push(`/listing?id=${id}`);
-  }
-
   const applyFilter = () => {
     router.push(`/market?${new URLSearchParams(filters).toString()}`);
   }
-
-  const convertDate = (date) => new Date(date).toLocaleDateString('en-us', { year: 'numeric', month: 'short' })
 
   const renderFilters = () => (
     <Box className='advanced-filters' sx={{ display: 'flex', my: 3 }}>
@@ -237,79 +211,6 @@ const Market = () => {
     </Box>
   )
 
-  const renderTiles = () => page.map(
-    (listing, index) => {
-      const property = properties.get(listing.propertyID);
-      const duration = JSON.parse(listing.duration);
-      const rate = JSON.parse(listing.rate);
-
-      // Card Background Color
-      let bgcolor = colors[1];
-      if (index < 2) {
-        bgcolor = colors[0];
-      } else if (index > 3) {
-        bgcolor = colors[2];
-      }
-
-      return (
-        <Card
-          className='market-listing-card'
-          onClick={() => { routeChange(listing.id) }}
-          key={index}
-          sx={{ backgroundColor: bgcolor }}>
-          <CardContent>
-            <div className='market-listing-card-body'>
-              <div className='market-listing-card-left'>
-                <h4>{property ? property.name : terms.loading}</h4>
-                <div>{property ? property.address : terms.loading}</div>
-                <div>{property ? `${property.city}, ${property.province}` : terms.loading}</div>
-                <div>{convertDate(duration.lower)} - {convertDate(duration.upper)}</div>
-              </div>
-              <div className='market-listing-card-right'>
-                <h4> </h4>
-                <div>Asking for: $ {`${rate.lower} - ${rate.upper}`}</div>
-                <UtiltiesList utilities={listing.utilities} />
-              </div>
-              <div className='market-listing-card-image'>
-                <img
-                  className="property-thumbnail"
-                  src="/static/images/fergushousesample.jpg"
-                  alt="Property Thumbnail"
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )
-    }
-  )
-
-  const renderList = () => (
-    <div className='market-listings-list'>
-      {page.length ? (
-        <div>
-          <div className='market-results-info'>
-                    Showing {6 * (pageNum - 1) + 1}-{6 * (pageNum - 1) + 6} of {listings.length} Results
-          </div>
-          <div className='market-listings'>
-            {renderTiles()}
-          </div>
-        </div>
-      ) : (
-        <div>No Results Found</div>
-      )}
-      <div className="pagination-wrapper">
-        <Pagination
-          count={Math.ceil(listings.length / 6)}
-          page={pageNum}
-          onChange={handlePageUpdate}
-          color="secondary"
-          shape="rounded"
-        />
-      </div>
-    </div>
-  )
-
   return (
     <>
       <Head>
@@ -330,7 +231,8 @@ const Market = () => {
             {renderFilters()}
             <Box display="flex" alignItems="center" justifyContent="center" minHeight="20rem">
               {
-                !isLoading ? renderList() :
+                !isLoading ? 
+                  <MarketListingsTable listings={listings} properties={properties} /> :
                   <CircularProgress className="loading-circle" size="5rem" />
               }
             </Box>

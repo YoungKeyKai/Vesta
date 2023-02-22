@@ -31,3 +31,15 @@
     flex: 1;
     max-width: 50%;
 }
+
+.carousel {
+    padding: 1rem;
+    width: 800px;
+    height: 800px;
+}
+
+.photos {
+    width: 700px;
+    height: 700px;
+    object-fit: contain;
+}

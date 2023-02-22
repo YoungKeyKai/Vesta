@@ -31,6 +31,8 @@ const CreateListing = () => {
     rate: { bounds: "[)" }
   });
   const [file, setFile] = useState(null);
+  const [images, setImages] = useState([]);
+  const testImages = [];
 
   // History
   const router = useRouter();
@@ -131,6 +133,10 @@ const CreateListing = () => {
     setFile(newFile);
   }
 
+  const handleImageUpload = (newFiles) => {
+    setImages(newFiles);
+  }
+
   const postFloorplan = () => {
     if (file != null) {
       authAxios.post('/api/useruploads/', {
@@ -146,6 +152,29 @@ const CreateListing = () => {
         .catch(error => console.log(error))
     } else {
       postProperty();
+    }
+  }
+
+  const postPhoto = (foreignKeys = []) => {
+    if (images.length > 0) {
+      authAxios.post('/api/useruploads/', {
+        owner: userId,
+        uploadtime: new Date(), // gets the current date/time
+        content: images.at(-1)
+      }, { 
+        headers: {'Content-Type': 'multipart/form-data'}
+      })
+        .then((response) => {
+          console.log(response.data);
+          //{...response.data, content: JSON.stringify(images.at(-1))}
+          testImages.push(response.data.content.slice(0, -16))
+          setImages(images.pop());
+          postPhoto(foreignKeys);
+        })
+        .catch(error => console.log(error))
+    } else {
+      console.log(testImages);
+      postFloorplan();
     }
   }
 
@@ -331,6 +360,15 @@ const CreateListing = () => {
                   onChange={handleFileChange}
                 />
               </Box>
+              Images:
+              <Box>
+                <MuiFileInput
+                  placeholder="Upload Attachment"
+                  value={images}
+                  onChange={handleImageUpload}
+                  multiple={true}
+                />
+              </Box>
             </div>
             <br/>
             <Box sx={{'& > :not(style)': { m: 1 }}}>
@@ -345,7 +383,7 @@ const CreateListing = () => {
               </TextField>
             </Box>
             <br/>
-            <Button variant="contained" onClick={postFloorplan}>Create</Button>
+            <Button variant="contained" onClick={postPhoto}>Create</Button>
           </div>
         </Container>
       </Box>

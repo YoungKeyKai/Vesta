@@ -18,6 +18,7 @@ import '../css/market.css';
 import '../css/listingsPage.css';
 import '../css/createListing.css';
 import '../css/editListing.css';
+import '../css/chat.css'
 
 registerChartJs();
 

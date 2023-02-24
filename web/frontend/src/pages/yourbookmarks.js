@@ -21,7 +21,7 @@ const YourBookmarks = () => {
   // Is loading marker
   const [isLoading, setIsLoading] = useState(true);
 
-  const {authAxios, isAuthenticated} = useAuthContext();
+  const {authAxios} = useAuthContext();
 
   // useEffect Hook on Page Load
   useEffect(() => {
@@ -43,7 +43,7 @@ const YourBookmarks = () => {
 
     // Fetch Listings
     getListings();
-  }, [isAuthenticated]);
+  }, []);
 
   const getProperties = (listings) => {
     // Store a Set of Properties to fetch to avoid repeating API Calls

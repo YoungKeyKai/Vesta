@@ -21,7 +21,7 @@ const YourListings = () => {
   // Is loading marker
   const [isLoading, setIsLoading] = useState(true);
 
-  const {authAxios, userId, isAuthenticated} = useAuthContext();
+  const {authAxios, userId} = useAuthContext();
 
   // useEffect Hook on Page Load
   useEffect(() => {
@@ -43,7 +43,7 @@ const YourListings = () => {
 
     // Fetch Listings
     getListings();
-  }, [isAuthenticated, userId]);
+  }, [userId]);
 
   const getProperties = (listings) => {
     // Store a Set of Properties to fetch to avoid repeating API Calls

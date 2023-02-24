@@ -145,8 +145,6 @@ class ListingListingView(viewsets.ModelViewSet):
             if owner_id_query:
                 owner_id_query = int(owner_id_query)
                 queryset = queryset.filter(owner=owner_id_query)
-                if owner_id_query != auth_user_id:
-                    queryset = queryset.filter(status='available')
             elif params.get('interested') == 'true':
                 # If request is not authenticated, this query is malformed
                 if auth_user_id is None:

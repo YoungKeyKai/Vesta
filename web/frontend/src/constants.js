@@ -28,6 +28,14 @@ export const pages = {
   editListingPage: {
     url: '/market/listing/edit',
     name: 'Edit'
+  },
+  yourListingsPage: {
+    url: '/yourlistings',
+    name: 'Your Listings'
+  },
+  yourBookmarksPage: {
+    url: '/yourbookmarks',
+    name: 'Your Bookmarks'
   }
 };
 

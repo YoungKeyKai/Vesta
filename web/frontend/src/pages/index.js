@@ -12,7 +12,7 @@ const linkButtonSize = {
 };
 
 const Page = () => {
-  const {userId, isAuthenticated} = useAuthContext();
+  const {isAuthenticated} = useAuthContext();
 
   return (
     <>
@@ -55,7 +55,7 @@ const Page = () => {
               {
                 isAuthenticated ?
                   <LinkButton
-                    href={`${pages.market.url}?ownerId=${userId}`}
+                    href={pages.yourListingsPage.url}
                     sx={{
                       backgroundColor: "#8860D0",
                       ...linkButtonSize,
@@ -67,13 +67,13 @@ const Page = () => {
               {
                 isAuthenticated ?
                   <LinkButton
-                    href={`${pages.market.url}?interested=true`}
+                    href={pages.yourBookmarksPage.url}
                     sx={{
                       backgroundColor: "#8860D0",
                       ...linkButtonSize,
                     }}
                   >
-                    Bookmarked Listings
+                    Your Bookmarks
                   </LinkButton> : null
               }
             </div>

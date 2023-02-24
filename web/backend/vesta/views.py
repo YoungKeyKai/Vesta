@@ -143,7 +143,7 @@ class ListingListingView(viewsets.ModelViewSet):
             # Filter by owner OR interested listings, otherwise, only return available listings
             owner_id_query = params.get('ownerId')
             if owner_id_query:
-                owner_id_query = int(int(owner_id_query))
+                owner_id_query = int(owner_id_query)
                 queryset = queryset.filter(owner=owner_id_query)
                 if owner_id_query != auth_user_id:
                     queryset = queryset.filter(status='available')

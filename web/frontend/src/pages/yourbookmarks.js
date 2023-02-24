@@ -84,7 +84,7 @@ const YourBookmarks = () => {
         }}
       >
         <Container maxWidth={false}>
-          <div className='Market'>
+          <div className='YourBookmarks'>
             <h1>Your Bookmarks</h1>
             <Box display="flex" alignItems="center" justifyContent="center" minHeight="20rem">
               {

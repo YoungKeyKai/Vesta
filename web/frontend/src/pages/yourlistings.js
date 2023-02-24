@@ -84,7 +84,7 @@ const YourListings = () => {
         }}
       >
         <Container maxWidth={false}>
-          <div className='Market'>
+          <div className='YourListings'>
             <h1>Your Listings</h1>
             <Box display="flex" alignItems="center" justifyContent="center" minHeight="20rem">
               {

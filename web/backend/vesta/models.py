@@ -194,6 +194,10 @@ class ListingListing(models.Model):
 
     class Meta:
         db_table = 'listing'
+        indexes = [
+            models.Index(fields=['owner']),
+            models.Index(fields=['status'])
+        ]
 
 class ListingInterest(models.Model):
     buyer = models.ForeignKey(AuthUser, related_name='buyer_fk', on_delete=models.SET_NULL, null=True)

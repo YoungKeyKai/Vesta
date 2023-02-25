@@ -1,4 +1,4 @@
-from math import floor
+from math import floor, log
 from django.conf import settings
 from rest_framework import viewsets, status
 from rest_framework.generics import GenericAPIView
@@ -99,6 +99,8 @@ class ListingListingView(viewsets.ModelViewSet):
         """
 
         queryset = self.filter_queryset(self.queryset)
+        # Show only available listings
+        queryset = queryset.filter(status='available')
         # Parameters
         params = request.GET
         try:
@@ -142,13 +144,61 @@ class ListingListingView(viewsets.ModelViewSet):
                 q3 = queryset.filter(propertyID__address__icontains=params.get('search'))
                 q4 = queryset.filter(description__icontains=params.get('search'))
                 queryset = (q1 | q2 | q3 | q4).distinct()
+            
+            # Sort Queryset by relevancy metric using weighted model
+            def get_relevancy(listing: ListingListing):
+                wsum = 0
+                # Description Length
+                wsum += len(listing.description or "") * 0.082
+                # Completeness of Listing
+                completeness = 0
+                for field in listing._meta.get_fields():
+                    try:
+                        if getattr(listing, field.name) is not None:
+                            completeness += 1
+                    except:
+                        pass
+                wsum += completeness * 0.229
+                # Recency of Post (timestamps not stored)
+                wsum += 0.320 / (log(listing.pk) + 1)
+                if listing.rate and listing.rate.lower:
+                    if listing.rate.upper:
+                        # Specificity of Asking Price
+                        wsum += 0.263 / (log(listing.rate.upper - listing.rate.lower) + 1)
+                    # Closeness of Asking Price LB to Price Filter LB
+                    lb = params.get('minprice')
+                    if lb:
+                        wsum += 0.115 / (log(abs(int(lb) - listing.rate.lower)) + 1)
+                # Available Utilities
+                wsum += 0.048 * len(listing.utilities or [])
+                # Number of Interested Users (TBD - requires extra query)
+
+                q = params.get('search')
+                if q:
+                    # Property Name contains Search Term
+                    if listing.propertyID.name and q in listing.propertyID.name:
+                        wsum += 0.547 * len(q) / len(listing.propertyID.name or "")
+                    # Address contains Search Term
+                    if listing.propertyID.address and q in listing.propertyID.address:
+                        wsum += 0.482 * len(q) / len(listing.propertyID.address or "")
+                    # Location contains Search Term
+                    if listing.propertyID.city and q in listing.propertyID.city:
+                        wsum += 0.312 * len(q) / len(listing.propertyID.city or "")
+                    # Description contains Search Term
+                    if listing.description and q in listing.description:
+                        wsum += 0.202
+                # Available Utilities (of selected)
+                if listing.utilities:
+                    for utility in ['Wifi', 'Electricity', 'Kitchen', 'Laundry', 'Food']:
+                        if params.get(utility) == 'true' and utility in listing.utilities:
+                            wsum += 0.156
+                
+                return wsum
+            
+            queryset = sorted(queryset, key=get_relevancy, reverse=True)
         except:
             # Parameters not well formed
             raise ValueError
-        # Show only available listings
-        queryset = queryset.filter(status='available')
-        # Sort Queryset by newest first
-        queryset = queryset.order_by('-id')
 
         page = self.paginate_queryset(queryset)
         if page is not None:

@@ -4,12 +4,10 @@ export const terms = {
 
 export const pages = {
   homepage: {
-    display: true,
     url: '/',
     name: 'Home'
   },
   market: {
-    display: true,
     url: '/market',
     name: 'Market'
   },
@@ -21,13 +19,33 @@ export const pages = {
     url: '/login',
     name: 'Login'
   },
+  registrationPage: {
+    url: '/register',
+    name: 'Register'
+  },
   createListingPage: {
     url: '/create',
-    name: 'Create'
+    name: 'Create Listing'
   },
   editListingPage: {
     url: '/market/listing/edit',
-    name: 'Edit'
+    name: 'Edit Listing'
+  },
+  yourListingsPage: {
+    url: '/yourlistings',
+    name: 'Your Listings'
+  },
+  yourBookmarksPage: {
+    url: '/yourbookmarks',
+    name: 'Your Bookmarks'
+  },
+  accountPage: {
+    url: '/account',
+    name: 'Account'
+  },
+  settingsPage: {
+    url: '/settings',
+    name: 'Settings'
   }
 };
 

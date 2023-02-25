@@ -36,6 +36,10 @@ const ListingsPage = () => {
 
   const formatAddr = (addr, city, province) => `${addr.replaceAll(/ +/g, '+')},${city}+${province}`;
   useEffect(() => {
+    if (!router.isReady) {
+      return
+    }
+
     const getProperty = id => axios
       .get(`/api/listingproperties/${id}`)
       .then((res) => {
@@ -66,7 +70,7 @@ const ListingsPage = () => {
       });
 
     getListing();
-  }, [id])
+  }, [router.isReady, id])
 
   const stringifyRate = (jsonRate) => {
     const rate = JSON.parse(jsonRate);
@@ -157,7 +161,7 @@ const ListingsPage = () => {
                     />
                   </Grid>
                   {
-                    isAuthenticated &&
+                    isAuthenticated && listing.owner != userId ?
                       <Grid item
                         xs={maxXS - propertyGridSize}
                       >
@@ -167,7 +171,7 @@ const ListingsPage = () => {
                         >
                           {buttonText}
                         </ToggleButton>
-                      </Grid>
+                      </Grid> : null
                   }
                   <Grid item
                     className='utilities-summary'

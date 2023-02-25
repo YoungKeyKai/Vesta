@@ -43,13 +43,7 @@ export const AccountPopover = (props) => {
           px: 2
         }}
       >
-        <Typography variant="overline">
-          Account
-        </Typography>
-        <Typography
-          color="text.secondary"
-          variant="body2"
-        >
+        <Typography color="text.secondary" >
           {`${firstName} ${lastName}`}
         </Typography>
       </Box>

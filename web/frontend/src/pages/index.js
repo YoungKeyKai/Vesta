@@ -7,6 +7,7 @@ import LinkButton from '../components/linkButton';
 import { useAuthContext } from '../contexts/auth-context';
 
 const linkButtonSize = {
+  padding: '2rem',
   width: 1 / 4,
   fontSize: 30,
 };
@@ -33,7 +34,13 @@ const Page = () => {
             <h1 className='vesta-main-title'>
                 Vesta
             </h1>
-            <div className='button-box'>
+            <Box sx={{fontSize: 26}}>
+              <p>The <i>One-Stop</i> Shop for your Subleasing Needs</p>
+            </Box>
+            <Box 
+              className='button-box' 
+              sx={{ display: 'flex', alignItems: 'center', minHeight: '24rem' }}
+            >
               <LinkButton
                 href={pages.market.url}
                 sx={{
@@ -76,7 +83,7 @@ const Page = () => {
                     Your Bookmarks
                   </LinkButton> : null
               }
-            </div>
+            </Box>
           </div>
         </Container>
       </Box>

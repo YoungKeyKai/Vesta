@@ -41,11 +41,6 @@ const authItems = [
     title: pages.chat.name
   },
   {
-    href: '/chat',
-    icon: (<ChatIcon fontSize="small" />),
-    title: 'Chat'
-  },
-  {
     href: pages.accountPage.url,
     icon: (<UserIcon fontSize="small" />),
     title: pages.accountPage.name

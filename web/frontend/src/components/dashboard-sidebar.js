@@ -13,6 +13,7 @@ import { Lock as LockIcon } from '../icons/lock';
 import { ShoppingBag as ShoppingBagIcon } from '../icons/shopping-bag';
 import { User as UserIcon } from '../icons/user';
 import { UserAdd as UserAddIcon } from '../icons/user-add';
+import { Chat as ChatIcon } from '../icons/chat';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
 import { useAuthContext } from '../contexts/auth-context';
@@ -33,6 +34,11 @@ const authItems = [
     href: pages.yourBookmarksPage.url,
     icon: (<BookmarksIcon fontSize="small" />),
     title: pages.yourBookmarksPage.name
+  },
+  {
+    href: pages.chat.url,
+    icon: (<ChatIcon fontSize="small" />),
+    title: pages.chat.name
   },
   {
     href: pages.accountPage.url,

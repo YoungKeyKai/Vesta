@@ -99,6 +99,11 @@ const ListingsPage = () => {
     router.push(`/edit?id=${id}`);
   }
 
+  const handleMessageOwner = () => {
+    console.log('owner', listing.owner);
+    router.push(`/chat/?receiver=${listing.owner}`);
+  }
+
   function changeButtonText(buttonText) {
     if (buttonText === "Interested") {
       authAxios.post(
@@ -180,6 +185,20 @@ const ListingsPage = () => {
                     <h2>Utilities and Amenities</h2>
                     <UtiltiesList utilities={listing.utilities} />
                   </Grid>
+                  {
+                    isAuthenticated &&
+                      <Grid item
+                      xs={maxXS - propertyGridSize}
+                      >
+                        <Button
+                          variant="contained" 
+                          color="secondary"
+                          onClick={() => handleMessageOwner()}
+                        >
+                          Message Owner
+                        </Button>
+                      </Grid>
+                  }
                   <Grid item
                     className='user-description'
                     xs={descriptionGridSize}

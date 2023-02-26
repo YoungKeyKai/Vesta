@@ -15,6 +15,10 @@ export const pages = {
     url: '/market/listing',
     name: 'Listing'
   },
+  chat: {
+    url: '/chat',
+    name: 'Chat'
+  },
   loginPage: {
     url: '/login',
     name: 'Login'

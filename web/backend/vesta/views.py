@@ -59,11 +59,9 @@ class CookieTokenRemoveView(GenericAPIView):
             return response
 
 class UserInfoView(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = UserInfoSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        return AuthUser.objects.filter(id=user.id)
+    queryset = AuthUser.objects.all()
 
 
 class UserUploadView(viewsets.ModelViewSet):

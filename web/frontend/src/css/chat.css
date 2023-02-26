@@ -1,4 +1,5 @@
 .messageArea {
+    padding-top: 10px;
     height: 55vh;
     overflow-y: auto;
 }

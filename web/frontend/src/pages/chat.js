@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 import Head from 'next/head';
 import { DashboardLayout } from '../components/dashboard-layout';
 
@@ -44,7 +45,9 @@ var messagesRef = null;
 const Chat = () => {
   const {authAxios, userId} = useAuthContext();
   const router = useRouter();
+  const [myName, setMyName] = useState('');
   const [rooms, setRooms] = useState([]);
+  const [filteredRooms, setFilteredRooms] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [messages, setMessages] = useState([]);
   const [messageText, setMessageText] = useState('');
@@ -73,12 +76,39 @@ const Chat = () => {
     firestore.collection('rooms').where('users', 'array-contains', userId)
       .get()
       .then((querySnapshot) => {
-        setRooms(querySnapshot.docs);
+        const docMap = new Map();
+        const requests = [];
+        querySnapshot.forEach((doc) => {
+          const users = doc.get('users');
+          const otherId = (userId == users[0]) ? users[1] : users[0];
+          docMap.set(otherId, doc);
+          requests.push(authAxios.get(`/api/userinfo/${otherId}`));
+        });
+
+        axios.all(requests)
+          .then((responses) => {
+            const roomInfo = responses.map(res => ({
+                doc: docMap.get(res.data.id),
+                label: `${res.data.first_name} ${res.data.last_name}`
+              }));
+            setRooms(roomInfo);
+            setFilteredRooms(roomInfo);
+        });
+
         selectRoom(querySnapshot.docs[0], 0);
       })
       .catch((error) => {
         console.error("error getting documents: ", error);
       });		
+
+    // update user's name in chat header
+    authAxios.get(`/api/userinfo/${userId}`)
+      .then((res) => {
+        setMyName(`${res.data.first_name} ${res.data.last_name}`);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
     return function cleanup() {
       // unsubscribe from chat rooms to stop incoming messages
@@ -126,6 +156,51 @@ const Chat = () => {
     dummy.current.scrollIntoView({ behaviour: 'smooth' });
   }
 
+  const filterRooms = (searchVal) => {
+    if (!searchVal) {
+      setFilteredRooms(rooms);
+    } else {
+      const filtered = rooms.filter((room) => {
+        return room.label.toLowerCase().includes(searchVal.toLowerCase());
+      });
+      setFilteredRooms(filtered); 
+    }
+  }
+
+  const avatarSize = {
+    height: 40,
+    width: 40,
+    ml: 1,
+  }
+
+  const stringAvatar = (name) => ({
+    sx: {
+      ...avatarSize,
+      bgcolor: stringToColor(name),
+    },
+    children: `${name.split(' ')?.[0]?.[0]}${name.split(' ')?.[1]?.[0]}`,
+  })
+
+  const stringToColor = (string) => {
+    let hash = 0;
+    let i;
+  
+    /* eslint-disable no-bitwise */
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+  
+    let color = '#';
+  
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+    /* eslint-enable no-bitwise */
+  
+    return color;
+  }
+
   return (
     <>
       <Head>
@@ -148,28 +223,32 @@ const Chat = () => {
                 <List>
                   <ListItem key="JohnWick">
                     <ListItemIcon>
-                      <Avatar alt="John Wick" src="https://material-ui.com/static/images/avatar/1.jpg" />
+                      <Avatar {...stringAvatar(myName)}/>
                     </ListItemIcon>
-                    <ListItemText primary="John Wick"></ListItemText>
+                    <ListItemText primary={myName}></ListItemText>
                   </ListItem>
                 </List>
                 <Divider />
                 <Grid item xs={12} style={{padding: '10px'}}>
-                  <TextField label="Search" variant="outlined" fullWidth />
+                  <TextField
+                    onChange={(event) => filterRooms(event.target.value)} 
+                    label="Search" 
+                    variant="outlined" 
+                    fullWidth 
+                  />
                 </Grid>
                 <Divider />
                 <List>
                   {
-                    rooms.map((room, index) => (
+                    filteredRooms.map((room, index) => (
                       <ListItemButton
                         selected={selectedIndex===index}
-                        onClick={() => selectRoom(room, index)}
+                        onClick={() => selectRoom(room.doc, index)}
                       >
                         <ListItemIcon>
-                          <Avatar alt="Remy Sharp" src="https://material-ui.com/static/images/avatar/1.jpg" />
+                          <Avatar {...stringAvatar(room.label)}/>
                         </ListItemIcon>
-                        <ListItemText primary={index}>Remy Sharp</ListItemText>
-                        <ListItemText secondary="online" align="right"></ListItemText>
+                        <ListItemText primary={room.label ? room.label : "John Smith"}></ListItemText>
                       </ListItemButton>
                     ))
                   }

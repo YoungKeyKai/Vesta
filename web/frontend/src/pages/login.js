@@ -20,8 +20,7 @@ const Login = () => {
       {
         username: values.email,
         password: values.password,
-      },
-      {withCredentials: true}
+      }
     )
     .then((response) => {
       // If login succeeded, update auth context and get the user info
@@ -39,24 +38,39 @@ const Login = () => {
       actions.setStatus({submissionError})
     })
 
+  const uponGetUserInfoFailure = (actions, accessToken) => {
+    let submissionError = "Unable to retrieve your user information, please try again."
+    axios
+      .get('/api/auth/token/remove/', {
+        headers: {'Authorization': `Bearer ${accessToken}`}
+      })
+      .catch(console.error)
+    logout()
+    actions.setStatus({submissionError})
+  }
+
   const getUserInfo = (actions, accessToken) => axios
     .get('/api/userinfo/', {
       headers: {'Authorization': `Bearer ${accessToken}`}
     })
     .then((response) => {
-      // If user info was retrieved successfully, redirect
-      setUser(response.data[0])
-      router
-        .replace({
-          pathname: router.query.continueUrl ? router.query.continueUrl : '/',
-        })
-        .catch(console.error)
+      if (response.data[0]) {
+        // If user info was retrieved successfully, redirect
+        setUser(response.data[0])
+        router
+          .replace({
+            pathname: router.query.continueUrl ? router.query.continueUrl : '/',
+          })
+          .catch(console.error)
+      }
+      else {
+        // If user info failed to be retrieved, remove the auth context info
+        uponGetUserInfoFailure(actions, accessToken)
+      }
     })
     .catch(() => {
       // If user info failed to be retrieved, remove the auth context info
-      logout()
-      let submissionError = "Unable to retrieve your user information, please try again."
-      actions.setStatus({submissionError})
+      uponGetUserInfoFailure(actions, accessToken)
     })
 
   const formik = useFormik({

@@ -3,64 +3,78 @@ import NextLink from 'next/link';
 import { useRouter } from 'next/router';
 import PropTypes from 'prop-types';
 import { Box, Divider, Drawer, Typography, useMediaQuery } from '@mui/material';
-import { ChartBar as ChartBarIcon } from '../icons/chart-bar';
+import CreateIcon from '@mui/icons-material/Create';
+import BookmarksIcon from '@mui/icons-material/Bookmarks';
+import HomeIcon from '@mui/icons-material/Home';
+import InventoryIcon from '@mui/icons-material/Inventory';
+
 import { Cog as CogIcon } from '../icons/cog';
 import { Lock as LockIcon } from '../icons/lock';
 import { ShoppingBag as ShoppingBagIcon } from '../icons/shopping-bag';
 import { User as UserIcon } from '../icons/user';
 import { UserAdd as UserAddIcon } from '../icons/user-add';
-import { Users as UsersIcon } from '../icons/users';
 import { Chat as ChatIcon } from '../icons/chat';
 import { Logo } from './logo';
 import { NavItem } from './nav-item';
 import { useAuthContext } from '../contexts/auth-context';
+import { pages } from '../constants';
 
 const authItems = [
   {
-    href: '/create',
-    icon: (<ShoppingBagIcon fontSize="small" />),
-    title: 'Create Listing'
+    href: pages.createListingPage.url,
+    icon: (<CreateIcon fontSize="small" />),
+    title: pages.createListingPage.name
   },
   {
-    href: '/chat',
+    href: pages.yourListingsPage.url,
+    icon: (<InventoryIcon fontSize="small" />),
+    title: pages.yourListingsPage.name
+  },
+  {
+    href: pages.yourBookmarksPage.url,
+    icon: (<BookmarksIcon fontSize="small" />),
+    title: pages.yourBookmarksPage.name
+  },
+  {
+    href: pages.chat.url,
     icon: (<ChatIcon fontSize="small" />),
-    title: 'Chat'
+    title: pages.chat.name
   },
   {
-    href: '/account',
+    href: pages.accountPage.url,
     icon: (<UserIcon fontSize="small" />),
-    title: 'Account'
+    title: pages.accountPage.name
   },
   {
-    href: '/settings',
+    href: pages.settingsPage.url,
     icon: (<CogIcon fontSize="small" />),
-    title: 'Settings'
+    title: pages.settingsPage.name
   },
 ];
 
 const unauthItems = [
   {
-    href: '/login',
+    href: pages.loginPage.url,
     icon: (<LockIcon fontSize="small" />),
-    title: 'Login'
+    title: pages.loginPage.name
   },
   {
-    href: '/register',
+    href: pages.registrationPage.url,
     icon: (<UserAddIcon fontSize="small" />),
-    title: 'Register'
+    title: pages.registrationPage.name
   },
 ];
 
 const defaultItems = [
   {
-    href: '/',
-    icon: (<ChartBarIcon fontSize="small" />),
-    title: 'Home'
+    href: pages.homepage.url,
+    icon: (<HomeIcon fontSize="small" />),
+    title: pages.homepage.name
   },
   {
-    href: '/market',
-    icon: (<UsersIcon fontSize="small" />),
-    title: 'Market'
+    href: pages.market.url,
+    icon: (<ShoppingBagIcon fontSize="small" />),
+    title: pages.market.name
   },
 ];
 

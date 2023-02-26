@@ -18,5 +18,5 @@ urlpatterns = [
     path('', include(router.urls)),
     path('auth/login/', views.CookieTokenObtainPairView.as_view(), name='vesta_login'),
     path('auth/token/refresh/', views.CookieTokenRefreshView.as_view(), name='vesta_refreshtoken'),
-    path('auth/token/remove/', views.CookieTokenRemoveView.as_view(), name='vesta_removetoken')
+    path('auth/token/remove/', views.CookieTokenRemoveView.as_view(), name='vesta_removetoken'),
 ]

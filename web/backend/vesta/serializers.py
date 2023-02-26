@@ -1,5 +1,7 @@
 from django.conf import settings
-from rest_framework import serializers
+from django.contrib.auth import get_user_model, hashers
+from django.utils import timezone
+from rest_framework import serializers, validators
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.exceptions import InvalidToken
 from .models import *
@@ -26,9 +28,38 @@ class CookieTokenRemoveSerializer(serializers.Serializer):
 
 
 class UserInfoSerializer(serializers.ModelSerializer):
+    username = serializers.EmailField(
+        required=True,
+        validators=[
+            validators.UniqueValidator(queryset=get_user_model().objects.all())
+        ]
+    )
+    first_name = serializers.CharField(required=True)
+    last_name = serializers.CharField(required=True)
+
     class Meta:
-        model = AuthUser
-        fields = ('id', 'username', 'first_name', 'last_name', 'last_login', 'date_joined')
+        model = get_user_model()
+        fields = ['id', 'username', 'first_name', 'last_name', 'last_login', 'date_joined', 'password']
+        extra_kwargs = {
+            'password': {'write_only': True, 'required': True},
+            'last_login': {'read_only': True},
+            'date_joined': {'read_only': True}
+        }
+
+    def create(self, validated_data):
+        user = AuthUser.objects.create(
+            username=validated_data['username'],
+            password=hashers.make_password(validated_data['password']),
+            email=validated_data['username'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name'],
+            date_joined=timezone.now(),
+            is_superuser=False,
+            is_staff=False,
+            is_active=True
+        )
+        user.save()
+        return user
 
 
 class UserUploadSerializer(serializers.ModelSerializer):

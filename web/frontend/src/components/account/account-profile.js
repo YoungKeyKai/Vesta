@@ -45,13 +45,16 @@ export const AccountProfile = (props) => {
             margin: 2,
           }}
         >
-          <Typography
-            color="textSecondary"
-            variant="body2"
-            gutterBottom
-          >
-            {`Last logged in on ${new Date(user.lastLoginTime).toLocaleDateString('en', dateFormat)}`}
-          </Typography>
+          {
+            user.lastLoginTime ? 
+              <Typography
+                color="textSecondary"
+                variant="body2"
+                gutterBottom
+              >
+                {`Last logged in on ${new Date(user.lastLoginTime).toLocaleDateString('en', dateFormat)}`}
+              </Typography> : null
+          }
           <Typography
             color="textSecondary"
             variant="body2"

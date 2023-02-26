@@ -36,6 +36,10 @@ const ListingsPage = () => {
 
   const formatAddr = (addr, city, province) => `${addr.replaceAll(/ +/g, '+')},${city}+${province}`;
   useEffect(() => {
+    if (!router.isReady) {
+      return
+    }
+
     const getProperty = id => axios
       .get(`/api/listingproperties/${id}`)
       .then((res) => {
@@ -66,7 +70,7 @@ const ListingsPage = () => {
       });
 
     getListing();
-  }, [id])
+  }, [router.isReady, id])
 
   const stringifyRate = (jsonRate) => {
     const rate = JSON.parse(jsonRate);
@@ -121,6 +125,7 @@ const ListingsPage = () => {
       authAxios.delete(`/api/listinginterests/${interest.id}`)
         .catch((err) => console.log(err));
     }
+    setButtonText(prev => prev === "Interested" ? "Uninterested" : "Interested");
   }
  
   return (
@@ -161,7 +166,7 @@ const ListingsPage = () => {
                     />
                   </Grid>
                   {
-                    isAuthenticated &&
+                    isAuthenticated && listing.owner != userId ?
                       <Grid item
                         xs={maxXS - propertyGridSize}
                       >
@@ -171,7 +176,7 @@ const ListingsPage = () => {
                         >
                           {buttonText}
                         </ToggleButton>
-                      </Grid>
+                      </Grid> : null
                   }
                   <Grid item
                     className='utilities-summary'
@@ -225,12 +230,15 @@ const ListingsPage = () => {
                       <Button className='edit-button' variant="contained" color="success" onClick={handleEdit}>Edit</Button>
                     </Grid> 
                   }
-                  <Grid item // TODO: Remove this test button
-                    className='download-image'
-                    xs={maxXS - deleteGridSize}
-                  >
-                    <ButtonFileDownload userUploadId={listing.floorplan} text="Download Image" className='download-image-button' variant="contained" color="primary">Download Floorplan</ButtonFileDownload>
-                  </Grid>
+                  {
+                    listing.floorplan ?
+                      <Grid item // TODO: Remove this test button
+                        className='download-image'
+                        xs={maxXS - deleteGridSize}
+                      >
+                        <ButtonFileDownload userUploadId={listing.floorplan} text="Download Image" className='download-image-button' variant="contained" color="primary">Download Floorplan</ButtonFileDownload>
+                      </Grid> : null
+                  }
                 </Grid> :
                 <CircularProgress className="loading-circle"
                   size="5rem" />

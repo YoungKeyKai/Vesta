@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { Fragment } from 'react';
 import Head from 'next/head';
 import { CacheProvider } from '@emotion/react';
@@ -19,6 +20,8 @@ import '../css/listingsPage.css';
 import '../css/createListing.css';
 import '../css/editListing.css';
 import '../css/chat.css'
+
+axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_ROOT;
 
 registerChartJs();
 

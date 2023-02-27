@@ -188,7 +188,7 @@ const ListingsPage = () => {
                   {
                     isAuthenticated &&
                       <Grid item
-                      xs={maxXS - propertyGridSize}
+                        xs={maxXS - propertyGridSize}
                       >
                         <Button
                           variant="contained" 

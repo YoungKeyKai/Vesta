@@ -88,12 +88,12 @@ const Chat = () => {
         axios.all(requests)
           .then((responses) => {
             const roomInfo = responses.map(res => ({
-                doc: docMap.get(res.data.id),
-                label: `${res.data.first_name} ${res.data.last_name}`
-              }));
+              doc: docMap.get(res.data.id),
+              label: `${res.data.first_name} ${res.data.last_name}`
+            }));
             setRooms(roomInfo);
             setFilteredRooms(roomInfo);
-        });
+          });
 
         selectRoom(querySnapshot.docs[0], 0);
       })
@@ -242,6 +242,7 @@ const Chat = () => {
                   {
                     filteredRooms.map((room, index) => (
                       <ListItemButton
+                        key={index}
                         selected={selectedIndex===index}
                         onClick={() => selectRoom(room.doc, index)}
                       >

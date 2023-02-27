@@ -56,7 +56,7 @@ const Market = () => {
       setIsLoading(true)
 
       const axiosInstance = isAuthenticated ? authAxios : axios
-      axiosInstance.get(`/api/listinglistings/?${reqFilters}`)
+      axiosInstance.get(`/api/listinglistings?${reqFilters}`)
         .then((res) => {
           setListings(res.data);
 

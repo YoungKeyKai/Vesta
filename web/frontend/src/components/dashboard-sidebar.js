@@ -153,11 +153,6 @@ export const DashboardSidebar = (props) => {
                 >
                   Vesta
                 </Typography>
-                <Typography
-                  color="neutral.400"
-                  variant="body2"
-                >
-                </Typography>
               </div>
             </Box>
           </Box>

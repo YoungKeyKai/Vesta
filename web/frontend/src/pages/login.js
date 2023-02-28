@@ -54,23 +54,17 @@ const Login = () => {
   }
 
   const getUserInfo = (actions, accessToken, userId) => axios
-    .get(`/api/userinfo/${userId}`, {
+    .get(`/api/userinfo/${userId}/`, {
       headers: {'Authorization': `Bearer ${accessToken}`}
     })
     .then((response) => {
-      if (response.data[0]) {
-        // If user info was retrieved successfully, redirect
-        setUser(response.data[0])
-        router
-          .replace({
-            pathname: router.query.continueUrl ? router.query.continueUrl : '/',
-          })
-          .catch(console.error)
-      }
-      else {
-        // If user info failed to be retrieved, remove the auth context info
-        uponGetUserInfoFailure(actions, accessToken)
-      }
+      // If user info was retrieved successfully, redirect
+      setUser(response.data)
+      router
+        .replace({
+          pathname: router.query.continueUrl ? router.query.continueUrl : '/',
+        })
+        .catch(console.error)
     })
     .catch(() => {
       // If user info failed to be retrieved, remove the auth context info

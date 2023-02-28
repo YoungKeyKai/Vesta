@@ -22,6 +22,7 @@ import '../css/editListing.css';
 import '../css/chat.css'
 
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_ROOT;
+axios.defaults.withCredentials = true;
 
 registerChartJs();
 

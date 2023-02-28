@@ -93,7 +93,7 @@ export const AuthProvider = (props) => {
     response => response,
     async error => {
       if (error.response.status == 401 && error.response.data?.code == 'token_not_valid') {
-        return axios.post('/api/auth/token/refresh/', {}, {withCredentials: true})
+        return axios.post('/api/auth/token/refresh/')
           .then((response) => {
             refresh(response.data.access)
 

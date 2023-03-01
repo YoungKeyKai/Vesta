@@ -30,8 +30,12 @@ const Page = () => (
           <h1 className='vesta-main-title'>
                 Vesta
           </h1>
-          <Box sx={{fontSize: 26}}>
-            <p>The <i>One-Stop</i> Shop for your Subleasing Needs</p>
+          <Box sx={{ fontSize: 26, color: 'text.secondary' }}>
+            The
+            <Box sx={{ display: 'inline', fontSize: 26, fontStyle: 'italic', fontWeight: 'bold', color: 'success.dark' }}>
+              {' One-Stop Shop '}
+            </Box>
+            for your Subleasing Needs
           </Box>
           <Box 
             className='button-box' 

@@ -19,6 +19,7 @@ def set_jwt_refresh_token_cookie(response, value, max_age):
         max_age=max_age,
         httponly=True,
         secure=True,
+        samesite='None',
         path=settings.SIMPLE_JWT['JWT_REFRESH_TOKEN_COOKIE_PATH']
     )
 

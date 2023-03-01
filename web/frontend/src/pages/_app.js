@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { Fragment } from 'react';
 import Head from 'next/head';
 import { CacheProvider } from '@emotion/react';
@@ -20,6 +21,9 @@ import '../css/createListing.css';
 import '../css/editListing.css';
 import '../css/chat.css'
 
+axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_ROOT;
+axios.defaults.withCredentials = true;
+
 registerChartJs();
 
 const clientSideEmotionCache = createEmotionCache();
@@ -33,7 +37,7 @@ const App = (props) => {
     <CacheProvider value={emotionCache}>
       <Head>
         <title>
-          Material Kit Pro
+          Vesta
         </title>
         <meta
           name="viewport"

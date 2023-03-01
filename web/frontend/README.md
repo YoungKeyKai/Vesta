@@ -18,7 +18,7 @@ Create a file called `.env.local` and add the address of your Django Server.
 If using localhost:8000, your env should look like 
 
 ```
-API_ROOT=http://127.0.0.1:8000
+NEXT_PUBLIC_API_ROOT=http://127.0.0.1:8000
 ```
 
 Linting should be done using `npm run lint` or autoformatted with `npm run lint-fix`.

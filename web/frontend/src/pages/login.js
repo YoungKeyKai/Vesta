@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import NextLink from 'next/link';
 import {useRouter} from 'next/router';
+import jwtDecode from 'jwt-decode';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Box, Button, Container, Link, TextField, Typography, Alert } from '@mui/material';
@@ -25,8 +26,11 @@ const Login = () => {
     .then((response) => {
       // If login succeeded, update auth context and get the user info
       actions.setStatus(null)
-      login(response.data.access)
-      getUserInfo(actions, response.data.access)
+
+      const accessToken = response.data.access
+      const {user_id: userId} = jwtDecode(accessToken)
+      login(accessToken)
+      getUserInfo(actions, response.data.access, userId)
     })
     .catch((error) => {
       let submissionError = ''
@@ -49,24 +53,18 @@ const Login = () => {
     actions.setStatus({submissionError})
   }
 
-  const getUserInfo = (actions, accessToken) => axios
-    .get('/api/userinfo/', {
+  const getUserInfo = (actions, accessToken, userId) => axios
+    .get(`/api/userinfo/${userId}/`, {
       headers: {'Authorization': `Bearer ${accessToken}`}
     })
     .then((response) => {
-      if (response.data[0]) {
-        // If user info was retrieved successfully, redirect
-        setUser(response.data[0])
-        router
-          .replace({
-            pathname: router.query.continueUrl ? router.query.continueUrl : '/',
-          })
-          .catch(console.error)
-      }
-      else {
-        // If user info failed to be retrieved, remove the auth context info
-        uponGetUserInfoFailure(actions, accessToken)
-      }
+      // If user info was retrieved successfully, redirect
+      setUser(response.data)
+      router
+        .replace({
+          pathname: router.query.continueUrl ? router.query.continueUrl : '/',
+        })
+        .catch(console.error)
     })
     .catch(() => {
       // If user info failed to be retrieved, remove the auth context info

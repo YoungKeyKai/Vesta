@@ -203,6 +203,7 @@ const CreateListing = () => {
       {
         ...listing,
         ...foreignKeys,
+        images: testImages,
         owner: userId,
         duration: JSON.stringify(listing.duration),
         rate: JSON.stringify(listing.rate),

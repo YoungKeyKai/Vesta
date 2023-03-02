@@ -179,6 +179,7 @@ class ListingListing(models.Model):
     description = models.TextField(blank=True, null=True)
     floorplan = models.ForeignKey(UserUpload, related_name='floorplan_fk', on_delete=models.SET_NULL, null=True, blank=True)
     proof = models.ForeignKey(UserUpload, related_name='proof_fk', on_delete=models.SET_NULL, null=True, blank=True)
+    images = ArrayField(models.URLField(blank=True, null=True), null=True, blank=True)
 
     #Enum Class
     class ListingStatus(models.TextChoices):

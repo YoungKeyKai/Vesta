@@ -184,13 +184,16 @@ const ListingsPage = () => {
                   className='carousel'
                   xs={photoGridSize}>
                     <h2>Images</h2>
-                    <Carousel autoPlay={false}>
-                      {
-                        images.map((image, i) => (
-                          <img className="photos" src={image}></img>
-                        ))
-                      }
-                    </Carousel>
+                    {
+                      listing.images &&
+                      <Carousel autoPlay={false}>
+                        {
+                          listing.images.map((image, i) => (
+                            <img className="photos" src={image}></img>
+                          ))
+                        }
+                      </Carousel>
+                    }
                   </Grid>
                   <Grid item
                     className='utilities-summary'

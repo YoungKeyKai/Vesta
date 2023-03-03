@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import Carousel from 'react-material-ui-carousel'
 import {
   Grid,
   CircularProgress,
@@ -38,6 +39,7 @@ const ListingsPage = () => {
   const utilityGridSize = 7;
   const descriptionGridSize = 10;
   const deleteGridSize = 4;
+  const photoGridSize = 8;
   const editGridSize = 5;
 
   const formatAddr = (addr, city, province) => `${addr.replaceAll(/ +/g, '+')},${city}+${province}`;
@@ -180,6 +182,22 @@ const ListingsPage = () => {
             </ToggleButton>
           </Grid> : null
       }
+      <Grid item
+        className='carousel'
+        xs={photoGridSize}
+      >
+        <h2>Images</h2>
+        {
+          listing.images &&
+          <Carousel autoPlay={false}>
+            {
+              listing.images.map((image, i) => (
+                <img className="photos" src={image}></img>
+              ))
+            }
+          </Carousel>
+        }
+      </Grid>
       <Grid item
         className='utilities-summary'
         xs={utilityGridSize}

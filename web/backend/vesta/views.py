@@ -231,7 +231,18 @@ class ListingListingView(viewsets.ModelViewSet):
 
 class ListingInterestView(viewsets.ModelViewSet):
     serializer_class = ListingInterestSerializer
-    queryset = ListingInterest.objects.all()
+
+    def get_queryset(self):
+        queryset = ListingInterest.objects.all()
+
+        buyer_id = self.request.GET.get('buyer', None)
+        listing_id = self.request.GET.get('listing', None)
+
+        if buyer_id is not None:
+            queryset = queryset.filter(buyer=int(buyer_id))
+        elif listing_id is not None:
+            queryset = queryset.filter(listing=int(listing_id))
+        return queryset
 
 
 class ListingFlaggedListingView(viewsets.ModelViewSet):

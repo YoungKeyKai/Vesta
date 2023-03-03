@@ -240,7 +240,7 @@ class ListingInterestView(viewsets.ModelViewSet):
 
         if buyer_id is not None:
             queryset = queryset.filter(buyer=int(buyer_id))
-        elif listing_id is not None:
+        if listing_id is not None:
             queryset = queryset.filter(listing=int(listing_id))
         return queryset
 

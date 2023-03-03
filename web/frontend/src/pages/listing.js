@@ -9,6 +9,8 @@ import {
   Container,
   ToggleButton
 } from '@mui/material';
+import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd';
+import BookmarkRemoveIcon from '@mui/icons-material/BookmarkRemove';
 import axios from 'axios';
 
 import { DashboardLayout } from '../components/dashboard-layout';
@@ -21,8 +23,12 @@ const ListingsPage = () => {
   const [listing, setListing] = useState({});
   const [property, setProperty] = useState({});
   const [googleMapsAddr, setGoogleMapsAddr] = useState('');
-  const [buttonText, setButtonText] = useState("Interested");
-  const [interest, setInterest] = useState({});
+  const [interest, setInterest] = useState({isInterested: false, interestId: null});
+
+  // Loading flags
+  const [isLoadingListing, setIsLoadingListing] = useState(true); // Starts unloaded
+  const [isLoadingInterest, setIsLoadingInterest] = useState(false); // Can start loaded if no user is logged in
+
   const {authAxios, userId, isAuthenticated} = useAuthContext();
   const router = useRouter();
   const { id } = router.query;
@@ -46,11 +52,9 @@ const ListingsPage = () => {
         const data = res.data;
         setProperty(data);
         setGoogleMapsAddr(formatAddr(data.address, data.city, data.province));
+        setIsLoadingListing(false);
       })
-      .catch((err) => {
-        //Replace with formal error handling
-        console.log(err);
-      });
+      .catch(console.error);
 
     const getListing = () => axios
       .get(`/api/listinglistings/${id}`)
@@ -58,18 +62,31 @@ const ListingsPage = () => {
         const data = res.data;
         setListing(data);
         getProperty(data.propertyID);
-        setInterest({
-          seller: data.owner,
-          listing: data.id
-        });
-        // getInterest(data.listing);
       })
-      .catch((err) => {
-        //Replace with formal error handling
-        console.log(err);
-      });
+      .catch(console.error);
 
+    const getInterest = () => authAxios
+      .get(`/api/listinginterests/?buyer=${userId}&listing=${id}`)
+      .then((result) => {
+        if (result.data.length !== 0) {
+          // If buyer has an interest on this listing, the result should return a non-zero array
+          setInterest({
+            isInterested: true,
+            interestId: result.data[0].id
+          });
+        } else {
+          setInterest({});
+        }
+        setIsLoadingInterest(false)
+      })
+      .catch(console.error)
+    
+    setIsLoadingListing(true);
     getListing();
+    if (isAuthenticated) {
+      setIsLoadingInterest(true)
+      getInterest();
+    }
   }, [router.isReady, id])
 
   const stringifyRate = (jsonRate) => {
@@ -104,35 +121,134 @@ const ListingsPage = () => {
     router.push(`/chat/?receiver=${listing.owner}`);
   }
 
-  function changeButtonText(buttonText) {
-    if (buttonText === "Interested") {
+  const handleToggleInterest = () => {
+    if (interest.isInterested) {
+      // Currently interested, need to remove the interest
+      setInterest({isInterested: false, interestId: null})
+      authAxios
+        .delete(`/api/listinginterests/${interest.interestId}`)
+        .catch(console.error);
+    } else {
+      // Currently not interested, need to add the interest
       authAxios.post(
         '/api/listinginterests/',
         {
-          ...interest,
+          seller: listing.owner,
+          listing: listing.id,
           buyer: userId,
         }
       )
-        .then((res) => {
-          const data = res.data;
-          setInterest({
-            ...interest,
-            id: data.id,
-          });
-        })
-        .catch((err) => console.log(err));
-    } else if(buttonText === "Uninterested") {
-      authAxios.delete(`/api/listinginterests/${interest.id}`)
-        .catch((err) => console.log(err));
+        .then((res) => setInterest({
+          isInterested: true,
+          interestId: res.data.id,
+        }))
+        .catch(console.error);
     }
-    setButtonText(prev => prev === "Interested" ? "Uninterested" : "Interested");
   }
- 
+
+  const getListingPageBody = () => (
+    <Grid className='listings-page-grid' container>
+      <Grid item
+        className='property-info'
+        xs={propertyGridSize}
+        flexDirection="column"
+      >
+        <div className='address-price'>
+          <h1>{property.name}{listing.unit ? `, Unit ${listing.unit}` : ''}</h1>
+          <h3>{`${property.address}, ${property.city}, ${property.province}`}</h3>
+          <h3>{stringifyRate(listing.rate)}</h3>
+          <h3>{stringifyDuration(listing.duration)}</h3>
+        </div>
+        <iframe
+          title='GoogleMapsEmbed'
+          className='google-maps-embed'
+          referrerPolicy="no-referrer-when-downgrade"
+          src={`https://www.google.com/maps/embed/v1/place?key=${googleMapsAPIKey}&q=${googleMapsAddr}`}
+        />
+      </Grid>
+      {
+        isAuthenticated && listing.owner != userId ?
+          <Grid item
+            xs={maxXS - propertyGridSize}
+          >
+            <ToggleButton selected={interest.isInterested} onClick={handleToggleInterest} >
+              {
+                interest.isInterested ?
+                  <BookmarkRemoveIcon fontSize='large' />
+                  : <BookmarkAddIcon fontSize='large' />
+              }
+            </ToggleButton>
+          </Grid> : null
+      }
+      <Grid item
+        className='utilities-summary'
+        xs={utilityGridSize}
+      >
+        <h2>Utilities and Amenities</h2>
+        <UtiltiesList utilities={listing.utilities} />
+      </Grid>
+      {
+        isAuthenticated &&
+          <Grid item
+            xs={maxXS - propertyGridSize}
+          >
+            <Button
+              variant="contained" 
+              color="secondary"
+              onClick={() => handleMessageOwner()}
+            >
+              Message Owner
+            </Button>
+          </Grid>
+      }
+      <Grid item
+        className='user-description'
+        xs={descriptionGridSize}
+      >
+        <h2>Description</h2>
+        <h3>{listing.description}</h3>
+      </Grid>
+      {
+        listing.owner == userId &&
+          <Grid item
+            className='delete'
+            xs={maxXS - deleteGridSize}
+          >
+            <Button
+              className='delete-button'
+              variant="contained"
+              color="error"
+              onClick={handleDelete}
+            >
+              Delete
+            </Button>
+          </Grid>
+      }
+      {
+        listing.owner == userId &&
+          <Grid item
+            className='modify-buttons'
+            xs={maxXS - editGridSize}>
+            <Button className='edit-button' variant="contained" color="success" onClick={handleEdit}>Edit</Button>
+          </Grid> 
+      }
+      {
+        listing.floorplan ?
+          <Grid item // TODO: Remove this test button
+            className='download-image'
+            xs={maxXS - deleteGridSize}
+          >
+            <ButtonFileDownload userUploadId={listing.floorplan} text="Download Image" className='download-image-button' variant="contained" color="primary">Download Floorplan</ButtonFileDownload>
+          </Grid> : null
+      }
+    </Grid>
+  )
+
   return (
     <>
       <Head>
         <title>
-                Listing | Vesta
+          Listing | Vesta
         </title>
       </Head>
       <Box
@@ -145,101 +261,8 @@ const ListingsPage = () => {
         <Container maxWidth={false}>
           <div className='listings-page'>
             {
-              listing && property && googleMapsAddr ?
-                <Grid className='listings-page-grid' container>
-                  <Grid item
-                    className='property-info'
-                    xs={propertyGridSize}
-                    flexDirection="column"
-                  >
-                    <div className='address-price'>
-                      <h1>{property.name}{listing.unit ? `, Unit ${listing.unit}` : ''}</h1>
-                      <h3>{`${property.address}, ${property.city}, ${property.province}`}</h3>
-                      <h3>{stringifyRate(listing.rate)}</h3>
-                      <h3>{stringifyDuration(listing.duration)}</h3>
-                    </div>
-                    <iframe
-                      title='GoogleMapsEmbed'
-                      className='google-maps-embed'
-                      referrerPolicy="no-referrer-when-downgrade"
-                      src={`https://www.google.com/maps/embed/v1/place?key=${googleMapsAPIKey}&q=${googleMapsAddr}`}
-                    />
-                  </Grid>
-                  {
-                    isAuthenticated && listing.owner != userId ?
-                      <Grid item
-                        xs={maxXS - propertyGridSize}
-                      >
-                        <ToggleButton
-                          selected={buttonText}
-                          onClick={() => changeButtonText(buttonText)}
-                        >
-                          {buttonText}
-                        </ToggleButton>
-                      </Grid> : null
-                  }
-                  <Grid item
-                    className='utilities-summary'
-                    xs={utilityGridSize}
-                  >
-                    <h2>Utilities and Amenities</h2>
-                    <UtiltiesList utilities={listing.utilities} />
-                  </Grid>
-                  {
-                    isAuthenticated &&
-                      <Grid item
-                        xs={maxXS - propertyGridSize}
-                      >
-                        <Button
-                          variant="contained" 
-                          color="secondary"
-                          onClick={() => handleMessageOwner()}
-                        >
-                          Message Owner
-                        </Button>
-                      </Grid>
-                  }
-                  <Grid item
-                    className='user-description'
-                    xs={descriptionGridSize}
-                  >
-                    <h2>Description</h2>
-                    <h3>{listing.description}</h3>
-                  </Grid>
-                  {
-                    listing.owner == userId &&
-                      <Grid item
-                        className='delete'
-                        xs={maxXS - deleteGridSize}
-                      >
-                        <Button
-                          className='delete-button'
-                          variant="contained"
-                          color="error"
-                          onClick={handleDelete}
-                        >
-                          Delete
-                        </Button>
-                      </Grid>
-                  }
-                  {
-                    listing.owner == userId &&
-                    <Grid item
-                      className='modify-buttons'
-                      xs={maxXS - editGridSize}>
-                      <Button className='edit-button' variant="contained" color="success" onClick={handleEdit}>Edit</Button>
-                    </Grid> 
-                  }
-                  {
-                    listing.floorplan ?
-                      <Grid item // TODO: Remove this test button
-                        className='download-image'
-                        xs={maxXS - deleteGridSize}
-                      >
-                        <ButtonFileDownload userUploadId={listing.floorplan} text="Download Image" className='download-image-button' variant="contained" color="primary">Download Floorplan</ButtonFileDownload>
-                      </Grid> : null
-                  }
-                </Grid> :
+              !isLoadingListing && !isLoadingInterest ?
+                getListingPageBody() :
                 <CircularProgress className="loading-circle"
                   size="5rem" />
             }

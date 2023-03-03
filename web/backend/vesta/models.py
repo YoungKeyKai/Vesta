@@ -206,6 +206,9 @@ class ListingInterest(models.Model):
 
     class Meta:
         db_table = 'interest'
+        constraints = [
+            models.UniqueConstraint(fields=['buyer', 'listing'], name='user_can_bookmark_listing_only_once')
+        ]
 
 class ListingFlaggedListing(models.Model):
     listing = models.ForeignKey(ListingListing, on_delete=models.CASCADE, null=False)

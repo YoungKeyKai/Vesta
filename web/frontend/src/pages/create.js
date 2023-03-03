@@ -32,7 +32,7 @@ const CreateListing = () => {
   });
   const [file, setFile] = useState(null);
   const [images, setImages] = useState([]);
-  const testImages = [];
+  const imagesURL = [];
 
   // History
   const router = useRouter();
@@ -165,15 +165,12 @@ const CreateListing = () => {
         headers: {'Content-Type': 'multipart/form-data'}
       })
         .then((response) => {
-          console.log(response.data);
-          //{...response.data, content: JSON.stringify(images.at(-1))}
-          testImages.push(response.data.content.slice(0, -16))
+          imagesURL.push(response.data.content.slice(0, -16))
           setImages(images.pop());
           postPhoto(foreignKeys);
         })
         .catch(error => console.log(error))
     } else {
-      console.log(testImages);
       postFloorplan();
     }
   }
@@ -203,7 +200,7 @@ const CreateListing = () => {
       {
         ...listing,
         ...foreignKeys,
-        images: testImages,
+        images: imagesURL,
         owner: userId,
         duration: JSON.stringify(listing.duration),
         rate: JSON.stringify(listing.rate),

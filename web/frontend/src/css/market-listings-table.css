@@ -1,0 +1,42 @@
+
+.market-listings {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.market-listing-card {
+    margin: 1rem;
+    width: calc(50% - 2rem);
+}
+
+.market-listing-card:hover {
+    cursor: pointer;
+}
+
+.market-listing-card-body {
+    display: flex;
+}
+
+.market-listing-card-body div{
+    margin: 0.5rem;
+}
+
+.market-listing-card-left, .market-listing-card-right {
+    flex: 3;
+}
+
+.market-listing-card-image {
+    flex: 3;
+    text-align: center;
+    box-shadow: 2px black;
+}
+
+.property-thumbnail {
+    width: 100%;
+}
+
+.pagination-wrapper {
+    justify-content: center;
+    display: flex;
+}

@@ -142,6 +142,7 @@ const ListingsPage = () => {
   const getListingPageBody = () => {
     const gridRowSpacing = 3
     const gridColumns = 12;
+    const carouselSize = gridColumns;
     const buttonHolderSize = 4;
     const propertyInfoSize = gridColumns - buttonHolderSize;
     const utilitySummarySize = gridColumns;
@@ -158,7 +159,7 @@ const ListingsPage = () => {
           listing.images ?
             <Grid item
               className='image-carousel-container'
-              xs={gridColumns}
+              xs={carouselSize}
             >
               <Carousel className='image-carousel' autoPlay={false}>
                 {

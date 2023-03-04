@@ -8,9 +8,9 @@ import {
   Container,
   Checkbox,
   Slider,
-  Typography,
   CircularProgress,
   TextField,
+  Grid,
 } from '@mui/material';
 
 import { DashboardLayout } from '../components/dashboard-layout';
@@ -104,112 +104,116 @@ const Market = () => {
     router.push(`/market?${new URLSearchParams(filters).toString()}`);
   }
 
-  const renderFilters = () => (
-    <Box className='advanced-filters' sx={{ display: 'flex', my: 3 }}>
-      <Box sx={{ width: 200, mx: 2 }}>
-        <Typography>
-          Price ($)
-        </Typography>
-        <Slider
-          value={[filters.minprice ?? 0, filters.maxprice ?? 4000]}
-          step={100}
-          min={0}
-          max={4000}
-          onChange={(event, newValue) => { setFilters({ 
-            ...filters, 
-            minprice: newValue[0],
-            maxprice: newValue[1] 
-          }) }}
-          valueLabelDisplay="auto"
-        ></Slider>
-      </Box>
-      <Box sx={{ mx: 3, display: 'flex' }}>
-        <Box sx={{ width: 200, mx: 1 }}>
-          <Typography>
+  const renderFilters = () => {
+    const filterBarColumnSpacing = 4;
+    const filterBarColumns = 20;
+    const priceSize = 3;
+    
+    return (
+      <Grid container className='advanced-filters' columns={filterBarColumns} columnSpacing={filterBarColumnSpacing}>
+        <Grid item className='price-filter' xs={priceSize}>
+          <div>
+            Price ($)
+          </div>
+          <Slider
+            value={[filters.minprice ?? 0, filters.maxprice ?? 4000]}
+            step={100}
+            min={0}
+            max={4000}
+            onChange={(event, newValue) => { setFilters({ 
+              ...filters, 
+              minprice: newValue[0],
+              maxprice: newValue[1] 
+            }) }}
+            valueLabelDisplay="auto"
+          ></Slider>
+        </Grid>
+        <Grid item className='start-date-filter' xs>
+          <div>
             Start Date
-          </Typography>
+          </div>
           <TextField 
             type="date"
             value={filters.startDate}
             onChange={(e) => { setFilters({ ...filters, startDate: e.target.value }) }}
           >
           </TextField>
-        </Box>
-        <Box sx={{ width: 200, mx: 1 }}>
-          <Typography>
+        </Grid>
+        <Grid item className='end-date-filter' xs>
+          <div>
             End Date
-          </Typography>
+          </div>
           <TextField 
             type="date"
             value={filters.endDate}
             onChange={(e) => { setFilters({ ...filters, endDate: e.target.value }) }}
           >
           </TextField>
-        </Box>
-      </Box>
-      <Box sx={{ width: 300, mx: 1 }}>
-        <Typography>
-          Location (city)
-        </Typography>
-        <TextField
-          onChange={(e) => { setFilters({ ...filters, location: e.target.value })}}
-        >  
-        </TextField>
-      </Box>
-      <Box sx={{ width: 600, mx: 3, display: 'flex', justifyContent: 'center' }}>
-        <Box>
-          <WifiTooltip />
-          <Checkbox color="primary"
-            checked={filters['Wifi'] === 'false'? false : true}
-            onChange={(e, newValue) => {
-              setFilters({ ...filters, Wifi: newValue.toString() });
-            }}
-          />
-        </Box>
-        <Box>
-          <ElectricToolTip />
-          <Checkbox color="primary"
-            checked={filters['Electricity'] == 'false'? false : true}
-            onChange={(e, newValue) => {
-              setFilters({ ...filters, Electricity: newValue.toString() });
-            }}
-          />
-        </Box>
-        <Box>
-          <KitchenTooltip />
-          <Checkbox color="primary"
-            checked={filters['Kitchen'] == 'false'? false : true}
-            onChange={(e, newValue) => { 
-              setFilters({ ...filters, Kitchen: newValue.toString() }); 
-            }}
-          />
-        </Box>
-        <Box>
-          <LaundryTooltip />
-          <Checkbox color="primary"
-            checked={filters['Laundry'] == 'false'? false : true}
-            onChange={(e, newValue) => { 
-              setFilters({ ...filters, Laundry: newValue.toString() });
-            }}
-          />
-        </Box>
-        <Box>
-          <LocalDiningTooltip />
-          <Checkbox color="primary"
-            checked={filters['Food'] == 'false'? false : true}
-            onChange={(e, newValue) => { 
-              setFilters({ ...filters, Food: newValue.toString() }); 
-            }}
-          />
-        </Box>
-      </Box>
-      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-        <Button onClick={applyFilter} variant="outlined">
-          Apply
-        </Button>
-      </Box>
-    </Box>
-  )
+        </Grid>
+        <Grid item className='location-filter' xs>
+          <div>
+            Location (city)
+          </div>
+          <TextField
+            onChange={(e) => { setFilters({ ...filters, location: e.target.value })}}
+          >  
+          </TextField>
+        </Grid>
+        <Grid item className='utilities-filter' xs>
+          <Box textAlign='center' flexDirection='column'>
+            <WifiTooltip />
+            <Checkbox color="primary"
+              checked={filters['Wifi'] === 'false'? false : true}
+              onChange={(e, newValue) => {
+                setFilters({ ...filters, Wifi: newValue.toString() });
+              }}
+            />
+          </Box>
+          <Box textAlign='center' flexDirection='column'>
+            <ElectricToolTip />
+            <Checkbox color="primary"
+              checked={filters['Electricity'] == 'false'? false : true}
+              onChange={(e, newValue) => {
+                setFilters({ ...filters, Electricity: newValue.toString() });
+              }}
+            />
+          </Box>
+          <Box textAlign='center' flexDirection='column'>
+            <KitchenTooltip />
+            <Checkbox color="primary"
+              checked={filters['Kitchen'] == 'false'? false : true}
+              onChange={(e, newValue) => { 
+                setFilters({ ...filters, Kitchen: newValue.toString() }); 
+              }}
+            />
+          </Box>
+          <Box textAlign='center' flexDirection='column'>
+            <LaundryTooltip />
+            <Checkbox color="primary"
+              checked={filters['Laundry'] == 'false'? false : true}
+              onChange={(e, newValue) => { 
+                setFilters({ ...filters, Laundry: newValue.toString() });
+              }}
+            />
+          </Box>
+          <Box textAlign='center' flexDirection='column'>
+            <LocalDiningTooltip />
+            <Checkbox color="primary"
+              checked={filters['Food'] == 'false'? false : true}
+              onChange={(e, newValue) => { 
+                setFilters({ ...filters, Food: newValue.toString() }); 
+              }}
+            />
+          </Box>
+        </Grid>
+        <Grid item className='apply-button-holder' xs>
+          <Button onClick={applyFilter} variant="outlined">
+            Apply
+          </Button>
+        </Grid>
+      </Grid>
+    )
+  }
 
   return (
     <>

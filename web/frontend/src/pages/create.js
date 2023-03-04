@@ -370,7 +370,7 @@ const CreateListing = () => {
             </div>
             <br/>
             <Box sx={{'& > :not(style)': { m: 1 }}}>
-              <TextField TextField type="text"
+              <TextField type="text"
                 fullWidth
                 multiline
                 variant="filled"

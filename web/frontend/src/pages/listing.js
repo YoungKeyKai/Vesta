@@ -68,7 +68,7 @@ const ListingsPage = () => {
             interestId: result.data[0].id
           });
         } else {
-          setInterest({});
+          setInterest({isInterested: false, interestId: null});
         }
         setIsLoadingInterest(false)
       })
@@ -260,7 +260,7 @@ const ListingsPage = () => {
               xs={userDescriptionSize}
             >
               <h2>Description</h2>
-              <h3>{listing.description}</h3>
+              <p className='user-description-text'>{listing.description}</p>
             </Grid>
             : null
         }

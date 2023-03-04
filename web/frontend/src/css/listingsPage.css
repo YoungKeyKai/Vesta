@@ -39,3 +39,9 @@
     width: 75%;
     min-height: 25rem;
 }
+
+.user-description-text {
+    white-space: pre-line;
+    color: black;
+    padding: 0;
+}

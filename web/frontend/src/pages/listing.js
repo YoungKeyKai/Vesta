@@ -16,7 +16,6 @@ import axios from 'axios';
 
 import { DashboardLayout } from '../components/dashboard-layout';
 import UtiltiesList from '../components/utilitiesList';
-import ButtonFileDownload from '../components/button-file-download'
 import { googleMapsAPIKey } from '../constants';
 import { useAuthContext } from '../contexts/auth-context';
 
@@ -33,14 +32,6 @@ const ListingsPage = () => {
   const {authAxios, userId, isAuthenticated} = useAuthContext();
   const router = useRouter();
   const { id } = router.query;
-
-  const maxXS = 12;
-  const propertyGridSize = 7;
-  const utilityGridSize = 7;
-  const descriptionGridSize = 10;
-  const deleteGridSize = 4;
-  const photoGridSize = 8;
-  const editGridSize = 5;
 
   const formatAddr = (addr, city, province) => `${addr.replaceAll(/ +/g, '+')},${city}+${province}`;
   useEffect(() => {
@@ -148,119 +139,134 @@ const ListingsPage = () => {
     }
   }
 
-  const getListingPageBody = () => (
-    <Grid className='listings-page-grid' container>
-      <Grid item
-        className='property-info'
-        xs={propertyGridSize}
-        flexDirection="column"
+  const getListingPageBody = () => {
+    const gridRowSpacing = 3
+    const gridColumns = 12;
+    const buttonHolderSize = 4;
+    const propertyInfoSize = gridColumns - buttonHolderSize;
+    const utilitySummarySize = gridColumns;
+    const embeddedMapSize = gridColumns;
+    const userDescriptionSize = gridColumns;
+
+    return (
+      <Grid container
+        className='listings-page-grid'
+        columns={gridColumns}
+        rowSpacing={gridRowSpacing}
       >
-        <div className='address-price'>
-          <h1>{property.name}{listing.unit ? `, Unit ${listing.unit}` : ''}</h1>
-          <h3>{`${property.address}, ${property.city}, ${property.province}`}</h3>
-          <h3>{stringifyRate(listing.rate)}</h3>
-          <h3>{stringifyDuration(listing.duration)}</h3>
-        </div>
-        <iframe
-          title='GoogleMapsEmbed'
-          className='google-maps-embed'
-          referrerPolicy="no-referrer-when-downgrade"
-          src={`https://www.google.com/maps/embed/v1/place?key=${googleMapsAPIKey}&q=${googleMapsAddr}`}
-        />
-      </Grid>
-      {
-        isAuthenticated && listing.owner != userId ?
-          <Grid item
-            xs={maxXS - propertyGridSize}
-          >
-            <ToggleButton selected={interest.isInterested} onClick={handleToggleInterest} >
-              {
-                interest.isInterested ?
-                  <BookmarkRemoveIcon fontSize='large' />
-                  : <BookmarkAddIcon fontSize='large' />
-              }
-            </ToggleButton>
-          </Grid> : null
-      }
-      <Grid item
-        className='carousel'
-        xs={photoGridSize}
-      >
-        <h2>Images</h2>
         {
-          listing.images &&
-          <Carousel autoPlay={false}>
-            {
-              listing.images.map((image, i) => (
-                <img className="photos" src={image}></img>
-              ))
-            }
-          </Carousel>
+          listing.images ?
+            <Grid item
+              className='image-carousel-container'
+              xs={gridColumns}
+            >
+              <Carousel className='image-carousel' autoPlay={false}>
+                {
+                  listing.images.map((image, i) => (
+                    <img className="photo" key={`photo${i}`} src={image}></img>
+                  ))
+                }
+              </Carousel>
+            </Grid> :
+            null
+        }
+        <Grid item
+          className='property-info'
+          xs={propertyInfoSize}
+        >
+          <div className='address-price'>
+            <h1>{property.name}{listing.unit ? `, Unit ${listing.unit}` : ''}</h1>
+            <h3>{`${property.address}, ${property.city}, ${property.province}`}</h3>
+            <h3>{stringifyRate(listing.rate)}</h3>
+            <h3>{stringifyDuration(listing.duration)}</h3>
+          </div>
+        </Grid>
+        <Grid item
+          className='button-holder'
+          xs={buttonHolderSize}
+        >
+          {
+            isAuthenticated && listing.owner !== userId ?
+              <>
+                <ToggleButton
+                  className='bookmark-button'
+                  selected={interest.isInterested}
+                  onClick={handleToggleInterest}
+                  sx={{marginRight: '1rem'}}
+                >
+                  {
+                    interest.isInterested ?
+                      <BookmarkRemoveIcon fontSize='large' />
+                      : <BookmarkAddIcon fontSize='large' />
+                  }
+                </ToggleButton>
+                <Button
+                  className='message-seller-button'
+                  variant="contained" 
+                  color="secondary"
+                  onClick={() => handleMessageOwner()}
+                >
+                  Message Seller
+                </Button>
+              </>
+              : null
+          }
+          {
+            listing.owner === userId ?
+              <>
+                <Button
+                  className='delete-button'
+                  variant="contained"
+                  color="error"
+                  onClick={handleDelete}
+                  sx={{marginRight: '1rem'}}
+                >
+                  Delete
+                </Button>
+                <Button
+                  className='edit-button'
+                  variant='contained'
+                  color='success'
+                  onClick={handleEdit}
+                >
+                  Edit
+                </Button>
+              </>
+              : null
+          }
+        </Grid>
+        <Grid item
+          className='utilities-summary'
+          xs={utilitySummarySize}
+        >
+          <h2>Utilities and Amenities</h2>
+          <UtiltiesList utilities={listing.utilities} />
+        </Grid>
+        <Grid item
+          className='embedded-map-container'
+          xs={embeddedMapSize}
+        >
+          <iframe
+            title='GoogleMapsEmbed'
+            className='google-maps-embed'
+            referrerPolicy="no-referrer-when-downgrade"
+            src={`https://www.google.com/maps/embed/v1/place?key=${googleMapsAPIKey}&q=${googleMapsAddr}`}
+          />
+        </Grid>
+        {
+          listing.description ?
+            <Grid item
+              className='user-description'
+              xs={userDescriptionSize}
+            >
+              <h2>Description</h2>
+              <h3>{listing.description}</h3>
+            </Grid>
+            : null
         }
       </Grid>
-      <Grid item
-        className='utilities-summary'
-        xs={utilityGridSize}
-      >
-        <h2>Utilities and Amenities</h2>
-        <UtiltiesList utilities={listing.utilities} />
-      </Grid>
-      {
-        isAuthenticated &&
-          <Grid item
-            xs={maxXS - propertyGridSize}
-          >
-            <Button
-              variant="contained" 
-              color="secondary"
-              onClick={() => handleMessageOwner()}
-            >
-              Message Owner
-            </Button>
-          </Grid>
-      }
-      <Grid item
-        className='user-description'
-        xs={descriptionGridSize}
-      >
-        <h2>Description</h2>
-        <h3>{listing.description}</h3>
-      </Grid>
-      {
-        listing.owner == userId &&
-          <Grid item
-            className='delete'
-            xs={maxXS - deleteGridSize}
-          >
-            <Button
-              className='delete-button'
-              variant="contained"
-              color="error"
-              onClick={handleDelete}
-            >
-              Delete
-            </Button>
-          </Grid>
-      }
-      {
-        listing.owner == userId &&
-          <Grid item
-            className='modify-buttons'
-            xs={maxXS - editGridSize}>
-            <Button className='edit-button' variant="contained" color="success" onClick={handleEdit}>Edit</Button>
-          </Grid> 
-      }
-      {
-        listing.floorplan ?
-          <Grid item // TODO: Remove this test button
-            className='download-image'
-            xs={maxXS - deleteGridSize}
-          >
-            <ButtonFileDownload userUploadId={listing.floorplan} text="Download Image" className='download-image-button' variant="contained" color="primary">Download Floorplan</ButtonFileDownload>
-          </Grid> : null
-      }
-    </Grid>
-  )
+    )
+  }
 
   return (
     <>

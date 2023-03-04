@@ -117,7 +117,7 @@ const MarketListingsTable = ({
 
 MarketListingsTable.propTypes = {
   listings: PropTypes.array,
-  properties: PropTypes.map,
+  properties: PropTypes.instanceOf(Map),
 };
 
 export default MarketListingsTable;

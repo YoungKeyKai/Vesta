@@ -62,7 +62,7 @@ const ListingsPage = () => {
         setListing(data);
         getProperty(data.propertyID);
         if (data.floorplan) {
-            getFloorplan(data.floorplan);
+          getFloorplan(data.floorplan);
         }
       })
       .catch(console.error);
@@ -151,7 +151,7 @@ const ListingsPage = () => {
   const getImages = () => {
     let urls = []
     if (listing.images) {
-        urls = listing.images
+      urls = listing.images
     }
     if (floorplanUrl) {
       urls = urls.concat([floorplanUrl])

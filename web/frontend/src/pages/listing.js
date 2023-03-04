@@ -42,10 +42,7 @@ const ListingsPage = () => {
 
     const getFloorplan = (floorplanId) => axios
       .get(`/api/useruploads/${floorplanId}`)
-      .then((res) => {
-        setFloorplanUrl(res.data.content.replace('&export=download', ''));
-        setIsLoadingListing(false);
-      })
+      .then((res) => setFloorplanUrl(res.data.content.replace('&export=download', '')))
       .catch(console.error);
 
     const getProperty = id => axios
@@ -54,6 +51,7 @@ const ListingsPage = () => {
         const data = res.data;
         setProperty(data);
         setGoogleMapsAddr(formatAddr(data.address, data.city, data.province));
+        setIsLoadingListing(false);
       })
       .catch(console.error);
 
@@ -63,7 +61,9 @@ const ListingsPage = () => {
         const data = res.data;
         setListing(data);
         getProperty(data.propertyID);
-        getFloorplan(data.floorplan);
+        if (data.floorplan) {
+            getFloorplan(data.floorplan);
+        }
       })
       .catch(console.error);
 
@@ -108,7 +108,7 @@ const ListingsPage = () => {
       authAxios.delete(`/api/listinglistings/${id}`)
         .then(() => {       
           alert("Listing deleted successfully!");
-          router.push(`/market`);
+          router.push(`/yourlistings`);
         })
         .catch((err) => console.log(err));
     }
@@ -149,7 +149,10 @@ const ListingsPage = () => {
   }
 
   const getImages = () => {
-    let urls = listing.images
+    let urls = []
+    if (listing.images) {
+        urls = listing.images
+    }
     if (floorplanUrl) {
       urls = urls.concat([floorplanUrl])
     }

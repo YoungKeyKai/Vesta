@@ -181,7 +181,7 @@ const EditListing = () => {
 
   const postListing = (newPropertyID = null) => {
     // Update the new listing, using new (or existing) propertyID
-    authAxios.put(`/api/listinglistings/${id}`, {
+    authAxios.put(`/api/listinglistings/${id}/`, {
       ...listing,
       propertyID: property?.id || newPropertyID,   // use newPropertyID if property.id is null
       owner: userId,   // Need to remove hardcoded user, and use current user
@@ -189,7 +189,7 @@ const EditListing = () => {
       rate: JSON.stringify(listing.rate),
     })
       .then((res) => {
-        router.push(`/listing?id=${res.data.id}`);
+        router.replace(`/listing?id=${res.data.id}`);
       })
       .catch((err) => console.log(err));
   }

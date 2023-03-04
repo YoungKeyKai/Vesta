@@ -204,7 +204,7 @@ const CreateListing = () => {
       }
     )
       .then((res) => {
-        router.push(`/listing?id=${res.data.id}`);
+        router.replace(`/listing?id=${res.data.id}`);
       })
       .catch((err) => console.log(err));
   }

@@ -21,6 +21,7 @@ import { useAuthContext } from '../contexts/auth-context';
 
 const ListingsPage = () => {
   const [listing, setListing] = useState({});
+  const [floorplanUrl, setFloorplanUrl] = useState('');
   const [property, setProperty] = useState({});
   const [googleMapsAddr, setGoogleMapsAddr] = useState('');
   const [interest, setInterest] = useState({isInterested: false, interestId: null});
@@ -39,13 +40,20 @@ const ListingsPage = () => {
       return
     }
 
+    const getFloorplan = (floorplanId) => axios
+      .get(`/api/useruploads/${floorplanId}`)
+      .then((res) => {
+        setFloorplanUrl(res.data.content.replace('&export=download', ''));
+        setIsLoadingListing(false);
+      })
+      .catch(console.error);
+
     const getProperty = id => axios
       .get(`/api/listingproperties/${id}`)
       .then((res) => {
         const data = res.data;
         setProperty(data);
         setGoogleMapsAddr(formatAddr(data.address, data.city, data.province));
-        setIsLoadingListing(false);
       })
       .catch(console.error);
 
@@ -55,6 +63,7 @@ const ListingsPage = () => {
         const data = res.data;
         setListing(data);
         getProperty(data.propertyID);
+        getFloorplan(data.floorplan);
       })
       .catch(console.error);
 
@@ -139,6 +148,16 @@ const ListingsPage = () => {
     }
   }
 
+  const getImages = () => {
+    let urls = listing.images
+    if (floorplanUrl) {
+      urls = urls.concat([floorplanUrl])
+    }
+    return urls.map((image, i) => (
+      <img className="photo" key={`photo${i}`} src={image} />
+    ))
+  }
+
   const getListingPageBody = () => {
     const gridRowSpacing = 3
     const gridColumns = 12;
@@ -156,17 +175,13 @@ const ListingsPage = () => {
         rowSpacing={gridRowSpacing}
       >
         {
-          listing.images ?
+          listing.images || floorplanUrl ?
             <Grid item
               className='image-carousel-container'
               xs={carouselSize}
             >
               <Carousel className='image-carousel' autoPlay={false}>
-                {
-                  listing.images.map((image, i) => (
-                    <img className="photo" key={`photo${i}`} src={image}></img>
-                  ))
-                }
+                {getImages()}
               </Carousel>
             </Grid> :
             null

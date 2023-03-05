@@ -32,6 +32,7 @@ const CreateListing = () => {
   });
   const [floorplanFile, setFloorplanFile] = useState(null);
   const [images, setImages] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
   const imagesURL = [];
 
   // History
@@ -146,13 +147,17 @@ const CreateListing = () => {
         .then((response) => {
           postProperty({floorplan: response.data.id})
         })
-        .catch(error => console.log(error))
+        .catch((err) => {
+            console.error(err)
+            setIsUploading(false);
+        })
     } else {
       postProperty();
     }
   }
 
   const postPhoto = (foreignKeys = []) => {
+    setIsUploading(true);
     if (images.length > 0) {
       authAxios.post('/api/useruploads/', {
         owner: userId,
@@ -166,7 +171,10 @@ const CreateListing = () => {
           setImages(images.pop());
           postPhoto(foreignKeys);
         })
-        .catch(console.error)
+        .catch((err) => {
+            console.error(err)
+            setIsUploading(false);
+        })
     } else {
       postFloorplan();
     }
@@ -181,7 +189,10 @@ const CreateListing = () => {
           foreignKeys.propertyID = response.data.id; 
           postListing(foreignKeys);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+            console.error(err)
+            setIsUploading(false);
+        });
     } else {
       // just create the listing using existing property
       foreignKeys.propertyID = property.id;
@@ -205,8 +216,12 @@ const CreateListing = () => {
     )
       .then((res) => {
         router.replace(`/listing?id=${res.data.id}`);
+        setIsUploading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error(err)
+        setIsUploading(false);
+    });
   }
 
   return (
@@ -378,7 +393,7 @@ const CreateListing = () => {
               </TextField>
             </Box>
             <br/>
-            <Button variant="contained" onClick={postPhoto}>Create</Button>
+            <Button disabled={isUploading} variant="contained" onClick={postPhoto}>Create</Button>
           </div>
         </Container>
       </Box>

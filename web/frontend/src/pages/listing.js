@@ -25,7 +25,6 @@ const ListingsPage = () => {
   const [buttonText, setButtonText] = useState("Interested");
   const [interest, setInterest] = useState({});
   const {authAxios, userId, isAuthenticated} = useAuthContext();
-  const [images] = useState([]);
   const router = useRouter();
   const { id } = router.query;
 
@@ -181,8 +180,8 @@ const ListingsPage = () => {
                       </Grid> : null
                   }
                   <Grid item
-                  className='carousel'
-                  xs={photoGridSize}>
+                    className='carousel'
+                    xs={photoGridSize}>
                     <h2>Images</h2>
                     {
                       listing.images &&

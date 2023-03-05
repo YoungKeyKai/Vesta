@@ -175,8 +175,8 @@ const EditListing = () => {
           postListing(response.data.id);
         })
         .catch((err) => {
-            console.error(err)
-            setIsUploading(false);
+          console.error(err)
+          setIsUploading(false);
         });
     } else {
       // jsut create the listing using existing property
@@ -200,7 +200,7 @@ const EditListing = () => {
       .catch((err) => {
         console.error(err)
         setIsUploading(false);
-    });
+      });
   }
 
   return (

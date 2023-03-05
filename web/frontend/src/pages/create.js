@@ -148,8 +148,8 @@ const CreateListing = () => {
           postProperty({floorplan: response.data.id})
         })
         .catch((err) => {
-            console.error(err)
-            setIsUploading(false);
+          console.error(err)
+          setIsUploading(false);
         })
     } else {
       postProperty();
@@ -172,8 +172,8 @@ const CreateListing = () => {
           postPhoto(foreignKeys);
         })
         .catch((err) => {
-            console.error(err)
-            setIsUploading(false);
+          console.error(err)
+          setIsUploading(false);
         })
     } else {
       postFloorplan();
@@ -190,8 +190,8 @@ const CreateListing = () => {
           postListing(foreignKeys);
         })
         .catch((err) => {
-            console.error(err)
-            setIsUploading(false);
+          console.error(err)
+          setIsUploading(false);
         });
     } else {
       // just create the listing using existing property
@@ -221,7 +221,7 @@ const CreateListing = () => {
       .catch((err) => {
         console.error(err)
         setIsUploading(false);
-    });
+      });
   }
 
   return (

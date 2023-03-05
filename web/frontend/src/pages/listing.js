@@ -29,6 +29,7 @@ const ListingsPage = () => {
   // Loading flags
   const [isLoadingListing, setIsLoadingListing] = useState(true); // Starts unloaded
   const [isLoadingInterest, setIsLoadingInterest] = useState(false); // Can start loaded if no user is logged in
+  const [isLoadingFloorplan, setIsLoadingFloorplan] = useState(false); // Can start loaded if no user is logged in
 
   const {authAxios, userId, isAuthenticated} = useAuthContext();
   const router = useRouter();
@@ -42,7 +43,10 @@ const ListingsPage = () => {
 
     const getFloorplan = (floorplanId) => axios
       .get(`/api/useruploads/${floorplanId}`)
-      .then((res) => setFloorplanUrl(res.data.content.replace('&export=download', '')))
+      .then((res) => {
+        setIsLoadingFloorplan(false)
+        setFloorplanUrl(res.data.content.replace('&export=download', ''))
+      })
       .catch(console.error);
 
     const getProperty = id => axios
@@ -62,6 +66,7 @@ const ListingsPage = () => {
         setListing(data);
         getProperty(data.propertyID);
         if (data.floorplan) {
+          setIsLoadingFloorplan(true);
           getFloorplan(data.floorplan);
         }
       })
@@ -148,7 +153,7 @@ const ListingsPage = () => {
     }
   }
 
-  const getImages = () => {
+  const getCarousel = () => {
     let urls = []
     if (listing.images) {
       urls = listing.images
@@ -156,9 +161,18 @@ const ListingsPage = () => {
     if (floorplanUrl) {
       urls = urls.concat([floorplanUrl])
     }
-    return urls.map((image, i) => (
+    const imgs = urls.map((image, i) => (
       <img className="photo" key={`photo${i}`} src={image} />
     ))
+    return (
+      <Carousel
+        className='image-carousel'
+        autoPlay={false}
+        navButtonsAlwaysVisible={imgs.length > 1}
+      >
+        {imgs}
+      </Carousel>
+    )
   }
 
   const getListingPageBody = () => {
@@ -183,9 +197,7 @@ const ListingsPage = () => {
               className='image-carousel-container'
               xs={carouselSize}
             >
-              <Carousel className='image-carousel' autoPlay={false}>
-                {getImages()}
-              </Carousel>
+              {getCarousel()}
             </Grid> :
             null
         }
@@ -304,7 +316,7 @@ const ListingsPage = () => {
         <Container maxWidth={false}>
           <div className='listings-page'>
             {
-              !isLoadingListing && !isLoadingInterest ?
+              !isLoadingListing && !isLoadingInterest && !isLoadingFloorplan ?
                 getListingPageBody() :
                 <CircularProgress className="loading-circle"
                   size="5rem" />

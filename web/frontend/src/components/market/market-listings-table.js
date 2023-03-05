@@ -77,7 +77,7 @@ const MarketListingsTable = ({
               <div className='market-listing-card-image'>
                 <img
                   className="property-thumbnail"
-                  src="/static/images/fergushousesample.jpg"
+                  src={ listing.images ? listing.images[0] : "/static/images/fergushousesample.jpg" }
                   alt="Property Thumbnail"
                 />
               </div>

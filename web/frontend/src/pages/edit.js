@@ -23,6 +23,7 @@ const EditListing = () => {
   const [property, setProperty] = useState(null);
   const [properties, setProperties] = useState([]);
   const [utilities, setUtilities] = useState([]);
+  const [isUploading, setIsUploading] = useState(false);
   const {authAxios, userId} = useAuthContext();  
   const [listing, setListing] = useState({
     duration: { bounds: "[)" },
@@ -165,6 +166,7 @@ const EditListing = () => {
   }
 
   const handleSubmit = () => {
+    setIsUploading(true);
     if (property?.id == null) {
       // first create the new property to use with new listing
       authAxios.post('/api/listingproperties/', property)
@@ -172,7 +174,10 @@ const EditListing = () => {
           setProperty(response.data); 
           postListing(response.data.id);
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+            console.error(err)
+            setIsUploading(false);
+        });
     } else {
       // jsut create the listing using existing property
       postListing();
@@ -190,8 +195,12 @@ const EditListing = () => {
     })
       .then((res) => {
         router.replace(`/listing?id=${res.data.id}`);
+        setIsUploading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error(err)
+        setIsUploading(false);
+    });
   }
 
   return (
@@ -340,7 +349,7 @@ const EditListing = () => {
             </div>
             <br/>
             <Box sx={{'& > :not(style)': { m: 1 }}}>
-              <TextField TextField type="text"
+              <TextField type="text"
                 fullWidth
                 multiline
                 variant="filled"
@@ -352,7 +361,7 @@ const EditListing = () => {
               </TextField>
             </Box>
             <br/>
-            <Button variant="contained" onClick={handleSubmit}>Save</Button>
+            <Button disabled={isUploading} variant="contained" onClick={handleSubmit}>Save</Button>
           </div>
         </Container>
       </Box>

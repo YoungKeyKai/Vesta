@@ -30,7 +30,7 @@ const CreateListing = () => {
     duration: { bounds: "[)" },
     rate: { bounds: "[)" }
   });
-  const [file, setFile] = useState(null);
+  const [floorplanFile, setFloorplanFile] = useState(null);
   const [images, setImages] = useState([]);
   const imagesURL = [];
 
@@ -44,10 +44,7 @@ const CreateListing = () => {
         .then((res) => {
           setProperties(res.data);
         })
-        .catch((err) => {
-          //Replace with formal error handling
-          console.log(err);
-        })
+        .catch(console.error)
     }
 
     // Fetch Properties
@@ -130,7 +127,7 @@ const CreateListing = () => {
   }
 
   const handleFileChange = (newFile) => {
-    setFile(newFile);
+    setFloorplanFile(newFile);
   }
 
   const handleImageUpload = (newFiles) => {
@@ -138,11 +135,11 @@ const CreateListing = () => {
   }
 
   const postFloorplan = () => {
-    if (file != null) {
+    if (floorplanFile != null) {
       authAxios.post('/api/useruploads/', {
         owner: userId,
         uploadtime: new Date(), // gets the current date/time
-        content: file
+        content: floorplanFile
       }, { 
         headers: {'Content-Type': 'multipart/form-data'}
       })
@@ -165,11 +162,11 @@ const CreateListing = () => {
         headers: {'Content-Type': 'multipart/form-data'}
       })
         .then((response) => {
-          imagesURL.push(response.data.content.slice(0, -16))
+          imagesURL.push(response.data.content.replace('&export=download', ''))
           setImages(images.pop());
           postPhoto(foreignKeys);
         })
-        .catch(error => console.log(error))
+        .catch(console.error)
     } else {
       postFloorplan();
     }
@@ -207,7 +204,7 @@ const CreateListing = () => {
       }
     )
       .then((res) => {
-        router.push(`/listing?id=${res.data.id}`);
+        router.replace(`/listing?id=${res.data.id}`);
       })
       .catch((err) => console.log(err));
   }
@@ -354,7 +351,7 @@ const CreateListing = () => {
               <Box>
                 <MuiFileInput
                   placeholder="Upload Attachment"
-                  value={file}
+                  value={floorplanFile}
                   onChange={handleFileChange}
                 />
               </Box>
@@ -370,7 +367,7 @@ const CreateListing = () => {
             </div>
             <br/>
             <Box sx={{'& > :not(style)': { m: 1 }}}>
-              <TextField TextField type="text"
+              <TextField type="text"
                 fullWidth
                 multiline
                 variant="filled"

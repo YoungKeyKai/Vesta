@@ -19,7 +19,8 @@ import '../css/market.css';
 import '../css/listingsPage.css';
 import '../css/createListing.css';
 import '../css/editListing.css';
-import '../css/chat.css'
+import '../css/chat.css';
+import '../css/market-listings-table.css';
 
 axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_ROOT;
 axios.defaults.withCredentials = true;

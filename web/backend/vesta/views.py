@@ -134,10 +134,11 @@ class ListingListingView(viewsets.ModelViewSet):
                 # DateRange Filter
                 if params.get('startDate') or params.get('endDate'):
                     # Decrease intervals by one in either direction for inclusivity.
-                    start_date = datetime.today().strftime('%Y-%m-%d')
-                    end_date = '2099-12-31'
+                    start_date = datetime.today()
                     if params.get('startDate'):
                         start_date = datetime.strptime(params.get('startDate'), '%Y-%m-%d')
+                    # Minimum and Default Interval of 7 days
+                    end_date = start_date + timedelta(days=7)
                     if params.get('endDate'):
                         end_date = datetime.strptime(params.get('endDate'), '%Y-%m-%d')
                     start_date += timedelta(days=1)
@@ -184,11 +185,11 @@ class ListingListingView(viewsets.ModelViewSet):
                     if listing.rate and listing.rate.lower:
                         if listing.rate.upper:
                             # Specificity of Asking Price
-                            wsum += 0.263 / (log(listing.rate.upper - listing.rate.lower) + 1)
+                            wsum += 0.263 / (log(listing.rate.upper - listing.rate.lower) + 1.1)
                         # Closeness of Asking Price LB to Price Filter LB
                         lb = params.get('minprice')
                         if lb:
-                            wsum += 0.115 / (log(abs(int(lb) - listing.rate.lower)) + 1)
+                            wsum += 0.115 / (log(abs(int(lb) - listing.rate.lower) + 1.1))
                     # Available Utilities
                     wsum += 0.048 * len(listing.utilities or [])
                     # Number of Interested Users (TBD - requires extra query)

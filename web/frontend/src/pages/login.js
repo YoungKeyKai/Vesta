@@ -144,6 +144,7 @@ const Login = () => {
               value={formik.values.email}
               variant="outlined"
               placeholder='Email'
+              autoComplete="username"
             />
             <TextField
               error={Boolean(formik.touched.password && formik.errors.password)}
@@ -158,6 +159,7 @@ const Login = () => {
               value={formik.values.password}
               variant="outlined"
               placeholder='Password'
+              autoComplete="current-password"
             />
             <Box sx={{ py: 2 }}>
               <Button

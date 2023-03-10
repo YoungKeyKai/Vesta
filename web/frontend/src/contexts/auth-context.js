@@ -17,6 +17,7 @@ const defaultContext = {
   isAuthenticated: false,
   accessToken: null,
   userId: null,
+  isLoading: true,
 };
 
 const handlers = {
@@ -24,6 +25,7 @@ const handlers = {
     return {
       ...state,
       isAuthenticated: true,
+      isLoading: false
     }
   },
   [HANDLERS.LOGIN]: (state, action) => {
@@ -36,6 +38,7 @@ const handlers = {
     return {
       ...state,
       isAuthenticated: true,
+      isLoading: false,
       accessToken,
       userId,
     };
@@ -48,6 +51,7 @@ const handlers = {
     return {
       ...state,
       isAuthenticated: false,
+      isLoading: false,
       accessToken: null,
       userId: null,
     };
@@ -59,6 +63,7 @@ const handlers = {
       ...state,
       accessToken,
       userId,
+      isLoading: false,
     };
   },
 };
@@ -97,6 +102,10 @@ export const AuthProvider = (props) => {
         } else {
           setAuthenticated();
         }
+      }
+      else {
+        authAxios.get('/api/auth/token/remove/').catch()
+        logout()
       }
     }
   }, []);

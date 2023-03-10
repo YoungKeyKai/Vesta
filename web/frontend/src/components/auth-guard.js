@@ -7,7 +7,7 @@ import { redirectToLogin } from '../utils/redirect-to-login';
 export const AuthGuard = (props) => {
   const { children } = props;
   const router = useRouter();
-  const { isAuthenticated } = useAuthContext();
+  const { isAuthenticated, isLoading } = useAuthContext();
   const ignore = useRef(false);
   const [checked, setChecked] = useState(false);
 
@@ -17,7 +17,7 @@ export const AuthGuard = (props) => {
 
   useEffect(
     () => {
-      if (!router.isReady) {
+      if (!router.isReady || isLoading) {
         return;
       }
 
@@ -35,7 +35,7 @@ export const AuthGuard = (props) => {
         setChecked(true);
       }
     },
-    [router.isReady, isAuthenticated]
+    [router.isReady, isAuthenticated, isLoading]
   );
 
   if (!checked) {

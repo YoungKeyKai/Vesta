@@ -168,6 +168,7 @@ const Register = () => {
               type="email"
               value={formik.values.email}
               variant="outlined"
+              autoComplete="username"
             />
             <TextField
               error={Boolean(formik.touched.password && formik.errors.password)}
@@ -181,6 +182,7 @@ const Register = () => {
               type="password"
               value={formik.values.password}
               variant="outlined"
+              autoComplete="new-password"
             />
             <Box
               sx={{
@@ -222,7 +224,7 @@ const Register = () => {
             <Box sx={{ py: 2 }}>
               <Button
                 color="primary"
-                disabled={formik.isSubmitting}
+                disabled={!formik.isValid || formik.isSubmitting}
                 fullWidth
                 size="large"
                 type="submit"
